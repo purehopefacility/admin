@@ -28,7 +28,9 @@ export default function OurService() {
       const response = await fetch('/api/services/all');
       const data = await response.json();
       console.log(data)
-      setServices(data.data || []);
+
+      const sortedServices = sortServices(data.data || []);
+      setServices(sortedServices);
 
       const uniqueCategories = getUniqueCategories(data.data || []);
       console.log(uniqueCategories)
@@ -38,6 +40,17 @@ export default function OurService() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const sortServices = (services: Service[]): Service[] => {
+    return services.sort((a, b) => {
+      // Prioritize services with order 1 or 0
+      if (a.serviceOrder <= 1 && b.serviceOrder > 1) return -1;
+      if (b.serviceOrder <= 1 && a.serviceOrder > 1) return 1;
+      
+      // For other services, sort in ascending order
+      return a.serviceOrder - b.serviceOrder;
+    });
   };
 
   const getUniqueCategories = (services: Service[]): string[] => {
