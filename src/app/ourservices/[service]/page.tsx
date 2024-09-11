@@ -6,6 +6,7 @@ import ServiceForm from "./serviceform";
 import Swiper from "swiper";
 import SliderCard from "./cardslide";
 import { useEffect, useState } from "react";
+import DisplayContent from "./htmlViewer";
 
 interface Service {
   serviceId: number;
@@ -63,7 +64,7 @@ export default function ServiceId({ params }: { params: { service: number } }) {
       <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-6 justify-center p-20 px-[13%]">
         <div className="flex lg:col-span-2 md:col-span-2 sm:col-span-1">
           <p>
-            {services?.serviceDesc ?? "No Description added."}
+            <DisplayContent content={services?.serviceDesc ?? "No Description added."}/>
           </p>
         </div>
         <div className="flex w-full">
