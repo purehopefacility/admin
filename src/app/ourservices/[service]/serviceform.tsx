@@ -7,6 +7,7 @@ import * as z from 'zod';
 import ImageUploader from '@/components/util/fileuploader';
 import { useRouter } from 'next/navigation';
 import SuccessDialog from '@/components/util/successDialog';
+import {PutBlobResult} from '@vercel/blob'
 
 // Define the form schema
 const formSchema = z.object({
