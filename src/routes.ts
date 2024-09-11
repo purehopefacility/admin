@@ -14,6 +14,10 @@ export const publicRoutes = [
     '/contactus',
     '/requestquote',
     '/Ophpolicy',
+    '/api/addinquire',
+    '/api/addquote',
+    '/api/newsletter',
+    '/api/newsletter'
 ]
 
 /**
