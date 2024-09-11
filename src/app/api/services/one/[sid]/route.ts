@@ -37,3 +37,4 @@ export async function GET(request: NextRequest, { params }: { params: { sid: num
     return NextResponse.json({ message: e }, { status: 500 });
   }
 }
+export const dynamic = "force-dynamic";
