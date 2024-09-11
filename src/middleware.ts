@@ -15,8 +15,6 @@ export default auth(async function middleware(req):Promise<any> {
     console.log('ROUTE: ', req.nextUrl.pathname);
     console.log("Is Logged in: ", isLoggedIn);
 
-    const isApiAuthRoute = req.nextUrl.pathname.startsWith(apiAuthPrefix);
-    const isPublicRoutes = publicRoutes.includes(req.nextUrl.pathname);
     const isAdminRoute = pathname.startsWith('/admin')
 
 

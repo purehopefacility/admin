@@ -60,7 +60,7 @@ const Slider = () => {
 
   return (
     <div className="w-full bg-[url('/images/home/services.png')] p-10 bg-cover bg-no-repeat ">
-      <div className="mx-[10%] pb-12 ">
+      <div className="md:mx-[10%] pb-12 ">
         <div className={`${poppins.variable} bg-[rgba(0,48,71,1)] text-white w-32 h-8 rounded-md flex justify-center items-center font-light mx-[2%]`}>
           Our Services
         </div>

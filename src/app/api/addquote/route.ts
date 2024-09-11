@@ -2,8 +2,7 @@ import { db } from "@/db/DB";
 import { eq, and } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { ServiceQuoteTable, CustomerTable } from "@/db/Schema";
-
-import IMGservice from "@/lib/imageService";
+import ImageService from "@/lib/imageService";
 
 export async function POST(request: NextRequest) {
   const QuoteData = await request.formData();
@@ -81,6 +80,8 @@ export async function POST(request: NextRequest) {
       //either load customerID here
       console.log("CREATED CUSTOMER" + JSON.stringify(customer));
       CustomerID = customer[0].CID;
+
+
     } else {
       //or load CustomerID herr
       console.log("found the customer");
@@ -91,6 +92,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const imageUrls = await ImageService.saveImages(quoteimageFiles, "Quotations", CustomerID!);
+
     const Quote = await db
       .insert(ServiceQuoteTable)
       .values({
@@ -99,17 +102,10 @@ export async function POST(request: NextRequest) {
         recievedAt: receivedAt,
         status: "pending",
         note: note,
+        images: JSON.parse(imageUrls), 
       })
       .returning({ QID: ServiceQuoteTable.quoteId });
-    const IMGS = await IMGservice.saveImages(
-      quoteimageFiles,
-      "Quotations",
-      Quote[0].QID,
-    );
-    await db
-      .update(ServiceQuoteTable)
-      .set({ images: IMGS })
-      .where(eq(ServiceQuoteTable.quoteId, Quote[0].QID));
+
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (Err) {
     console.error("ERROR: ", Err);

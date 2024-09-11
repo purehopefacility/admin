@@ -53,7 +53,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {auth} from "@/auth";
 import { signOut } from "next-auth/react";
 
 interface Category {
