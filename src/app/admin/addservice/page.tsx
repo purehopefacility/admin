@@ -60,12 +60,15 @@ interface Category {
   categoryId: string;
   categoryTitle: string;
 }
-import ReactQuill from 'react-quill';
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
 
 interface EditorProps {
   initialValue?: string;
 }
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function Dashboard() {
   //const searchParams = useSearchParams();
