@@ -25,7 +25,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Purehope",
-  description: "Developed by Terracode",
+  description: "Pure Hope Facility Management",
 };
 
 export default function RootLayout({
