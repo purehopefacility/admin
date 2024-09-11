@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   ChevronLeft,
@@ -55,10 +55,20 @@ import {
 } from "@/components/ui/tooltip";
 import {auth} from "@/auth";
 import { signOut } from "next-auth/react";
+import JoditEditor from "jodit-react";
 interface Category {
   categoryId: string;
   categoryTitle: string;
 }
+// import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import dynamic from "next/dynamic";
+
+interface EditorProps {
+  initialValue?: string;
+}
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 export default function Dashboard() {
   //const searchParams = useSearchParams();
@@ -69,10 +79,11 @@ export default function Dashboard() {
   const [title1, setTitle1] = useState("");
   const [title2, setTitle2] = useState("");
   const [order, setOrder] = useState("");
-  const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [content, setContent] = useState<string>("");
+
   const handleServiceImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -120,7 +131,7 @@ export default function Dashboard() {
     formDataToSend.append(
       "serviceDesc",
       //draftToHtml(convertToRaw(formData.description.getCurrentContent())),
-      description,
+      content,
     );
 
     formDataToSend.append("serviceImg", serviceImage as File);
@@ -379,14 +390,16 @@ export default function Dashboard() {
                           onChange={(e) => setTitle2(e.target.value)}
                         />
                       </div>
-                      <div className="grid gap-3">
+                      <div className="grid gap-3 mb-10">
                         <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          value={description}
-                          className="min-h-32"
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
+                        {/* App Error */}
+                        {/* <Textarea */}
+                        {/*   id="description" */}
+                        {/*   value={description} */}
+                        {/*   className="min-h-32" */}
+                        {/*   onChange={(e) => setDescription(e.target.value)} */}
+                        {/* /> */}
+                        <ReactQuill value={content} onChange={setContent} />
                       </div>
                       <div className="grid gap-3">
                         <Label htmlFor="description">Service Order</Label>
