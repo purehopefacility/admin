@@ -25,10 +25,10 @@ export async function GET(request: NextRequest, { params }: { params: { sid: num
         eq(ServiceTable.ServiceCategory, ServiceCategoryTable.categoryId),
       )
       .where(
-        and(
+        
           eq(ServiceTable.serviceId, params.sid),
-          eq(ServiceTable.status, "active"),
-        ),
+          // eq(ServiceTable.status, "active"),
+        
       );
     console.log(params.sid)
     return NextResponse.json(sdata[0]);
