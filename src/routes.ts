@@ -17,7 +17,7 @@ export const publicRoutes = [
     '/api/addinquire',
     '/api/addquote',
     '/api/newsletter',
-    '/api/newsletter'
+    '/api/newsletter',
 ]
 
 /**
@@ -34,7 +34,7 @@ export const authRoutes = [
  * @type {string}
  */
 
-export const apiAuthPrefix = '/api/auth'
+export const apiAuthPrefix = '/api'
 
 
 /**
