@@ -46,3 +46,4 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ message: e }, { status: 500 });
   }
 }
+export const dynamic = "force-dynamic";

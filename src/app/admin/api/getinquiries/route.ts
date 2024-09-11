@@ -29,3 +29,4 @@ export async function GET() {
     return NextResponse.json({ message: e }, { status: 500 });
   }
 }
+export const dynamic = "force-dynamic";

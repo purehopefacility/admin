@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { z } from 'zod';
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -155,27 +156,6 @@ export default function Dashboard() {
       console.error("Error creating service:", error);
     }
   };
-  // const Updater = () => {
-  //   console.log("Title 1:", title1);
-  //   console.log("Title 2:", title2);
-  //   console.log("Order:", order);
-  //   console.log("Description:", description);
-  //   console.log("Category:", category);
-
-  //   // Log the service image (check if an image is uploaded)
-  //   if (serviceImage) {
-  //     console.log("Service Image:", serviceImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Service Image: No image uploaded");
-  //   }
-
-  //   // Log the cover image (check if an image is uploaded)
-  //   if (coverImage) {
-  //     console.log("Cover Image:", coverImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Cover Image: No image uploaded");
-  //   }
-  // };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">

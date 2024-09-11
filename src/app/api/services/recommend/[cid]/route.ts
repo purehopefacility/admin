@@ -26,3 +26,4 @@ export async function GET(
     return NextResponse.json({ error: 'Internal server error' });
   }
 }
+export const dynamic = "force-dynamic";
