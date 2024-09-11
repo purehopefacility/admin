@@ -112,7 +112,7 @@ export default function Dashboard() {
         setOrder(data.serviceOrder);
         setDescription(data.serviceDesc);
         setCategory(data.serviceCategory);
-        // Note: We can't set File objects for images, but we can display them using the URLs
+        //Note: We can't set File objects for images, but we can display them using the URLs
       } else {
         console.error("Failed to fetch service details");
       }
