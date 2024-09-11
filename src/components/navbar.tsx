@@ -59,7 +59,7 @@ export default function Navbar() {
           <ul
             className={`hidden lg:flex items-center md:gap-3 lg:gap-4 xl:gap-9`}
           >
-            <Link href={"/"} className="relative text-sky-950 dot-indicator hover:font-bold focus:font-bold">
+            <Link href={"/"} className="relative text-sky-950 dot-indicator hover: focus:font-bold">
               <li>Home</li>
             </Link>
 
