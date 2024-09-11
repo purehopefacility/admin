@@ -13,6 +13,7 @@ import {
   Settings,
   ShoppingCart,
   Users2,
+  MessageCircle
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -137,6 +138,18 @@ export default function Dashboard() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Customer Quoations</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/inquiries"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">Inquiries</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Inquiries</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
