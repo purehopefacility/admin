@@ -16,6 +16,15 @@ import {
   MessageCircle
 } from "lucide-react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -373,6 +382,38 @@ export default function Dashboard() {
                                   ? "Rejected"
                                   : "Reject"}
                               </Button>
+                              <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline">View</Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Quote Details</DialogTitle>
+                                  <DialogDescription>
+                                    View note and images for quotes {quote.quoteId}
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <label className="text-right font-medium">Note:</label>
+                                    <p className="col-span-3">{quote.note}</p>
+                                  </div>
+                                  <div className="grid grid-cols-4 items-center gap-4">
+                                    <label className="text-right font-medium">Images:</label>
+                                    <div className="col-span-3 flex flex-wrap gap-2">
+                                      {quote.images && quote.images.map((image: string, index: number) => (
+                                        <img
+                                          key={index}
+                                          src={image}
+                                          alt={`Quote image ${index + 1}`}
+                                          className="w-24 h-24 object-cover rounded"
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
                             </TableCell>
                           </TableCell>
                         </TableRow>
