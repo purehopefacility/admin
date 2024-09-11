@@ -15,6 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: { sid: num
         serviceTitle_1: ServiceTable.serviceTitle_1,
         serviceTitle_2: ServiceTable.serviceTitle_2,
         serviceDesc: ServiceTable.serviceDesc,
+        serviceCoverImg:ServiceTable.serviceCoverImg,
         status: ServiceTable.status,
         serviceImages: ServiceTable.serviceImg,
       })
