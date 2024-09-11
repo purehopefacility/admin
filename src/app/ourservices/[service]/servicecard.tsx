@@ -12,7 +12,7 @@ export default function ServiceCard({ imgPath, title, alt, href }: ServiceCardPr
   return (
     <Link href={`${href}`} >
       <div className=" max-w-sm overflow-hidden rounded-lg transform transition-transform duration-300 lg:hover:scale-105">
-        <img className="w-full h-64 object-cover rounded-lg" src={`/${imgPath}`} alt={alt} />
+        <img className="w-full h-64 object-cover rounded-lg" src={`${imgPath}`} alt={alt} />
         <div className="px-6 py-2 flex flex-row items-center justify-between gap-2">
           <div className="flex">
             <h1 className="text-lg font-medium text-[#003047]" >{title}</h1>

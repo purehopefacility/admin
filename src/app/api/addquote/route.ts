@@ -2,9 +2,6 @@ import { db } from "@/db/DB";
 import { eq, and } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { ServiceQuoteTable, CustomerTable } from "@/db/Schema";
-import {put} from "@vercel/blob"
-
-import IMGservice from "@/lib/imageService";
 import ImageService from "@/lib/imageService";
 
 export async function POST(request: NextRequest) {
@@ -108,7 +105,7 @@ export async function POST(request: NextRequest) {
         images: JSON.parse(imageUrls), 
       })
       .returning({ QID: ServiceQuoteTable.quoteId });
-      
+
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (Err) {
     console.error("ERROR: ", Err);

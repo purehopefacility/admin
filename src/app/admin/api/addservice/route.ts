@@ -73,13 +73,13 @@ export async function POST(request: NextRequest) {
       })
       .returning({ SID: ServiceTable.serviceId });
 
-    const serviceIMGS = await IMGservice.saveImages(
-      [serviceIMG],
+    const serviceIMGS = await IMGservice.saveImage(
+      serviceIMG,
       "Services",
       String(service[0].SID),
     );
-    const coverIMGS = await IMGservice.saveImages(
-      [coverIMG],
+    const coverIMGS = await IMGservice.saveImage(
+      coverIMG,
       "Services",
       String(service[0].SID),
     );

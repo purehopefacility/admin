@@ -79,6 +79,28 @@
 import { put, list, del } from '@vercel/blob';
 
 export default class ImageService {
+  static async saveImage(
+    image:File,
+    subdirectory: string,
+    subSubdirectory: string,
+  ):Promise<string>{
+    
+    if (!subdirectory || !subSubdirectory) {
+      console.error("Invalid directory names provided:", { subdirectory, subSubdirectory });
+      throw new Error("Directory names must be valid non-empty strings.");
+    }
+      let imageUrl:string
+      if (image.name) {
+        const blobPath = `${subdirectory}/${subSubdirectory}/${image.name}`;
+        const { url } = await put(blobPath, image, { access: 'public' });
+        imageUrl = url
+      } else {
+        console.error("File name is missing for file:", image);
+        throw new Error("Each file must have a name.");
+      }
+
+    return imageUrl;
+  }
   static async saveImages(
     imageArray:File[],
     subdirectory: string,
@@ -106,19 +128,11 @@ export default class ImageService {
     return JSON.stringify(imageUrls);
   }
 
-  static async retrieveImages(
-    subdirectory: string,
-    subSubdirectory: string,
-  ): Promise<string[]> {
-    if (!subdirectory || !subSubdirectory) {
-      console.error("Invalid directory names provided:", { subdirectory, subSubdirectory });
-      throw new Error("Directory names must be valid non-empty strings.");
-    }
-
-    const prefix = `${subdirectory}/${subSubdirectory}/`;
-    const { blobs } = await list({ prefix });
-
-    return blobs.map(blob => blob.url);
+  static async retrieveImages(quoteId: string): Promise<string[]> {
+    const { blobs } = await list();
+    return blobs
+      .filter(blob => blob.pathname.includes(`Quotations/${quoteId}/`))
+      .map(blob => blob.url);
   }
 
   static async deleteImage(url: string): Promise<void> {

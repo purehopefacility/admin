@@ -33,8 +33,7 @@ export async function GET() {
 
     const promises = qdata.map(async (quote) => {
       const images = await IMGservice.retrieveImages(
-        "Quotations",
-        String(quote.quoteId),
+        String(quote.quoteId)
       );
       Object.defineProperty(quote, "images", {
         value: images,
