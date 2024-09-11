@@ -15,6 +15,7 @@ interface Service {
   ServiceCategoryId: number;
   serviceTitle_1: string;
   serviceTitle_2: string;
+  serviceCoverImg:string;
   serviceDesc: string;
   status: string;
   serviceImages: string;
@@ -49,7 +50,7 @@ export default function ServiceId({ params }: { params: { service: number } }) {
       <div
         className="flex w-full items-end justify-center h-64  relative bg-cover bg-center bg-gray-300"
         style={{
-          backgroundImage: `url(/${services?.serviceImages})`,
+          backgroundImage: `url(${services?.serviceCoverImg})`,
         }}
       >
         <div className="absolute w-3/4 h-1/2 bottom-[-20%]  p-2 rounded-t-lg bg-white flex justify-center items-center">
