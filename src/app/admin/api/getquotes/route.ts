@@ -43,7 +43,6 @@ export async function GET() {
       });
       return quote;
     });
-
     const quotesWithImages = await Promise.all(promises);
     return NextResponse.json({ QuoteData: quotesWithImages }, { status: 200 });
   } catch (e) {
