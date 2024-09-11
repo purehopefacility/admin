@@ -22,14 +22,10 @@ export default auth(async function middleware(req):Promise<any> {
 
 
     if(isAdminRoute){
-        if(isLoggedIn){
-            return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT,req.nextUrl))
+        if(!isLoggedIn){
+            return Response.redirect(new URL('/auth/login', req.url))
         }
         return null
-    }
-
-    if(!isLoggedIn && !isPublicRoutes){
-        return Response.redirect(new URL ('/auth/login', req.nextUrl))
     }
     return null
 
@@ -37,9 +33,7 @@ export default auth(async function middleware(req):Promise<any> {
 
 export const config = {
     matcher: [
-        // Skip Next.js internals and all static files, unless found in search params
-        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-        // Always run for API routes
-        '/(api|trpc)(.*)',
+        // Only match admin routes
+        '/admin/:path*',
     ],
 }
