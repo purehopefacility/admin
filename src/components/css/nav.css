@@ -1,0 +1,19 @@
+.dot-indicator::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor; /* Matches the color of the text */
+    position: absolute;
+    bottom: -10px; /* Adjust based on your needs */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  
+  .text-sky-950:focus::after,
+  .text-sky-950:focus::after {
+    opacity: 1;
+  }
