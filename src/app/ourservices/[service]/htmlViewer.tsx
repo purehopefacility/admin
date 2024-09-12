@@ -9,7 +9,7 @@ const DisplayContent: React.FC<DisplayContentProps> = ({ content }) => {
     <div>
       <h2></h2>
       {/* Render the saved HTML content */}
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="prose text-justify" dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   );
 };
