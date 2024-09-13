@@ -20,7 +20,7 @@ const getActiveServices = async () => {
       ServiceCategoryTable,
       eq(ServiceTable.ServiceCategory, ServiceCategoryTable.categoryId),
     )
-    // .where(eq(ServiceTable.status, "active"))
+    .where(eq(ServiceTable.status, "active"))
     .orderBy(desc(ServiceTable.serviceOrder));
 };
 
@@ -37,4 +37,3 @@ export async function GET() {
   }
 }
 export const dynamic = "force-dynamic";
-
