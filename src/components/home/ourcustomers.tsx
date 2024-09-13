@@ -36,7 +36,7 @@ export default function OurCustomers() {
       </div>
       <div className="bg-[#fcfcfc]">
         {/* repeat eka remove karla map karapan wasthuwe */}
-      <Marquee pauseOnHover repeat={5}>
+      <Marquee pauseOnHover >
         <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
           <div className="flex items-start space-x-4">
             <img
@@ -46,14 +46,73 @@ export default function OurCustomers() {
             />
             <div className="flex-1">
               <p className="text-gray-700 mb-2">
-                The quality of cleaning is excellent. They are dependable. A
-                morning appointment is very important to me and they always keep
-                that time frame.
+              CleanedVery pleased with the work and service 100%
+              Highly recommended Pure Hope Facility Management Pty Ltd
               </p>
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold text-gray-800">Jude Roshen</h3>
-                  <p className="text-sm text-gray-600">CEO - Five Squared</p>
+                  <h3 className="font-semibold text-gray-800">Tony Taylor</h3>
+                  <p className="text-sm text-gray-600 hidden">CEO - Five Squared</p>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-yellow-400 mr-1">5</span>
+                  <svg
+                    className="w-5 h-5 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
+          <div className="flex items-start space-x-4">
+            <img
+              src="https://avatars.githubusercontent.com/u/20110627"
+              alt="Profile"
+              className="w-12 h-12 rounded-full"
+            />
+            <div className="flex-1">
+              <p className="text-gray-700 mb-2">
+              Great serviceVery good service, on time and carpets and lounge were exceptionally cleaned. I will definitely use their services again.
+              </p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-semibold text-gray-800">Jesica Becker</h3>
+                  <p className="text-sm text-gray-600 hidden">CEO - Five Squared</p>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-yellow-400 mr-1">5</span>
+                  <svg
+                    className="w-5 h-5 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
+          <div className="flex items-start space-x-4">
+            <img
+              src="https://avatars.githubusercontent.com/u/106103625"
+              alt="Profile"
+              className="w-12 h-12 rounded-full"
+            />
+            <div className="flex-1">
+              <p className="text-gray-700 mb-2">
+              I engaged Pure Hope Floor Care to fix up an issue with my terrazzo floor tiles which had been damaged by a generalist cleaning contractor. Josh and team honed and sealed the tiles and they honestly look better than new. Totally amazing result. They were very professional to work with, prompt, friendly, clean and tidy and respectful at my place. I would highly recommend.
+              </p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-semibold text-gray-800">Brendan Clark</h3>
+                  <p className="text-sm text-gray-600 hidden">CEO - Five Squared</p>
                 </div>
                 <div className="flex items-center">
                   <span className="text-yellow-400 mr-1">5</span>
@@ -70,6 +129,7 @@ export default function OurCustomers() {
           </div>
         </div>
       </Marquee>
+      
       {/* reverse marquee ekak ona nm mekath map karapan wasthuwe */}
       <Marquee pauseOnHover repeat={5} reverse={true}>
         <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 mt-5 hidden">

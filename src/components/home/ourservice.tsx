@@ -10,6 +10,7 @@ import { Poppins, Ubuntu } from "next/font/google";
 import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 import { ArrowUpRight } from "lucide-react";
 import '@/components/css/custom-swiper-bullets.css';
+import Link from "next/link";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -93,6 +94,7 @@ const Slider = () => {
           autoplay={true}
         >
           {latestServices.map((service, index) => (
+            <>
             <SwiperSlide key={index}>
               <div className="flex justify-center items-center lg:h-[500px] h-[500px]">
                 <div className="w-[330px] h-[340px] bg-white rounded-3xl">
@@ -105,13 +107,16 @@ const Slider = () => {
                   </div>
                   <div className="flex justify-center gap-2 items-center mx-4">
                     <h1 className={title}>{`${service.serviceTitle1} ${service.serviceTitle2}`}</h1>
+                    <Link href={`/ourservices/${service.serviceId}`}>
                     <button className="bg-[rgba(0,48,71,1)] rounded-full text-white font-bold w-10 h-10 flex items-center justify-center shadow-lg mt-5 p-2">
                       <ArrowUpRight />
                     </button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </SwiperSlide>
+            </>
           ))}
         </Swiper>
       </div>

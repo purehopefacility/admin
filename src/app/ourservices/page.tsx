@@ -67,7 +67,7 @@ export default function OurService() {
     <div className="flex flex-col content-end">
 
       <div className="flex w-full items-end justify-center h-64 relative bg-cover bg-center bg-blue-700"
-        style={{ backgroundImage: "url('/images/ourservices/ourservicesheader.png')" }}>
+        style={{ backgroundImage: "url('/images/ourservices/Our Services-01.jpg')" }}>
         <div className="absolute md:w-3/4 w-[84%] h-1/2 bottom-[-20%] p-2 rounded-t-lg bg-white flex justify-center items-center">
           <h1 className="text-[#219EBC] text-2xl"><span className="font-bold text-[#003047]">Our</span> Services</h1>
 

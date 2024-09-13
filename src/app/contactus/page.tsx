@@ -27,7 +27,7 @@ export default function ContactUs() {
             <div className="flex items-center gap-4 sm:gap-7 w-full h-auto bg-[rgba(0,48,71,1)] p-4 rounded-lg">
               <MapPin size={24} className="text-white"/>
               <p className="text-sm text-white w-[229px]">
-                Waterman Business centre, Suite 346, Level 2, 66 Victor Crescent, Narre Warren, Victoria 3805.
+              Suite 349, Level 2/66 Victor Crescent, Narre Warren VIC 3805, Australia
               </p>
             </div>
             </a>
