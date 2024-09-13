@@ -25,7 +25,7 @@ export default function OurService() {
   const fetchServices = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/services/all');
+      const response = await fetch('/api/services/frontall');
       const data = await response.json();
       console.log(data)
 
