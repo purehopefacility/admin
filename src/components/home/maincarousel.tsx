@@ -116,8 +116,8 @@ const Carousel: React.FC = () => {
             />
             <div className="absolute inset-0 bg-black bg-opacity-35 flex items-center ">
               <div className=" mx-[12%] ">
-                <div>
-                  <h1 className="mb-4">
+                <div className='mt-10 sm:mt-0'>
+                  <h1 className="mb-0 sm:mb-4">
                     <span
                       className="block text-1xl md:text-4xl text-white font-light"
                       style={{ textShadow: '6px 4px 6px rgba(0, 0, 0, 0.5)' }}
@@ -125,14 +125,14 @@ const Carousel: React.FC = () => {
                       {item.title1}
                     </span>
                     <span
-                      className="block text-2xl md:text-5xl text-white font-bold mt-2"
+                      className="block text-2xl md:text-5xl text-white font-semibold sm:font-bold  mt-2"
                       style={{ textShadow: '6px 4px 6px rgba(0, 0, 0, 0.5)' }}
                     >
                       {item.title2}
                     </span>
                   </h1>
                   <p
-                    className="text-base md:text-3xl text-white mb-8"
+                    className="text-[14px] md:text-3xl text-white mb-4 sm:mb-8"
                     style={{ textShadow: '6px 4px 6px rgba(0, 0, 0, 0.5)' }}
                   >
                     {item.description}
@@ -198,7 +198,35 @@ const Carousel: React.FC = () => {
       </div>
 
       {/* Avatar */}
-      <div className="absolute top-[-13px] ">
+      <div className="absolute top-[-13px] sm:hidden ">
+        <div className='sm:ml-[-5px]'>
+          <Image
+            src="/images/home/17.png"
+            alt="Top Right Image"
+            width={270}
+            height={100}
+            className='lg:mr-[1px] mt-0 ml-[-23px] sm:ml-[-15px] sm:top-0 '
+          />
+          <div className='relative top-9 ml-1 sm:ml-10 mt-[-86px] lg:mt-[-1]'>
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 350 86" fill="none" className='ml-3 w-[180px]'>
+              <path d="M15 86C6.71572 86 0 79.2843 0 71L0 15C0 6.71573 6.71573 0 15 0L334.594 0C345.896 0 353.138 12.0249 347.853 22.0148L318.225 78.0148C315.626 82.9272 310.524 86 304.966 86L15 86Z" fill="#003047"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Avatar Circles */}
+        <Link href={'#ourcustomers'}>
+        <div className="absolute top-8 flex items-center space-x-2 pl-0 sm:absolute bottom-6 left-[30px] ">
+          <AvatarCircles numPeople={4} avatarUrls={avatarUrls}  className=''/>
+
+          
+            <p className="text-white text-[9px] sm:text-xs sm:left-15 ">Our Vip Clients</p>
+         
+        </div>
+        </Link>
+      </div>
+      {/* Avatar large screen*/}
+      <div className="absolute top-[-13px] hidden sm:block">
         <div className='sm:ml-[-5px]'>
           <Image
             src="/images/home/17.png"
