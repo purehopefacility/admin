@@ -104,7 +104,7 @@ export default function Navbar() {
       <div className="flex justify-center ">
         <div
           ref={menuRef}
-          className={`lg:hidden flex justify-center z-30 absolute w-screen bg-white transform rounded-b-2xl transition-all duration-300 ${
+          className={`lg:hidden flex justify-center z-30 absolute w-screen bg-white transform rounded-b-2xl top-20 transition-all duration-300 ${
             isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
           } overflow-hidden`}
         >
