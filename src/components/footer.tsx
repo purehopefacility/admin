@@ -108,7 +108,7 @@ export default function Footer() {
             <a href="https://maps.app.goo.gl/KCmzaAgV1R8nX51XA">
             <div className="flex flex-row gap-2">
               <MapPin size={20}  className=""/>
-              <p className=" text-sm w-56">Waterman Business Centre, Suite 349, Level 2, 66 Victor Crescent, Narre Warren, Victoria 3805.</p>
+              <p className=" text-sm w-56">Suite 349, Level 2/66 Victor Crescent, Narre Warren VIC 3805, Australia</p>
             </div>
             </a>
             <a href="tel:1300762950">
@@ -201,10 +201,10 @@ export default function Footer() {
             <h3 className="font-bold ">HELP CENTER</h3>
             <ul className="md:space-y-2">
               <li className="text-sm">
-                <Link href="/pure-hope-policy">Pure Hope Policy</Link>
+                <Link href="/ophpolicy">Pure Hope Policy</Link>
               </li>
               <li className="text-sm">
-                <Link href="/service-policy">Service Policy</Link>
+                <Link href="/ophpolicy">Service Policy</Link>
               </li>
             </ul>
           </div>
@@ -218,8 +218,8 @@ export default function Footer() {
             &copy; 2024 All Rights Reserved. Pure Hope
           </p>
           <div className="space-x-4 text-[6px] sm:text-[10px] md:text-[15px]">
-            <Link href="/terms-policy text-black">Terms & Policy</Link>
-            <Link href="/privacy-policy text-black">Privacy Policy</Link>
+            <Link href="">Terms & Policy</Link>
+            <Link href="">Privacy Policy</Link>
           </div>
         </div>
       </div>

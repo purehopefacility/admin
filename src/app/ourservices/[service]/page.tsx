@@ -62,7 +62,7 @@ export default function ServiceId({ params }: { params: { service: number } }) {
           </h1>
         </div>
       </div>
-      <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-6 justify-center p-20 px-[13%]">
+      <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 gap-6 justify-center p-20 px-[13%] lg:gap-20">
         <div className="flex lg:col-span-2 md:col-span-2 sm:col-span-1">
           <p>
             <DisplayContent content={services?.serviceDesc ?? "No Description added."}/>

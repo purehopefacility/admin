@@ -198,7 +198,7 @@ const Carousel: React.FC = () => {
       </div>
 
       {/* Avatar */}
-      <div className="absolute top-[-13px] hidden">
+      <div className="absolute top-[-13px] ">
         <div className='sm:ml-[-5px]'>
           <Image
             src="/images/home/17.png"
@@ -215,13 +215,15 @@ const Carousel: React.FC = () => {
         </div>
 
         {/* Avatar Circles */}
+        <Link href={'#ourcustomers'}>
         <div className="absolute flex items-center space-x-2 pl-0 sm:absolute bottom-6 left-[60px]">
-          <AvatarCircles numPeople={99} avatarUrls={avatarUrls} />
+          <AvatarCircles numPeople={4} avatarUrls={avatarUrls} />
 
-          <Link href={'#ourcustomers'}>
+          
             <p className="text-white text-xs sm:left-15">Our Vip Clients</p>
-          </Link>
+         
         </div>
+        </Link>
       </div>
     </div>
   );

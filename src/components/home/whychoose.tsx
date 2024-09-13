@@ -132,7 +132,7 @@ export default function WhyChoose() {
             <div className="relative xl:h-auto xl:w-auto h-full xl:aspect-[4/4]">
               <div className="absolute top-0 left-[10%] w-[80%] h-[60%] overflow-hidden rounded-lg">
                 <img
-                  src="images/home/whychoosevaccum.png"
+                  src="images/home/last4.jpeg"
                   alt="Library"
                   className="w-full h-full object-cover rounded-xl"
                 />
