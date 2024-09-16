@@ -38,7 +38,7 @@ export default function Home() {
         <section id="support" className="flex w-full">
           <Support/>
         </section>
-        <section id="brands" className="flex w-full hidden">
+        <section id="brands" className="flex w-full">
           <Brands/>
         </section>
         <section id="ourcustomers" className="flex w-full">

@@ -108,7 +108,7 @@ export default function Footer() {
             <a href="https://maps.app.goo.gl/KCmzaAgV1R8nX51XA">
             <div className="flex flex-row gap-2">
               <MapPin size={20}  className=""/>
-              <p className=" text-sm w-56">Suite 349, Level 2/66 Victor Crescent, Narre Warren VIC 3805, Australia</p>
+              <p className=" text-sm w-56">Suite 346 , Level 2/66 Victor Cres, Narre Warren VIC 3805, Australia</p>
             </div>
             </a>
             <a href="tel:1300762950">
