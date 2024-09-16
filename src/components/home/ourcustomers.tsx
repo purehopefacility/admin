@@ -40,7 +40,7 @@ export default function OurCustomers() {
         <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
           <div className="flex items-start space-x-4">
             <img
-              src="/images/avatar.png"
+              src="https://avatars.githubusercontent.com/u/16860528"
               alt="Profile"
               className="w-12 h-12 rounded-full"
             />
