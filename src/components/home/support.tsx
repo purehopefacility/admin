@@ -11,7 +11,7 @@ export default function Support() {
             <p className='text-white flex flex-wrap items-center justify-center sm:justify-start text-xs sm:text-sm md:text-base lg:text-lg font-semibold gap-1' style={{ textShadow: '6px 4px 6px rgba(0, 0, 0, 0.5)' }}>
                 PARTNER WITH : 
                 <img src="/images/home/support1.jpg" alt="" className='mx-1 sm:mx-2 inline-block h-4 sm:h-6 w-auto'/>
-                REGISTERED DIS PROVIDER
+                REGISTERED NDIS PROVIDER
             </p>
         </div>
         <div className='w-full flex justify-center sm:justify-start mt-3'>
