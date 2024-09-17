@@ -10,6 +10,7 @@ const Brands = () => {
   ];
   
   return (
+    // Add all new brands
    <div className="flex justify-center w-full  ">
     <div className=" mx-10 my-8 overflow-hidden md:w-1/2 lg:w-1/3">
         {/*Animatoin Container*/}
