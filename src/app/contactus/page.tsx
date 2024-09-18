@@ -26,8 +26,8 @@ export default function ContactUs() {
             <a href="https://maps.app.goo.gl/KCmzaAgV1R8nX51XA">
             <div className="flex items-center gap-4 sm:gap-7 w-full h-auto bg-[rgba(0,48,71,1)] p-4 rounded-lg">
               <MapPin size={24} className="text-white"/>
-              <p className="text-sm text-white w-[229px]">
-              Suite 349, Level 2/66 Victor Crescent, Narre Warren VIC 3805, Australia
+              <p className="text-sm text-white w-[220px]">
+              Suite 346 , Level 2/66 Victor Cres, Narre Warren VIC 3805, Australia
               </p>
             </div>
             </a>
