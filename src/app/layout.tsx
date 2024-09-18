@@ -5,6 +5,7 @@ dotenv.config();
 import { Poppins } from "next/font/google";
 import NavBar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <Footer/>
         </div>
       </body>
+      <GoogleAnalytics gaId="G-XVQLXY2R9K"/>
     </html>
   );
 }
