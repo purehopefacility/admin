@@ -1,0 +1,9 @@
+.swiper-pagination-bullet {
+    background-color: rgb(7, 33, 128);
+    transition: transform 0.3s ease; /* Smooth transition for scaling */
+  }
+  
+  .swiper-pagination-bullet-active {
+    transform: scale(1.7); /* Scale up the active bullet */
+    background-color: rgb(20, 80, 222); /* Optionally, keep the same background color */
+  }

@@ -9,7 +9,7 @@ import "swiper/css/autoplay";
 import { Poppins, Ubuntu } from "next/font/google";
 import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 import { ArrowUpRight } from "lucide-react";
-import '@/components/css/custom-swiper-bullets.css';
+import '@/components/css/bullets1.css';
 import Link from "next/link";
 
 const ubuntu = Ubuntu({
