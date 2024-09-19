@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export default function IgGallery() {
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://static.elfsight.com/platform/platform.js';
+    script.src = "https://s.electricblaze.com/widget.js";
     script.setAttribute('data-use-service-core', '');
     script.defer = true;
     document.body.appendChild(script);
@@ -18,8 +18,15 @@ export default function IgGallery() {
 
   return (
     <div className='w-full'>
-      <div className="elfsight-app-5d1ea7b0-b19b-409b-8a10-90bf8e8ccec1 my-20" data-elfsight-app-lazy></div>
+      {/* <h1 className="text-3xl text-center font-bold my-10">Instagram Gallery</h1> */}
+      <div className="electricblaze-id-2UhxDEy my-20" ></div>
+      <style>{`
+            .PIz4HixPF9mDMQqIRfcD {
+              display: none !important;
+            }
+          `}</style>
     </div>
   );
 }
+
 
