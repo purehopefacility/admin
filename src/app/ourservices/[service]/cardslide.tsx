@@ -74,7 +74,7 @@ const SliderCard = ({ categoryId }: { categoryId: number }) => {
       >
         {servicesData.map((service) => (
           <SwiperSlide key={service.serviceId}>
-            <div className="h-[400px]">
+            <div className="h-[450px]">
               <ServiceCard
                 title={`${service.serviceTitle_1} ${service.serviceTitle_2}`}
                 alt={`${service.serviceTitle_1} ${service.serviceTitle_2}`}
