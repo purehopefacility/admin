@@ -9,7 +9,7 @@ import { Poppins, Ubuntu } from "next/font/google";
 import { Autoplay, FreeMode, Pagination } from "swiper/modules";
 
 import ServiceCard from "./servicecard";
-import "./bullets2.css";
+
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
