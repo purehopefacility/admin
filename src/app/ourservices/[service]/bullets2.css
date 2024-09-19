@@ -5,5 +5,5 @@
   
   .swiper-pagination-bullet-active {
     transform: scale(1.7); /* Scale up the active bullet */
-    background-color: blue; /* Optionally, keep the same background color */
+    background-color: rgb(59, 59, 231); /* Optionally, keep the same background color */
   }
