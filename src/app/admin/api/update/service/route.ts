@@ -84,16 +84,21 @@ export async function POST(request: NextRequest) {
     if (serviceIMG) {
       //TODO --> here delete tje exisiting image
       //1) fetche the image url and del first
-      const s_img_url = await db
-        .select({
-          serviceImg: ServiceTable.serviceImg,
-        })
-        .from(ServiceTable)
-        .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
 
-      //now deleting
-      if (s_img_url[0].serviceImg) {
-        await IMGservice.deleteImage(s_img_url[0].serviceImg?.toString());
+      try {
+        const s_img_url = await db
+          .select({
+            serviceImg: ServiceTable.serviceImg,
+          })
+          .from(ServiceTable)
+          .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
+
+        //now deleting
+        if (s_img_url[0].serviceImg) {
+          await IMGservice.deleteImage(s_img_url[0].serviceImg?.toString());
+        }
+      } catch (e) {
+        console.error("error in deleting svc-image" + e);
       }
       const serviceIMGS = await IMGservice.saveImage(
         serviceIMG,
@@ -106,16 +111,20 @@ export async function POST(request: NextRequest) {
     if (coverIMG) {
       //TODO --> here delete tje exisiting image
       //1) fetche the image url and del first
-      const cvr_img_url = await db
-        .select({
-          cvrImg: ServiceTable.serviceCoverImg,
-        })
-        .from(ServiceTable)
-        .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
+      try {
+        const cvr_img_url = await db
+          .select({
+            cvrImg: ServiceTable.serviceCoverImg,
+          })
+          .from(ServiceTable)
+          .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
 
-      //now deleting
-      if (cvr_img_url[0].cvrImg) {
-        await IMGservice.deleteImage(cvr_img_url[0].cvrImg?.toString());
+        //now deleting
+        if (cvr_img_url[0].cvrImg) {
+          await IMGservice.deleteImage(cvr_img_url[0].cvrImg?.toString());
+        }
+      } catch (e) {
+        console.error("error in deleting cvr-image" + e);
       }
       const coverIMGS = await IMGservice.saveImage(
         coverIMG,
