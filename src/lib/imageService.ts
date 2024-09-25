@@ -76,39 +76,43 @@
 //   }
 // }
 
-import { put, list, del } from '@vercel/blob';
+import { put, list, del } from "@vercel/blob";
 
 export default class ImageService {
   static async saveImage(
-    image:File,
+    image: File,
     subdirectory: string,
     subSubdirectory: string,
-  ):Promise<string>{
-    
+  ): Promise<string> {
     if (!subdirectory || !subSubdirectory) {
-      console.error("Invalid directory names provided:", { subdirectory, subSubdirectory });
+      console.error("Invalid directory names provided:", {
+        subdirectory,
+        subSubdirectory,
+      });
       throw new Error("Directory names must be valid non-empty strings.");
     }
-      let imageUrl:string
-      if (image.name) {
-        const blobPath = `${subdirectory}/${subSubdirectory}/${image.name}`;
-        const { url } = await put(blobPath, image, { access: 'public' });
-        imageUrl = url
-      } else {
-        console.error("File name is missing for file:", image);
-        throw new Error("Each file must have a name.");
-      }
+    let imageUrl: string;
+    if (image.name) {
+      const blobPath = `${subdirectory}/${subSubdirectory}/${image.name}`;
+      const { url } = await put(blobPath, image, { access: "public" });
+      imageUrl = url;
+    } else {
+      console.error("File name is missing for file:", image);
+      throw new Error("Each file must have a name.");
+    }
 
     return imageUrl;
   }
   static async saveImages(
-    imageArray:File[],
+    imageArray: File[],
     subdirectory: string,
     subSubdirectory: string,
   ): Promise<string> {
-
     if (!subdirectory || !subSubdirectory) {
-      console.error("Invalid directory names provided:", { subdirectory, subSubdirectory });
+      console.error("Invalid directory names provided:", {
+        subdirectory,
+        subSubdirectory,
+      });
       throw new Error("Directory names must be valid non-empty strings.");
     }
 
@@ -117,7 +121,7 @@ export default class ImageService {
     for (const file of imageArray) {
       if (file.name) {
         const blobPath = `${subdirectory}/${subSubdirectory}/${file.name}`;
-        const { url } = await put(blobPath, file, { access: 'public' });
+        const { url } = await put(blobPath, file, { access: "public" });
         imageUrls.push(url);
       } else {
         console.error("File name is missing for file:", file);
@@ -131,8 +135,8 @@ export default class ImageService {
   static async retrieveImages(quoteId: string): Promise<string[]> {
     const { blobs } = await list();
     return blobs
-      .filter(blob => blob.pathname.includes(`Quotations/${quoteId}/`))
-      .map(blob => blob.url);
+      .filter((blob) => blob.pathname.includes(`Quotations/${quoteId}/`))
+      .map((blob) => blob.url);
   }
 
   static async deleteImage(url: string): Promise<void> {

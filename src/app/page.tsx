@@ -12,51 +12,57 @@ import Sustainability from "@/components/home/environment";
 import Sustain from "@/components/home/sustain";
 import Support from "@/components/home/support";
 import Recon from "@/components/home/recon";
+import NavBar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
-  <div>
+    <div>
+      <NavBar />
       <main className="flex flex-col  items-center">
         <section id="mainCarousel" className="flex w-full">
-          <MainCarousel/>
+          <MainCarousel />
         </section>
         <section id="aboutus" className="flex w-full">
-          <AboutUs/>
+          <AboutUs />
         </section>
         <section id="ourservice" className="flex w-full">
-          <OurService/>
+          <OurService />
         </section>
         <section id="whychoose" className="flex w-full">
-          <WhyChoose/>
+          <WhyChoose />
         </section>
         <section id="sustain" className="flex w-full">
-          <Sustain/>
+          <Sustain />
         </section>
         <section id="contactus" className="flex w-full">
-          <ContactUs/>
+          <ContactUs />
         </section>
         <section id="support" className="flex w-full">
-          <Support/>
+          <Support />
         </section>
         <section id="brands" className="flex w-full">
-          <Brands/>
+          <Brands />
         </section>
         <section id="ourcustomers" className="flex w-full">
-          <OurCustomers/>
+          <OurCustomers />
         </section>
         <section id="recon" className="flex w-full">
-          <Recon/>
+          <Recon />
         </section>
         <section id="brand2" className="flex w-full">
-          <Brands2/>
+          <Brands2 />
         </section>
         <section id="iggallery" className="flex w-full ">
-          <IgGallery/>
+          <IgGallery />
         </section>
         <section id="ourlocation" className="flex w-full justify-center">
-          <OurLocation/>
+          <OurLocation />
         </section>
       </main>
+      <div className="flex items-center justify-center">
+        <Footer />
+      </div>
     </div>
   );
 }

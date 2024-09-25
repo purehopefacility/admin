@@ -5,7 +5,7 @@ dotenv.config();
 import { Poppins } from "next/font/google";
 import NavBar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -20,7 +20,7 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["100","200","300","400","500","600","700", "800"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
   variable: "--font-poppins",
 });
 
@@ -36,14 +36,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans  items-center justify-center`}>
-        <NavBar />
+      <body
+        className={`${poppins.variable} font-sans  items-center justify-center`}
+      >
+        {/*   <NavBar />*/}
         {children}
-      <div className="flex items-center justify-center">
-      <Footer/>
+        {/*
+        <div className="flex items-center justify-center">
+            <Footer/>
         </div>
+        */}
       </body>
-      <GoogleAnalytics gaId="G-XVQLXY2R9K"/>
+      <GoogleAnalytics gaId="G-XVQLXY2R9K" />
     </html>
   );
 }
