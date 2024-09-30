@@ -6,18 +6,15 @@ import { CustomerTable } from "@/db/Schema";
 
 export async function POST(request: NextRequest) {
   const feedbackData = await request.formData();
-  //CHECK
-  const feedback = feedbackData.get("feedback");
-  const customerId = feedbackData.get("cid");
 
-  if (typeof feedback !== "string" || typeof customerId !== "string") {
-    throw new Error("Invalid feedback or customer ID");
-  }
-  //CHECKEND
+  const feedback = feedbackData.get("feedback") as string;
+  const rating = feedbackData.get("rating") as string;
+  const customerId = feedbackData.get("cid") as string;
+
   try {
     await db
       .update(CustomerTable)
-      .set({ feedback: feedback })
+      .set({ feedback: feedback, rating: parseInt(rating as string, 10) })
       .where(eq(CustomerTable.customerId, customerId));
     return NextResponse.json(
       { message: "Successfully Added Feedback" },
