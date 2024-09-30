@@ -52,7 +52,6 @@ export const AddImage = async (file: File, path: string): Promise<string> => {
   }
 };
 
-// Function to delete an image given its URL
 export const DelImage = async (url: string): Promise<void> => {
   try {
     // Create a reference to the file to delete

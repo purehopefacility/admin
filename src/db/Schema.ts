@@ -2,7 +2,8 @@ import {
   boolean,
   integer,
   json,
-  pgTable, primaryKey,
+  pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
@@ -36,18 +37,26 @@ export const ServiceTable = pgTable("services", {
 });
 
 export const CustomerTable = pgTable("customers", {
-  customerId: uuid("customer_id").primaryKey().$defaultFn(() => randomUUID()),
+  customerId: uuid("customer_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   customerName: varchar("customer_name").notNull(),
+  avatar: varchar("avatar"),
   email: varchar("email").unique(),
+
   phoneNumber: varchar("phone_number"),
   registeredAt: timestamp("registered_at"),
+  rating: integer("rating"),
   address: varchar("address"),
   feedback: varchar("feedback"),
+  position: varchar("position"),
 });
 
 //Assuming a single quote --> single service
 export const ServiceQuoteTable = pgTable("quotations", {
-  quoteId: uuid("quote_id").primaryKey().$defaultFn(() => randomUUID()),
+  quoteId: uuid("quote_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   ServiceId: integer("service_id").references(() => ServiceTable.serviceId),
   customerId: uuid("customer").references(() => CustomerTable.customerId),
   recievedAt: timestamp("recieved_at"),
@@ -57,7 +66,9 @@ export const ServiceQuoteTable = pgTable("quotations", {
 });
 
 export const GeneralInquiryTable = pgTable("customer_inquiries", {
-  inquiryId: uuid("inquiry_id").primaryKey().$defaultFn(() => randomUUID()),
+  inquiryId: uuid("inquiry_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   customerId: uuid("customer").references(() => CustomerTable.customerId),
   recievedAt: timestamp("recieved_at"),
   status: varchar("status"),
@@ -70,7 +81,9 @@ export const NewsLetterMailTable = pgTable("news_letter_mails", {
 });
 
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   roleType: varchar("role_type"),
   name: text("name"),
   password: varchar("password").notNull(),
