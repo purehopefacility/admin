@@ -29,9 +29,9 @@ export default function OurCustomers() {
     async function fetchData() {
       try {
         const response = await fetch("/api/feedbacks");
-        const data = await response.json();
+        const feedbacks = await response.json();
 
-        //setReviewData(data);
+        setReviewData(feedbacks.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -54,7 +54,7 @@ export default function OurCustomers() {
       <div className="bg-[#fcfcfc]">
         {/* repeat eka remove karla map karapan wasthuwe */}
         {Reviewdata ? (
-          <Marquee pauseOnHover>
+          <Marquee pauseOnHover repeat={5}>
             {Reviewdata.map((review: RW, idx) => (
               <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
                 <div className="flex items-start space-x-4">

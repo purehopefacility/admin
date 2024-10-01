@@ -64,11 +64,11 @@ interface Category {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [ctgtitle, setCtgTitle] = useState("");
+  const [customerName, setCustomerName] = useState<string>("");
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
-
-  const [order, setOrder] = useState("1");
-  const [description, setDescription] = useState("");
+  const [position, setPosition] = useState<string>("");
+  const [feedback, setFeedback] = useState<string>("");
+  const [rating, setRating] = useState<string>(0);
 
   const handleAvatarImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -79,53 +79,34 @@ export default function Dashboard() {
     }
   };
 
-  const Updater = async () => {
+  const FeedBackAdder = async () => {
     const formDataToSend = new FormData();
 
-    formDataToSend.append("ctgTitle", ctgtitle);
-
-    formDataToSend.append("ctgDesc", description);
-    formDataToSend.append("ctgOrder", order);
+    formDataToSend.append("avatar", avatarImage as File);
+    formDataToSend.append("customerName", customerName);
+    formDataToSend.append("rating", rating);
+    formDataToSend.append("feedback", feedback);
+    formDataToSend.append("position", position);
 
     try {
-      const response = await fetch(`/admin/api/addcategory`, {
+      const response = await fetch(`/api/feedbacks`, {
         method: "POST",
         body: formDataToSend,
       });
       if (response.ok) {
-        console.log("Service created successfully");
+        console.log("feedback added successfully");
 
         setTimeout(() => {
           router.push("/admin/home");
         }, 2000); // Navigate back to the service list
       } else {
-        console.error("Failed to create service");
+        console.error("Failed to add feedback");
       }
     } catch (error) {
-      console.error("Error creating service:", error);
+      console.error("Error adding feedback:", error);
     }
   };
-  // const Updater = () => {
-  //   console.log("Title 1:", title1);
-  //   console.log("Title 2:", title2);
-  //   console.log("Order:", order);
-  //   console.log("Description:", description);
-  //   console.log("Category:", category);
 
-  //   // Log the service image (check if an image is uploaded)
-  //   if (serviceImage) {
-  //     console.log("Service Image:", serviceImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Service Image: No image uploaded");
-  //   }
-
-  //   // Log the cover image (check if an image is uploaded)
-  //   if (coverImage) {
-  //     console.log("Cover Image:", coverImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Cover Image: No image uploaded");
-  //   }
-  // };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -265,7 +246,7 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Service Category</Link>
+                  <Link href="#">Add Customer Feedbacks</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -334,8 +315,8 @@ export default function Dashboard() {
                 >
                   Discard
                 </Button>
-                <Button size="sm" onClick={Updater}>
-                  Add Category
+                <Button size="sm" onClick={FeedBackAdder}>
+                  Add Feedback
                 </Button>
               </div>
             </div>
@@ -348,38 +329,52 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="grid gap-6">
                       <div className="grid gap-3">
-                        <Label htmlFor="name">Category Title</Label>
+                        <Label htmlFor="name">Customer Name</Label>
                         <Input
                           id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="title"
-                          value={ctgtitle}
-                          onChange={(e) => setCtgTitle(e.target.value)}
+                          placeholder="Name"
+                          value={customerName}
+                          onChange={(e) => setCustomerName(e.target.value)}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          value={description}
-                          className="min-h-32"
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                      </div>
-                      {/*
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Category Order</Label>
+                        <Label htmlFor="description">
+                          {"Position/Designation"}
+                        </Label>
                         <Input
-                          id="order"
+                          id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="Order Number"
-                          value={order}
-                          onChange={(e) => setOrder(e.target.value)}
+                          placeholder="position"
+                          value={position}
+                          onChange={(e) => setPosition(e.target.value)}
                         />
                       </div>
-                      */}
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">Feedback Message</Label>
+                        <Textarea
+                          id="feedback"
+                          placeholder="Feedback Message"
+                          value={feedback}
+                          className="min-h-32"
+                          onChange={(e) => setFeedback(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">
+                          {"Rating (out of 5)"}
+                        </Label>
+                        <Input
+                          id="t1"
+                          type="number"
+                          className="w-full"
+                          placeholder="title"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                        />
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
