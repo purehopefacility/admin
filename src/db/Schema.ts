@@ -21,6 +21,13 @@ export const ServiceCategoryTable = pgTable("services_category", {
   categoryOrder: integer("category_order").notNull(),
   categoryDesc: varchar("category_desc").notNull(),
 });
+export const FeedbackTable = pgTable("customer_feedbacks", {
+  avatar: varchar("avatar"),
+  registeredAt: timestamp("registered_at"),
+  rating: integer("rating"),
+  feedback: varchar("feedback"),
+  position: varchar("position"),
+});
 
 export const ServiceTable = pgTable("services", {
   serviceId: serial("service_id").primaryKey(),
@@ -41,15 +48,15 @@ export const CustomerTable = pgTable("customers", {
     .primaryKey()
     .$defaultFn(() => randomUUID()),
   customerName: varchar("customer_name").notNull(),
-  avatar: varchar("avatar"),
+  //avatar: varchar("avatar"),
   email: varchar("email").unique(),
 
   phoneNumber: varchar("phone_number"),
   registeredAt: timestamp("registered_at"),
-  rating: integer("rating"),
+  //rating: integer("rating"),
   address: varchar("address"),
-  feedback: varchar("feedback"),
-  position: varchar("position"),
+  //feedback: varchar("feedback"),
+  //position: varchar("position"),
 });
 
 //Assuming a single quote --> single service
