@@ -36,13 +36,10 @@ const SliderRef = ref(storage, "slider_images/");
 //FUNCTIONS
 export const AddImage = async (file: File, path: string): Promise<string> => {
   try {
-    // Create a reference to the location where we want to upload the file
     const storageRef = ref(storage, `${path}/${file.name}`);
 
-    // Upload the file
     const snapshot = await uploadBytes(storageRef, file);
 
-    // Get the download URL
     const downloadURL = await getDownloadURL(snapshot.ref);
 
     return downloadURL;
@@ -51,18 +48,43 @@ export const AddImage = async (file: File, path: string): Promise<string> => {
     throw error;
   }
 };
+export const AddImageSet = async (
+  files: File[],
+  path: string,
+): Promise<string[]> => {
+  try {
+    const uploadPromises = files.map((file) => AddImage(file, path));
+
+    const downloadURLs = await Promise.all(uploadPromises);
+
+    return downloadURLs;
+  } catch (error) {
+    console.error("Error uploading image set: ", error);
+    throw error;
+  }
+};
 
 export const DelImage = async (url: string): Promise<void> => {
   try {
-    // Create a reference to the file to delete
     const imageRef = ref(storage, url);
 
-    // Delete the file
     await deleteObject(imageRef);
 
     console.log("Image deleted successfully");
   } catch (error) {
     console.error("Error deleting image: ", error);
+    throw error;
+  }
+};
+export const DelImageSet = async (urls: string[]): Promise<void> => {
+  try {
+    const deletePromises = urls.map((url) => DelImage(url));
+
+    await Promise.all(deletePromises);
+
+    console.log("All images deleted successfully");
+  } catch (error) {
+    console.error("Error deleting image set: ", error);
     throw error;
   }
 };

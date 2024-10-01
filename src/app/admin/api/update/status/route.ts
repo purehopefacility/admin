@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/DB";
 import { eq } from "drizzle-orm";
+import { DelImageSet } from "@/firebase";
 
 import {
   GeneralInquiryTable,
@@ -31,6 +32,18 @@ export async function PUT(request: NextRequest) {
         .update(ServiceQuoteTable)
         .set({ status: state })
         .where(eq(ServiceQuoteTable.quoteId, ID));
+      if (state == "completed" || state == "rejected") {
+        //HERE --> Deleting all the images if above states are set
+        const imgSet = await db
+          .select({
+            images: ServiceQuoteTable.images,
+          })
+          .from(ServiceQuoteTable)
+          .where(eq(ServiceQuoteTable.quoteId, ID));
+        const IMGs = JSON.parse(imgSet[0].images as string);
+        console.log("JSON PARSED Qiuote IMAGES : ", IMGs);
+        await DelImageSet(IMGs);
+      }
     } else {
       await db
         .update(ServiceTable)

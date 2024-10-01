@@ -2,6 +2,7 @@ import { db } from "@/db/DB";
 import { desc, eq } from "drizzle-orm";
 import { FeedbackTable } from "@/db/Schema";
 import { NextResponse, NextRequest } from "next/server";
+import { AddImage } from "@/firebase";
 
 const getFeedBacks = async () => {
   return await db
@@ -38,8 +39,8 @@ export async function POST(request: NextRequest) {
   const rating = parseInt(QuoteData.get("rating") as string, 10);
   const avatar = QuoteData.get("avatar") as File;
 
-  //HERE IMAGE WILL BE UPLOADED TO FIREBASE CLOUD BUCKET AND GETS THE STINF URL
-  const avatarURL = "sample url";
+  const avatarURL = await AddImage(avatar, "customer_avatars");
+
   try {
     await db.insert(FeedbackTable).values({
       avatar: avatarURL,

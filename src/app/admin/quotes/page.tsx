@@ -299,15 +299,17 @@ export default function Dashboard() {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Tabs defaultValue="all">
+          <Tabs defaultValue="pending">
             <div className="flex items-center">
               <TabsList>
-                <TabsTrigger value="all">Pending</TabsTrigger>
-                <TabsTrigger value="active">Completed</TabsTrigger>
-                <TabsTrigger value="draft">Rejected</TabsTrigger>
+                {/*THere are 4 states here okay */}
+                <TabsTrigger value="pending">Pending</TabsTrigger>
+                <TabsTrigger value="approved">Approved</TabsTrigger>
+                <TabsTrigger value="completed">Completed</TabsTrigger>
+                <TabsTrigger value="rejected">Rejected</TabsTrigger>
               </TabsList>
             </div>
-            <TabsContent value="all">
+            <TabsContent value="pending">
               <Card x-chunk="dashboard-06-chunk-0">
                 <CardHeader>
                   <CardTitle>Quotations</CardTitle>
@@ -342,105 +344,557 @@ export default function Dashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {quotations.map((quote) => (
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            {quote.quoteId}
-                          </TableCell>
+                      {quotations
+                        .filter((quote) => quote.status == "pending")
+                        .map((quote) => (
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              {quote.quoteId}
+                            </TableCell>
 
-                          <TableCell className="hidden md:table-cell">
-                            {quote.customerName}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {`${quote.serviceTitle_1} - ${quote.serviceTitle_2}`}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {quote.note}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {quote.email}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {quote.phoneNumber}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {quote.recievedAt}
-                          </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.customerName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {`${quote.serviceTitle_1} - ${quote.serviceTitle_2}`}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.recievedAt}
+                            </TableCell>
 
-                          <TableCell>
-                            <TableCell className="flex gap-2">
-                              <Button
-                                className="px-4 py-2 bg-green-500"
-                                onClick={() => {
-                                  StateUpdater(
-                                    "quote",
-                                    quote.quoteId,
-                                    "approved",
-                                  );
-                                }}
-                              >
-                                {quote.status == "approved"
-                                  ? "Approved"
-                                  : "Approve"}
-                              </Button>
-                              <Button
-                                className="px-4 py-2 bg-red-500"
-                                onClick={() => {
-                                  StateUpdater(
-                                    "quote",
-                                    quote.quoteId,
-                                    "rejected",
-                                  );
-                                }}
-                              >
-                                {quote.status == "rejected"
-                                  ? "Rejected"
-                                  : "Reject"}
-                              </Button>
-                              <Dialog>
-                                <DialogTrigger asChild>
-                                  <Button variant="outline">View</Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[425px]">
-                                  <DialogHeader>
-                                    <DialogTitle>Quote Details</DialogTitle>
-                                    <DialogDescription>
-                                      View note and images for quotes{" "}
-                                      {quote.quoteId}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                      <label className="text-right font-medium">
-                                        Note:
-                                      </label>
-                                      <p className="col-span-3">{quote.note}</p>
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                      <label className="text-right font-medium">
-                                        Images:
-                                      </label>
-                                      <div className="col-span-3 flex flex-wrap gap-2">
-                                        {quote.images &&
-                                          quote.images.map(
-                                            (image: string, index: number) => (
-                                              <img
-                                                key={index}
-                                                src={image}
-                                                alt={`Quote image ${index + 1}`}
-                                                className="w-24 h-24 object-cover rounded"
-                                              />
-                                            ),
-                                          )}
+                            <TableCell>
+                              <TableCell className="flex gap-2">
+                                <Button
+                                  className="px-4 py-2 bg-green-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "approved",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "approved"
+                                    ? "Approved"
+                                    : "Approve"}
+                                </Button>
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "rejected",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "rejected"
+                                    ? "Rejected"
+                                    : "Reject"}
+                                </Button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline">View</Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Quote Details</DialogTitle>
+                                      <DialogDescription>
+                                        View note and images for quotes{" "}
+                                        {quote.quoteId}
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Note:
+                                        </label>
+                                        <p className="col-span-3">
+                                          {quote.note}
+                                        </p>
+                                      </div>
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Images:
+                                        </label>
+                                        <div className="col-span-3 flex flex-wrap gap-2">
+                                          {quote.images &&
+                                            quote.images.map(
+                                              (
+                                                image: string,
+                                                index: number,
+                                              ) => (
+                                                <img
+                                                  key={index}
+                                                  src={image}
+                                                  alt={`Quote image ${index + 1}`}
+                                                  className="w-24 h-24 object-cover rounded"
+                                                />
+                                              ),
+                                            )}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </DialogContent>
-                              </Dialog>
+                                  </DialogContent>
+                                </Dialog>
+                              </TableCell>
                             </TableCell>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  <div className="text-xs text-muted-foreground">
+                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+                    products
+                  </div>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="approved">
+              <Card x-chunk="dashboard-06-chunk-0">
+                <CardHeader>
+                  <CardTitle>Quotations</CardTitle>
+                  <CardDescription>
+                    All available service quoations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Quotation ID</TableHead>
+                        <TableHead>customer</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          service
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Note
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          email
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          mobile
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          date
+                        </TableHead>
+                        <TableHead>
+                          <span className="sr-only">Actions</span>
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {quotations
+                        .filter((quote) => quote.status == "approved")
+                        .map((quote) => (
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              {quote.quoteId}
+                            </TableCell>
+
+                            <TableCell className="hidden md:table-cell">
+                              {quote.customerName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {`${quote.serviceTitle_1} - ${quote.serviceTitle_2}`}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.recievedAt}
+                            </TableCell>
+
+                            <TableCell>
+                              <TableCell className="flex gap-2">
+                                <Button
+                                  className="px-4 py-2 bg-green-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "completed",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "completed"
+                                    ? "Completed"
+                                    : "Complete"}
+                                </Button>
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "rejected",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "rejected"
+                                    ? "Rejected"
+                                    : "Reject"}
+                                </Button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline">View</Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Quote Details</DialogTitle>
+                                      <DialogDescription>
+                                        View note and images for quotes{" "}
+                                        {quote.quoteId}
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Note:
+                                        </label>
+                                        <p className="col-span-3">
+                                          {quote.note}
+                                        </p>
+                                      </div>
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Images:
+                                        </label>
+                                        <div className="col-span-3 flex flex-wrap gap-2">
+                                          {quote.images &&
+                                            quote.images.map(
+                                              (
+                                                image: string,
+                                                index: number,
+                                              ) => (
+                                                <img
+                                                  key={index}
+                                                  src={image}
+                                                  alt={`Quote image ${index + 1}`}
+                                                  className="w-24 h-24 object-cover rounded"
+                                                />
+                                              ),
+                                            )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
+                              </TableCell>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  <div className="text-xs text-muted-foreground">
+                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+                    products
+                  </div>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="completed">
+              <Card x-chunk="dashboard-06-chunk-0">
+                <CardHeader>
+                  <CardTitle>Quotations</CardTitle>
+                  <CardDescription>
+                    All available service quoations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Quotation ID</TableHead>
+                        <TableHead>customer</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          service
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Note
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          email
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          mobile
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          date
+                        </TableHead>
+                        <TableHead>
+                          <span className="sr-only">Actions</span>
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {quotations
+                        .filter((quote) => quote.status == "completed")
+                        .map((quote) => (
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              {quote.quoteId}
+                            </TableCell>
+
+                            <TableCell className="hidden md:table-cell">
+                              {quote.customerName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {`${quote.serviceTitle_1} - ${quote.serviceTitle_2}`}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.recievedAt}
+                            </TableCell>
+
+                            <TableCell>
+                              <TableCell className="flex gap-2">
+                                {/*
+                                <Button
+                                  className="px-4 py-2 bg-green-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "approved",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "approved"
+                                    ? "Approved"
+                                    : "Approve"}
+                                </Button>
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "rejected",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "rejected"
+                                    ? "Rejected"
+                                    : "Reject"}
+                                </Button>
+                                */}
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline">View</Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Quote Details</DialogTitle>
+                                      <DialogDescription>
+                                        View note and images for quotes{" "}
+                                        {quote.quoteId}
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Note:
+                                        </label>
+                                        <p className="col-span-3">
+                                          {quote.note}
+                                        </p>
+                                      </div>
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Images:
+                                        </label>
+                                        <div className="col-span-3 flex flex-wrap gap-2">
+                                          {"None after completion"}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
+                              </TableCell>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  <div className="text-xs text-muted-foreground">
+                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+                    products
+                  </div>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="rejected">
+              <Card x-chunk="dashboard-06-chunk-0">
+                <CardHeader>
+                  <CardTitle>Quotations</CardTitle>
+                  <CardDescription>
+                    All available service quoations
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Quotation ID</TableHead>
+                        <TableHead>customer</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          service
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Note
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          email
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          mobile
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          date
+                        </TableHead>
+                        <TableHead>
+                          <span className="sr-only">Actions</span>
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {quotations
+                        .filter((quote) => quote.status == "rejected")
+                        .map((quote) => (
+                          <TableRow>
+                            <TableCell className="font-medium">
+                              {quote.quoteId}
+                            </TableCell>
+
+                            <TableCell className="hidden md:table-cell">
+                              {quote.customerName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {`${quote.serviceTitle_1} - ${quote.serviceTitle_2}`}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {quote.recievedAt}
+                            </TableCell>
+
+                            <TableCell>
+                              <TableCell className="flex gap-2">
+                                <Button
+                                  className="px-4 py-2 bg-green-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "approved",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "approved"
+                                    ? "Approved"
+                                    : "Approve"}
+                                </Button>
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    StateUpdater(
+                                      "quote",
+                                      quote.quoteId,
+                                      "approved",
+                                    );
+                                  }}
+                                >
+                                  {quote.status == "approved"
+                                    ? "Rejection Recalled"
+                                    : "Reapprove"}
+                                </Button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline">View</Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Quote Details</DialogTitle>
+                                      <DialogDescription>
+                                        View note and images for quotes{" "}
+                                        {quote.quoteId}
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Note:
+                                        </label>
+                                        <p className="col-span-3">
+                                          {quote.note}
+                                        </p>
+                                      </div>
+                                      <div className="grid grid-cols-4 items-center gap-4">
+                                        <label className="text-right font-medium">
+                                          Images:
+                                        </label>
+                                        <div className="col-span-3 flex flex-wrap gap-2">
+                                          {quote.images &&
+                                            quote.images.map(
+                                              (
+                                                image: string,
+                                                index: number,
+                                              ) => (
+                                                <img
+                                                  key={index}
+                                                  src={image}
+                                                  alt={`Quote image ${index + 1}`}
+                                                  className="w-24 h-24 object-cover rounded"
+                                                />
+                                              ),
+                                            )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </DialogContent>
+                                </Dialog>
+                              </TableCell>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </CardContent>
