@@ -30,7 +30,7 @@ export default function OurCustomers() {
       try {
         const response = await fetch("/api/feedbacks");
         const feedbacks = await response.json();
-
+        console.log("FEDBACKS  : ", feedbacks.data);
         setReviewData(feedbacks.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -65,16 +65,16 @@ export default function OurCustomers() {
                   />
                   <div className="flex-1">
                     <p className="text-gray-700 mb-2">{review.feedback}</p>
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col justify-between items-start">
                       <div>
                         <h3 className="font-semibold text-gray-800">
                           {review.name}
                         </h3>
-                        <p className="text-sm text-gray-600 hidden">
+                        <p className="text-sm text-gray-600 font-medium">
                           {review.position}
                         </p>
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-center mt-2">
                         <span className="text-yellow-400 mr-1">
                           {review.rating}
                         </span>
