@@ -54,7 +54,7 @@ export default function OurCustomers() {
       <div className="bg-[#fcfcfc]">
         {/* repeat eka remove karla map karapan wasthuwe */}
         {Reviewdata ? (
-          <Marquee pauseOnHover repeat={5}>
+          <Marquee pauseOnHover>
             {Reviewdata.map((review: RW, idx) => (
               <div className="max-w-md xl:max-w-xl bg-white rounded-lg shadow-md p-9 mx-4 ">
                 <div className="flex items-start space-x-4">

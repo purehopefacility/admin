@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import {
   ChevronLeft,
   Home,
@@ -64,6 +65,7 @@ interface Category {
 
 export default function Dashboard() {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const [customerName, setCustomerName] = useState<string>("");
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
   const [position, setPosition] = useState<string>("");
@@ -80,6 +82,7 @@ export default function Dashboard() {
   };
 
   const FeedBackAdder = async () => {
+    setLoading(true);
     const formDataToSend = new FormData();
 
     formDataToSend.append("avatar", avatarImage as File);
@@ -95,15 +98,14 @@ export default function Dashboard() {
       });
       if (response.ok) {
         console.log("feedback added successfully");
-
-        setTimeout(() => {
-          router.push("/admin/home");
-        }, 2000); // Navigate back to the service list
       } else {
         console.error("Failed to add feedback");
       }
     } catch (error) {
       console.error("Error adding feedback:", error);
+    } finally {
+      setLoading(false);
+      window.location.reload();
     }
   };
 
@@ -315,8 +317,16 @@ export default function Dashboard() {
                 >
                   Discard
                 </Button>
-                <Button size="sm" onClick={FeedBackAdder}>
-                  Add Feedback
+
+                <Button onClick={FeedBackAdder} disabled={loading} className="">
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Adding Feedback....
+                    </>
+                  ) : (
+                    "Add Feedback"
+                  )}
                 </Button>
               </div>
             </div>
