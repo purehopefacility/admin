@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
+  ChevronLeft,
   Home,
   LineChart,
   Package,
@@ -11,32 +12,22 @@ import {
   PanelLeft,
   Search,
   Settings,
-  PlusCircle,
   ShoppingCart,
-  Users2,
+  PlusCircle,
   MessageCircle,
+  Upload,
+  Users2,
 } from "lucide-react";
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,52 +36,86 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+import { Textarea } from "@/components/ui/textarea";
+
 import {
   Tooltip,
-  TooltipContent,
   TooltipProvider,
+  TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-interface InquiryType {
-  inquireId: string;
-  customerId: string;
-  customerName: string;
-  phoneNumber: string;
-  email: string;
-  recievedAt: string;
-  status: string;
-  note: string;
+import { auth } from "@/auth";
+import { signOut } from "next-auth/react";
+interface Category {
+  categoryId: string;
+  categoryTitle: string;
 }
 
-export default function InquiriesDashboard() {
-  const [inquiries, setInquiries] = useState<InquiryType[]>([]);
-  const [loading, setLoading] = useState(true);
-
+export default function Dashboard() {
   const router = useRouter();
+  const [ctgtitle, setCtgTitle] = useState("");
 
-  useEffect(() => {
-    const fetchInquiries = async () => {
-      try {
-        const response = await fetch("/admin/api/getinquiries");
-        if (!response.ok) {
-          throw new Error("Failed to fetch inquiries");
-        }
-        const data = await response.json();
-        setInquiries(data.InquireData);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching inquiries:", err);
-        setLoading(false);
+  const [order, setOrder] = useState("1");
+  const [description, setDescription] = useState("");
+
+  const Updater = async () => {
+    const formDataToSend = new FormData();
+
+    formDataToSend.append("ctgTitle", ctgtitle);
+
+    formDataToSend.append("ctgDesc", description);
+    formDataToSend.append("ctgOrder", order);
+
+    try {
+      const response = await fetch(`/admin/api/addcategory`, {
+        method: "POST",
+        body: formDataToSend,
+      });
+      if (response.ok) {
+        console.log("Service created successfully");
+
+        setTimeout(() => {
+          router.push("/admin/home");
+        }, 2000); // Navigate back to the service list
+      } else {
+        console.error("Failed to create service");
       }
-    };
-    fetchInquiries();
-  }, []);
+    } catch (error) {
+      console.error("Error creating service:", error);
+    }
+  };
+  // const Updater = () => {
+  //   console.log("Title 1:", title1);
+  //   console.log("Title 2:", title2);
+  //   console.log("Order:", order);
+  //   console.log("Description:", description);
+  //   console.log("Category:", category);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  //   // Log the service image (check if an image is uploaded)
+  //   if (serviceImage) {
+  //     console.log("Service Image:", serviceImage.name); // Logs the file name of the image
+  //   } else {
+  //     console.log("Service Image: No image uploaded");
+  //   }
 
+  //   // Log the cover image (check if an image is uploaded)
+  //   if (coverImage) {
+  //     console.log("Cover Image:", coverImage.name); // Logs the file name of the image
+  //   } else {
+  //     console.log("Cover Image: No image uploaded");
+  //   }
+  // };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -116,12 +141,11 @@ export default function InquiriesDashboard() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
-                  <span className="sr-only">Customer Quotes</span>
+                  <span className="sr-only">Customer Quotations</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Customer Quotes</TooltipContent>
+              <TooltipContent side="right">Customer Quoations</TooltipContent>
             </Tooltip>
-
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -221,6 +245,21 @@ export default function InquiriesDashboard() {
               </nav>
             </SheetContent>
           </Sheet>
+          <Breadcrumb className="hidden md:flex">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/admin/home">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="#">Add Service Category</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -251,73 +290,98 @@ export default function InquiriesDashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Inquiries List</CardTitle>
-              <CardDescription>Manage customer inquiries here</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Customer Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Email
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Phone
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Received At
-                    </TableHead>
-                    {/* <TableHead>Actions</TableHead> */}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {inquiries.map((inquiry) => (
-                    <TableRow key={inquiry.inquireId}>
-                      <TableCell className="font-medium">
-                        {inquiry.customerName}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{inquiry.status}</Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {inquiry.email}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {inquiry.phoneNumber}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {new Date(inquiry.recievedAt).toLocaleString()}
-                      </TableCell>
-                      {/* <TableCell>
-                        <Button
-                          className="px-4 py-2 bg-blue-500"
-                          onClick={() => {
-                            router.push(`/admin/inquiry-details?id=${inquiry.inquireId}`);
-                          }}
-                        >
-                          View Details
-                        </Button>
-                      </TableCell> */}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter>
-              <div className="text-xs text-muted-foreground">
-                Showing <strong>{inquiries.length}</strong> inquiries
+          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => {
+                  router.push(`/admin/home`);
+                }}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+              </Button>
+              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                Add Customer Feedback
+              </h1>
+
+              <div className="hidden items-center gap-2 md:ml-auto md:flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    router.push(`/admin/home`);
+                  }}
+                >
+                  Discard
+                </Button>
+                <Button size="sm" onClick={Updater}>
+                  Add Category
+                </Button>
               </div>
-            </CardFooter>
-          </Card>
+            </div>
+            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+              <div className="grid auto-rows-max items-start gap-4 col-span-10 lg:gap-8">
+                <Card x-chunk="dashboard-07-chunk-0">
+                  <CardHeader>
+                    <CardTitle>Add</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-6">
+                      <div className="grid gap-3">
+                        <Label htmlFor="name">Category Title</Label>
+                        <Input
+                          id="t1"
+                          type="text"
+                          className="w-full"
+                          placeholder="title"
+                          value={ctgtitle}
+                          onChange={(e) => setCtgTitle(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                          id="description"
+                          value={description}
+                          className="min-h-32"
+                          onChange={(e) => setDescription(e.target.value)}
+                        />
+                      </div>
+                      {/*
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">Category Order</Label>
+                        <Input
+                          id="order"
+                          type="text"
+                          className="w-full"
+                          placeholder="Order Number"
+                          value={order}
+                          onChange={(e) => setOrder(e.target.value)}
+                        />
+                      </div>
+                      */}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-2 md:hidden">
+              <Button variant="outline" size="sm">
+                Discard
+              </Button>
+              <Button size="sm">Add Category</Button>
+            </div>
+          </div>
         </main>
       </div>
     </div>

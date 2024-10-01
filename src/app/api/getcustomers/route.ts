@@ -17,7 +17,10 @@ export async function GET() {
       })
       .from(CustomerTable);
 
-    return NextResponse.json({ CustomerData: cdata }, { status: 200 });
+    return NextResponse.json(
+      { CustomerData: cdata ? cdata : [] },
+      { status: 200 },
+    );
   } catch (e) {
     console.log("error in gettinh customers" + e);
     return NextResponse.json({ message: e }, { status: 500 });

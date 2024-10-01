@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { signOut } from "next-auth/react"
+import { signOut } from "next-auth/react";
 
 import Link from "next/link";
 import {
@@ -16,7 +16,7 @@ import {
   Settings,
   ShoppingCart,
   Users2,
-  MessageCircle
+  MessageCircle,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +60,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {auth} from "@/auth";
+import { auth } from "@/auth";
 
 interface categorytype {
   categoryId: string;
@@ -196,6 +196,18 @@ export default function Dashboard() {
               </TooltipTrigger>
               <TooltipContent side="right">Inquiries</TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Feedbacks</TooltipContent>
+            </Tooltip>
           </TooltipProvider>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -235,32 +247,32 @@ export default function Dashboard() {
                   <span className="sr-only">Acme Inc</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/home"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
-                  Dashboard
+                  <span className="sr-only">Admin Home</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/quotes"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
-                  Customers
+                  <span className="sr-only">Customer Quotations</span>
+                </Link>
+                <Link
+                  href="/admin/inquiries"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">Inquiries</span>
+                </Link>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
                 </Link>
                 <Link
                   href="#"
@@ -311,7 +323,9 @@ export default function Dashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
