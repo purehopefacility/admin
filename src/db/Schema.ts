@@ -23,6 +23,7 @@ export const ServiceCategoryTable = pgTable("services_category", {
 });
 export const FeedbackTable = pgTable("customer_feedbacks", {
   avatar: varchar("avatar"),
+  customerName: varchar("customer_name"),
   registeredAt: timestamp("registered_at"),
   rating: integer("rating"),
   feedback: varchar("feedback"),
