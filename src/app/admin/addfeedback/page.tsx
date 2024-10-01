@@ -65,9 +65,19 @@ interface Category {
 export default function Dashboard() {
   const router = useRouter();
   const [ctgtitle, setCtgTitle] = useState("");
+  const [avatarImage, setAvatarImage] = useState<File | null>(null);
 
   const [order, setOrder] = useState("1");
   const [description, setDescription] = useState("");
+
+  const handleAvatarImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAvatarImage(file); // Set the service image state
+    }
+  };
 
   const Updater = async () => {
     const formDataToSend = new FormData();
@@ -329,8 +339,8 @@ export default function Dashboard() {
                 </Button>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-              <div className="grid auto-rows-max items-start gap-4 col-span-10 lg:gap-8">
+            <div className="flex gap-4 w-full">
+              <div className="flex w-full">
                 <Card x-chunk="dashboard-07-chunk-0">
                   <CardHeader>
                     <CardTitle>Add</CardTitle>
@@ -370,6 +380,44 @@ export default function Dashboard() {
                         />
                       </div>
                       */}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                {/* Service Image Uploader */}
+                <Card className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle>Avatar Image</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-2">
+                      <div className="grid grid-cols-3 gap-2">
+                        {avatarImage && (
+                          <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                            <Image
+                              src={URL.createObjectURL(avatarImage)} // Preview uploaded service image
+                              alt="Service Image"
+                              width={100}
+                              height={100}
+                              className="object-cover"
+                            />
+                          </div>
+                        )}
+                        {!avatarImage && (
+                          <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                            <Upload className="h-4 w-4 text-muted-foreground" />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleAvatarImageUpload} // Handle service image upload
+                            />
+                            <span className="sr-only">Upload Avatar Image</span>
+                          </label>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
