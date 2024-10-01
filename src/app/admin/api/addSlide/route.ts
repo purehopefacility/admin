@@ -1,6 +1,6 @@
 import { db } from "@/db/DB";
 import { desc, eq } from "drizzle-orm";
-import { FeedbackTable } from "@/db/Schema";
+import { FeedbackTable, HomeSliderImageTable } from "@/db/Schema";
 import { NextResponse, NextRequest } from "next/server";
 import { AddImage } from "@/firebase";
 
@@ -31,27 +31,29 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const QuoteData = await request.formData();
+  const SliderData = await request.formData();
 
-  const customerName = QuoteData.get("customerName") as string;
-  const position = QuoteData.get("position") as string;
-  const feedback = QuoteData.get("feedback") as string;
-  const rating = parseInt(QuoteData.get("rating") as string, 10);
-  const avatar = QuoteData.get("avatar") as File;
+  const order = parseInt(SliderData.get("order") as string, 10);
+  const desc1 = SliderData.get("desc1") as string;
+  const desc2 = SliderData.get("desc2") as string;
+  const buttonText = SliderData.get("buttonText") as string;
+  const buttonLink = parseInt(SliderData.get("buttonLink") as string, 10);
+  const sliderImg = SliderData.get("image") as File;
 
-  const avatarURL = await AddImage(avatar, "customer_avatars");
+  const sliderURL = await AddImage(sliderImg, "slider_images");
 
   try {
-    await db.insert(FeedbackTable).values({
-      avatar: avatarURL,
-      customerName: customerName,
-      rating: rating,
-      feedback: feedback,
-      position: position,
+    await db.insert(HomeSliderImageTable).values({
+      imgUrl: sliderURL as string,
+      Order: order,
+      SlideDesc1: desc1,
+      SlideDesc2: desc2,
+      ButtonTxt: buttonText,
+      ButtonLink: buttonLink,
     });
 
     return NextResponse.json(
-      { message: "Succesfully Added Feedbacks" },
+      { message: "Succesfully Added Slider" },
       { status: 200 },
     );
   } catch (Err) {
