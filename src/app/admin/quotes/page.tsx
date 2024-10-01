@@ -381,6 +381,17 @@ export default function Dashboard() {
                                       quote.quoteId,
                                       "approved",
                                     );
+                                    setQuotations((prevState) => {
+                                      return prevState.map((item) => {
+                                        if (item.quoteId === quote.quoteId) {
+                                          return {
+                                            ...item,
+                                            status: "approved",
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
                                   }}
                                 >
                                   {quote.status == "approved"
@@ -395,6 +406,17 @@ export default function Dashboard() {
                                       quote.quoteId,
                                       "rejected",
                                     );
+                                    setQuotations((prevState) => {
+                                      return prevState.map((item) => {
+                                        if (item.quoteId === quote.quoteId) {
+                                          return {
+                                            ...item,
+                                            status: "rejected",
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
                                   }}
                                 >
                                   {quote.status == "rejected"
@@ -533,6 +555,17 @@ export default function Dashboard() {
                                       quote.quoteId,
                                       "completed",
                                     );
+                                    setQuotations((prevState) => {
+                                      return prevState.map((item) => {
+                                        if (item.quoteId === quote.quoteId) {
+                                          return {
+                                            ...item,
+                                            status: "completed",
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
                                   }}
                                 >
                                   {quote.status == "completed"
@@ -547,6 +580,17 @@ export default function Dashboard() {
                                       quote.quoteId,
                                       "rejected",
                                     );
+                                    setQuotations((prevState) => {
+                                      return prevState.map((item) => {
+                                        if (item.quoteId === quote.quoteId) {
+                                          return {
+                                            ...item,
+                                            status: "rejected",
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
                                   }}
                                 >
                                   {quote.status == "rejected"

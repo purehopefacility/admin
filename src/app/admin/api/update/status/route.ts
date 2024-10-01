@@ -28,10 +28,6 @@ export async function PUT(request: NextRequest) {
         .set({ status: state })
         .where(eq(GeneralInquiryTable.inquiryId, ID));
     } else if (rectype == "quote") {
-      await db
-        .update(ServiceQuoteTable)
-        .set({ status: state })
-        .where(eq(ServiceQuoteTable.quoteId, ID));
       if (state == "completed" || state == "rejected") {
         //HERE --> Deleting all the images if above states are set
         const imgSet: any = await db
@@ -42,6 +38,15 @@ export async function PUT(request: NextRequest) {
           .where(eq(ServiceQuoteTable.quoteId, ID));
 
         await DelImageSet(imgSet[0].images);
+        await db
+          .update(ServiceQuoteTable)
+          .set({ status: state, images: null })
+          .where(eq(ServiceQuoteTable.quoteId, ID));
+      } else {
+        await db
+          .update(ServiceQuoteTable)
+          .set({ status: state })
+          .where(eq(ServiceQuoteTable.quoteId, ID));
       }
     } else {
       await db
