@@ -14,13 +14,13 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDMN8TyE6WGuG-2AZy7kmCYC5Nrxx59qzs",
-  authDomain: "purehope-web.firebaseapp.com",
-  projectId: "purehope-web",
-  storageBucket: "purehope-web.appspot.com",
-  messagingSenderId: "458513442949",
-  appId: "1:458513442949:web:17f004684478b705f3a1ec",
-  measurementId: "G-D1NM1J58LQ",
+  apiKey: process.env.FBAPIKEY,
+  authDomain: process.env.FBAUTHDOMAIN,
+  projectId: process.env.FBPROJECTID,
+  storageBucket: process.env.FBSTORAGEBUCKET,
+  messagingSenderId: process.env.FBMESSAGINGSENDERID,
+  appId: process.env.FBAPPID,
+  measurementId: process.env.FBMEASUREMENTID,
 };
 
 // Initialize Firebase
