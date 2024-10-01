@@ -21,6 +21,16 @@ export const ServiceCategoryTable = pgTable("services_category", {
   categoryOrder: integer("category_order").notNull(),
   categoryDesc: varchar("category_desc").notNull(),
 });
+
+export const HomeSliderImageTable = pgTable("slide_images", {
+  SlideId: serial("image_id").primaryKey(),
+  imgUrl: varchar("image_url").notNull(),
+  Order: integer("image_order").notNull(),
+  SlideDesc1: varchar("image_desc_1"),
+  SlideDesc2: varchar("image_desc_2"),
+  ButtonTxt: varchar("button_txt"),
+  ButtonLink: varchar("button_link"),
+});
 export const FeedbackTable = pgTable("customer_feedbacks", {
   feedbackId: serial("feedback_id").primaryKey(),
   avatar: varchar("avatar"),
