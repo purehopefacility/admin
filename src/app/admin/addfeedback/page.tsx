@@ -253,14 +253,7 @@ export default function Dashboard() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
+          {/*
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -288,6 +281,7 @@ export default function Dashboard() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
@@ -304,7 +298,7 @@ export default function Dashboard() {
                 <span className="sr-only">Back</span>
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add Customer Feedback
+                Add Customer Feedbacks
               </h1>
 
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
@@ -332,9 +326,9 @@ export default function Dashboard() {
             </div>
             <div className="flex gap-4 w-full">
               <div className="flex w-full">
-                <Card x-chunk="dashboard-07-chunk-0">
+                <Card x-chunk="dashboard-07-chunk-0" className="w-full">
                   <CardHeader>
-                    <CardTitle>Add</CardTitle>
+                    <CardTitle></CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6">
@@ -394,7 +388,7 @@ export default function Dashboard() {
                 {/* Service Image Uploader */}
                 <Card className="overflow-hidden">
                   <CardHeader>
-                    <CardTitle>Avatar Image</CardTitle>
+                    <CardTitle>Customer Image</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-2">
@@ -429,10 +423,26 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  router.push(`/admin/home`);
+                }}
+              >
                 Discard
               </Button>
-              <Button size="sm">Add Category</Button>
+
+              <Button onClick={FeedBackAdder} disabled={loading} className="">
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Adding Feedback....
+                  </>
+                ) : (
+                  "Add Feedback"
+                )}
+              </Button>
             </div>
           </div>
         </main>
