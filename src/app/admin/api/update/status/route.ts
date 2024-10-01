@@ -34,15 +34,14 @@ export async function PUT(request: NextRequest) {
         .where(eq(ServiceQuoteTable.quoteId, ID));
       if (state == "completed" || state == "rejected") {
         //HERE --> Deleting all the images if above states are set
-        const imgSet = await db
+        const imgSet: any = await db
           .select({
             images: ServiceQuoteTable.images,
           })
           .from(ServiceQuoteTable)
           .where(eq(ServiceQuoteTable.quoteId, ID));
-        const IMGs = JSON.parse(imgSet[0].images as string);
-        console.log("JSON PARSED Qiuote IMAGES : ", IMGs);
-        await DelImageSet(IMGs);
+
+        await DelImageSet(imgSet[0].images);
       }
     } else {
       await db

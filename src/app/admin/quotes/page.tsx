@@ -818,6 +818,7 @@ export default function Dashboard() {
 
                             <TableCell>
                               <TableCell className="flex gap-2">
+                                {/*
                                 <Button
                                   className="px-4 py-2 bg-green-500"
                                   onClick={() => {
@@ -846,6 +847,7 @@ export default function Dashboard() {
                                     ? "Rejection Recalled"
                                     : "Reapprove"}
                                 </Button>
+                                */}
                                 <Dialog>
                                   <DialogTrigger asChild>
                                     <Button variant="outline">View</Button>
