@@ -22,9 +22,10 @@ export const ServiceCategoryTable = pgTable("services_category", {
   categoryDesc: varchar("category_desc").notNull(),
 });
 export const FeedbackTable = pgTable("customer_feedbacks", {
+  feedbackId: serial("feedback_id").primaryKey(),
   avatar: varchar("avatar"),
   customerName: varchar("customer_name"),
-  registeredAt: timestamp("registered_at"),
+  registeredAt: timestamp("registered_at").defaultNow(),
   rating: integer("rating"),
   feedback: varchar("feedback"),
   position: varchar("position"),
