@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest) {
         .where(eq(GeneralInquiryTable.inquiryId, ID));
     } else if (rectype == "quote") {
       if (state == "completed" || state == "rejected") {
-        //HERE --> Deleting all the images if above states are set
+        //HERE --> Deleting all the imajes if above states are set
         const imgSet: any = await db
           .select({
             images: ServiceQuoteTable.images,

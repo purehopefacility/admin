@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/DB";
 import { eq } from "drizzle-orm";
 
-import { ServiceCategoryTable, ServiceTable } from "@/db/Schema";
+import {
+  ServiceCategoryTable,
+  ServiceTable,
+  ServiceQuoteTable,
+  GeneralInquiryTable,
+} from "@/db/Schema";
 export async function DELETE(request: NextRequest) {
   //Mention the specific type to record
   //EXP --> service(svc)/serviceCategory(ctg) Id , type of the record svc || ctg
@@ -21,10 +26,18 @@ export async function DELETE(request: NextRequest) {
       await db
         .delete(ServiceCategoryTable)
         .where(eq(ServiceCategoryTable.categoryId, parseInt(ID, 10)));
-    } else {
+    } else if (rectype == "svc") {
       await db
         .delete(ServiceTable)
         .where(eq(ServiceTable.serviceId, parseInt(ID, 10)));
+    } else if (rectype == "quote") {
+      await db
+        .delete(ServiceQuoteTable)
+        .where(eq(ServiceQuoteTable.quoteId, ID as string));
+    } else if (rectype == "inquiry") {
+      await db
+        .delete(GeneralInquiryTable)
+        .where(eq(GeneralInquiryTable.inquiryId, ID as string));
     }
     return NextResponse.json(
       { message: "Successfully Deleted the Record in " + String(rectype) },

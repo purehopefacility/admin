@@ -113,10 +113,21 @@ export default function Dashboard() {
           throw new Error("failed to update srvice");
         }
       }
-
-      setLoading(!loading);
     } catch (err) {
-      setLoading(!loading);
+      console.log("Error occured un updating state if quote", err);
+    }
+  };
+
+  const Deleter = async (id: string) => {
+    try {
+      const response = await fetch(`/admin/api/delete?id=${id}&type=quote`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete quotation");
+      }
+    } catch (err) {
+      console.log("Error occured while deleting quote", err);
     }
   };
   return (
@@ -490,7 +501,9 @@ export default function Dashboard() {
                 <CardHeader>
                   <CardTitle>Quotations</CardTitle>
                   <CardDescription>
-                    All available service quoations
+                    {
+                      "All available approved service quoations (Note! Once set to completed, Images will be Removed) "
+                    }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -664,7 +677,9 @@ export default function Dashboard() {
                 <CardHeader>
                   <CardTitle>Quotations</CardTitle>
                   <CardDescription>
-                    All available service quoations
+                    {
+                      "All available completed service quoations (Note: Images have been removed once completed)"
+                    }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -723,6 +738,19 @@ export default function Dashboard() {
 
                             <TableCell>
                               <TableCell className="flex gap-2">
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    Deleter(quote.quoteId);
+                                    setQuotations((prevState) => {
+                                      return prevState.filter(
+                                        (item) => item.quoteId != quote.quoteId,
+                                      );
+                                    });
+                                  }}
+                                >
+                                  {"Delete"}
+                                </Button>
                                 {/*
                                 <Button
                                   className="px-4 py-2 bg-green-500"
@@ -805,7 +833,9 @@ export default function Dashboard() {
                 <CardHeader>
                   <CardTitle>Quotations</CardTitle>
                   <CardDescription>
-                    All available service quoations
+                    {
+                      " All available Rejected service quoations (Note: Images have been removed once Rejected)"
+                    }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -864,21 +894,20 @@ export default function Dashboard() {
 
                             <TableCell>
                               <TableCell className="flex gap-2">
-                                {/*
                                 <Button
-                                  className="px-4 py-2 bg-green-500"
+                                  className="px-4 py-2 bg-red-500"
                                   onClick={() => {
-                                    StateUpdater(
-                                      "quote",
-                                      quote.quoteId,
-                                      "approved",
-                                    );
+                                    Deleter(quote.quoteId);
+                                    setQuotations((prevState) => {
+                                      return prevState.filter(
+                                        (item) => item.quoteId != quote.quoteId,
+                                      );
+                                    });
                                   }}
                                 >
-                                  {quote.status == "approved"
-                                    ? "Approved"
-                                    : "Approve"}
+                                  {"Delete"}
                                 </Button>
+                                {/*
                                 <Button
                                   className="px-4 py-2 bg-red-500"
                                   onClick={() => {

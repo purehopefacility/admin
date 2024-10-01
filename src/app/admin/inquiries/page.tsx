@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   Home,
   LineChart,
@@ -90,6 +92,34 @@ export default function InquiriesDashboard() {
   if (loading) {
     return <div>Loading...</div>;
   }
+  const StateUpdater = async (id: string, state: string) => {
+    try {
+      const inq_response = await fetch(
+        `/admin/api/update/status?id=${id}&type=inquiry&state=${state}`,
+        {
+          method: "PUT",
+        },
+      );
+      if (!inq_response.ok) {
+        throw new Error("failed to update state of invoice");
+      }
+    } catch (err) {
+      console.error("error occured while updating state of inquiry", err);
+    }
+  };
+
+  const Deleter = async (id: string) => {
+    try {
+      const response = await fetch(`/admin/api/delete?id=${id}&type=inquiry`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete quotation");
+      }
+    } catch (err) {
+      console.error("Error deleting inquiry:", err);
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -221,6 +251,7 @@ export default function InquiriesDashboard() {
               </nav>
             </SheetContent>
           </Sheet>
+          {/*
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -254,70 +285,193 @@ export default function InquiriesDashboard() {
               <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Inquiries List</CardTitle>
-              <CardDescription>Manage customer inquiries here</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Customer Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Email
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Phone
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Received At
-                    </TableHead>
-                    {/* <TableHead>Actions</TableHead> */}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {inquiries.map((inquiry) => (
-                    <TableRow key={inquiry.inquireId}>
-                      <TableCell className="font-medium">
-                        {inquiry.customerName}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{inquiry.status}</Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {inquiry.email}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {inquiry.phoneNumber}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {new Date(inquiry.recievedAt).toLocaleString()}
-                      </TableCell>
-                      {/* <TableCell>
-                        <Button
-                          className="px-4 py-2 bg-blue-500"
-                          onClick={() => {
-                            router.push(`/admin/inquiry-details?id=${inquiry.inquireId}`);
-                          }}
-                        >
-                          View Details
-                        </Button>
-                      </TableCell> */}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter>
-              <div className="text-xs text-muted-foreground">
-                Showing <strong>{inquiries.length}</strong> inquiries
-              </div>
-            </CardFooter>
-          </Card>
+          <Tabs defaultValue="unread">
+            <div className="flex items-center">
+              <TabsList>
+                {/*THere are 4 states here okay */}
+                <TabsTrigger value="unread">Unread</TabsTrigger>
+                <TabsTrigger value="read">Read</TabsTrigger>
+              </TabsList>
+            </div>
+            <TabsContent value="unread">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Inquiries List</CardTitle>
+                  <CardDescription>
+                    Manage customer inquiries here
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Customer Name</TableHead>
+
+                        <TableHead className="hidden md:table-cell">
+                          Email
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Phone
+                        </TableHead>
+                        <TableHead>Note</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Received At
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {inquiries
+                        .filter((inq) => inq.status == "pending")
+                        .map((inquiry) => (
+                          <TableRow key={inquiry.inquireId}>
+                            <TableCell className="font-medium">
+                              {inquiry.customerName}
+                            </TableCell>
+
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {new Date(inquiry.recievedAt).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  className="px-4 py-2 bg-blue-500"
+                                  onClick={() => {
+                                    StateUpdater(inquiry.inquireId, "read");
+                                    setInquiries((prevState) => {
+                                      return prevState.map((item) => {
+                                        if (
+                                          item.inquireId === inquiry.inquireId
+                                        ) {
+                                          return {
+                                            ...item,
+                                            status: "read",
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
+                                  }}
+                                >
+                                  {inquiry.status == "read"
+                                    ? "Marked Read"
+                                    : "mark as Read"}
+                                </Button>
+                                <Button
+                                  className="px-4 py-2 bg-red-500"
+                                  onClick={() => {
+                                    Deleter(inquiry.inquireId);
+                                    setInquiries((prevState) => {
+                                      return prevState.filter(
+                                        (item) =>
+                                          item.inquireId != inquiry.inquireId,
+                                      );
+                                    });
+                                  }}
+                                >
+                                  {"Delete"}
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  <div className="text-xs text-muted-foreground">
+                    Showing <strong>{inquiries.length}</strong> inquiries
+                  </div>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            <TabsContent value="read">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Inquiries List</CardTitle>
+                  <CardDescription>
+                    Manage customer inquiries here
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Customer Name</TableHead>
+
+                        <TableHead className="hidden md:table-cell">
+                          Email
+                        </TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Phone
+                        </TableHead>
+                        <TableHead>Note</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Received At
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {inquiries
+                        .filter((inq) => inq.status == "read")
+                        .map((inquiry) => (
+                          <TableRow key={inquiry.inquireId}>
+                            <TableCell className="font-medium">
+                              {inquiry.customerName}
+                            </TableCell>
+
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.email}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.phoneNumber}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {inquiry.note}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {new Date(inquiry.recievedAt).toLocaleString()}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                className="px-4 py-2 bg-red-500"
+                                onClick={() => {
+                                  Deleter(inquiry.inquireId);
+                                  setInquiries((prevState) => {
+                                    return prevState.filter(
+                                      (item) =>
+                                        item.inquireId != inquiry.inquireId,
+                                    );
+                                  });
+                                }}
+                              >
+                                {"Delete"}
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+                <CardFooter>
+                  <div className="text-xs text-muted-foreground">
+                    Showing <strong>{inquiries.length}</strong> inquiries
+                  </div>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </div>
