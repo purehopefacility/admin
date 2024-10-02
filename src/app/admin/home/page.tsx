@@ -75,14 +75,14 @@ import {
 import { auth } from "@/auth";
 
 interface categorytype {
-  categoryId: string;
+  categoryId: number;
   categoryTitle: string;
   categoryOrder: string;
   categoryDesc: string;
 }
 
 interface servicetype {
-  serviceId: string;
+  serviceId: number;
   serviceTitle1: string;
   categoryId: string;
   serviceTitle2: string;
@@ -168,7 +168,7 @@ export default function Dashboard() {
     }
   };
 
-  const StateUpdater = async (type: string, id: string, state: string) => {
+  const StateUpdater = async (type: string, id: number, state: string) => {
     if (type === "svc") {
       // setServices((prevServices: servicetype[]) =>
       //   prevServices.map((service: servicetype) =>
@@ -224,11 +224,6 @@ export default function Dashboard() {
         setDialogOpen(true);
       }
     } else if (type === "ctg") {
-      const prevCategories = [...categories];
-      setCategories((prevCategories) =>
-        prevCategories.filter((category) => category.categoryId !== id),
-      );
-
       try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
           method: "DELETE",
@@ -239,7 +234,6 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.error("Error deleting category:", err);
-        setCategories(prevCategories);
 
         setError("Error deleting category. Please try again.");
         setDialogOpen(true);

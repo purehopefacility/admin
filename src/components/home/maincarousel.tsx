@@ -7,6 +7,7 @@ import AvatarCircles from "../magicui/avatar-circles";
 interface CarouselItem {
   slideId: number;
   image: string;
+  Order: number;
   title1: string;
   title2: string;
   description: string;
@@ -74,7 +75,12 @@ const Carousel: React.FC = () => {
           throw new Error("Failed to fetch slides");
         }
         const data = await response.json();
-        setSlides(data.slideData);
+        const sortedSlides = data.slideData.sort(
+          (a: CarouselItem, b: CarouselItem) => a.Order - b.Order,
+        );
+
+        setSlides(sortedSlides);
+
         //setLoading(false);
       } catch (err) {
         console.error("Error fetching inquiries:", err);
@@ -84,12 +90,13 @@ const Carousel: React.FC = () => {
     fetchSlides();
   }, []);
   useEffect(() => {
+    if (Slides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % Slides.length);
     }, 10000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [Slides]);
 
   const goToNextSlide = (): void => {
     setCurrentSlide((prevSlide) => (prevSlide + 1) % Slides.length);
