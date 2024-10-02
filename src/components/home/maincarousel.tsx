@@ -61,10 +61,18 @@ const avatarUrls: string[] = [
 //     buttonLink: "/requestquote",
 //   },
 // ];
+//
+//
+interface AvatarData {
+  count: number;
+  data: any[];
+}
 
 const Carousel: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [Slides, setSlides] = useState<CarouselItem[]>([]);
+  const [Avatars, setAvatars] = useState<string[]>([]);
+  const [AvtCount, setAvtCount] = useState<number>(0);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
   useEffect(() => {
@@ -87,7 +95,27 @@ const Carousel: React.FC = () => {
         //setLoading(false);
       }
     };
+
+    //avatar fetcher
+    const fetchAvatars = async () => {
+      try {
+        const response = await fetch("/api/getavatars");
+        if (!response.ok) {
+          throw new Error("Failed to fetch avatars");
+        }
+        const data = await response.json();
+
+        setAvtCount(data.AVData.count);
+        setAvatars(data.AVData.data.map((avt: any) => avt.avatar));
+
+        //setLoading(false);
+      } catch (err) {
+        console.error("Error fetching avatars:", err);
+        //setLoading(false);
+      }
+    };
     fetchSlides();
+    fetchAvatars();
   }, []);
   useEffect(() => {
     if (Slides.length === 0) return;
@@ -284,7 +312,11 @@ const Carousel: React.FC = () => {
         {/* Avatar Circles */}
         <Link href={"#ourcustomers"}>
           <div className="absolute top-8 flex items-center space-x-2 pl-0 sm:absolute bottom-6 left-[30px] ">
-            <AvatarCircles numPeople={4} avatarUrls={avatarUrls} className="" />
+            <AvatarCircles
+              numPeople={AvtCount}
+              avatarUrls={Avatars}
+              className=""
+            />
 
             <p className="text-white text-[9px] sm:text-xs sm:left-15 ">
               Our Vip Clients
@@ -322,7 +354,7 @@ const Carousel: React.FC = () => {
         {/* Avatar Circles */}
         <Link href={"#ourcustomers"}>
           <div className="absolute flex items-center space-x-2 pl-0 sm:absolute bottom-6 left-[60px]">
-            <AvatarCircles numPeople={4} avatarUrls={avatarUrls} />
+            <AvatarCircles numPeople={AvtCount} avatarUrls={Avatars} />
 
             <p className="text-white text-xs sm:left-15">Our Vip Clients</p>
           </div>
