@@ -20,46 +20,46 @@ const avatarUrls: string[] = [
   "https://avatars.githubusercontent.com/u/106103625",
 ];
 
-const carouselData: CarouselItem[] = [
-  {
-    slideId: 1,
-    image: "/images/home/1.jpg",
-    title1: "WELCOME TO",
-    title2: "Pure Hope Facility Management",
-    description:
-      "We provide exceptional cleaning and floor care solutions which exceed our clients expectations.",
-    buttonText: "Contact Us",
-    buttonLink: "/contactus",
-  },
-  {
-    slideId: 2,
-    image: "/images/home/2.jpg",
-    title1: "",
-    title2: "Reliable Facility Management",
-    description:
-      "Our team of experts ensures your facility stays spotless and hygienic.",
-    buttonText: "Contact Us",
-    buttonLink: "/contactus",
-  },
-  {
-    slideId: 3,
-    image: "/images/home/3.jpg",
-    title1: "",
-    title2: "Certified and",
-    description: "experienced professionals",
-    buttonText: "Our Services",
-    buttonLink: "/ourservices",
-  },
-  {
-    slideId: 4,
-    image: "/images/home/4.jpg",
-    title1: "",
-    title2: "Transform Your Space With",
-    description: "Our top-tier facility services",
-    buttonText: "Request a Quote",
-    buttonLink: "/requestquote",
-  },
-];
+// const carouselData: CarouselItem[] = [
+//   {
+//     slideId: 1,
+//     image: "/images/home/1.jpg",
+//     title1: "WELCOME TO",
+//     title2: "Pure Hope Facility Management",
+//     description:
+//       "We provide exceptional cleaning and floor care solutions which exceed our clients expectations.",
+//     buttonText: "Contact Us",
+//     buttonLink: "/contactus",
+//   },
+//   {
+//     slideId: 2,
+//     image: "/images/home/2.jpg",
+//     title1: "",
+//     title2: "Reliable Facility Management",
+//     description:
+//       "Our team of experts ensures your facility stays spotless and hygienic.",
+//     buttonText: "Contact Us",
+//     buttonLink: "/contactus",
+//   },
+//   {
+//     slideId: 3,
+//     image: "/images/home/3.jpg",
+//     title1: "",
+//     title2: "Certified and",
+//     description: "experienced professionals",
+//     buttonText: "Our Services",
+//     buttonLink: "/ourservices",
+//   },
+//   {
+//     slideId: 4,
+//     image: "/images/home/4.jpg",
+//     title1: "",
+//     title2: "Transform Your Space With",
+//     description: "Our top-tier facility services",
+//     buttonText: "Request a Quote",
+//     buttonLink: "/requestquote",
+//   },
+// ];
 
 const Carousel: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState<number>(0);
@@ -85,20 +85,19 @@ const Carousel: React.FC = () => {
   }, []);
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselData.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % Slides.length);
     }, 10000);
 
     return () => clearInterval(timer);
   }, []);
 
   const goToNextSlide = (): void => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselData.length);
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % Slides.length);
   };
 
   const goToPrevSlide = (): void => {
     setCurrentSlide(
-      (prevSlide) =>
-        (prevSlide - 1 + carouselData.length) % carouselData.length,
+      (prevSlide) => (prevSlide - 1 + Slides.length) % Slides.length,
     );
   };
 
@@ -127,113 +126,59 @@ const Carousel: React.FC = () => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {Slides.length > 0
-          ? Slides.map((item, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 flex items-center transition-opacity duration-1000 ${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <Image
-                  src={item.image}
-                  alt={`${item.title1} ${item.title2}`}
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-35 flex items-center ">
-                  <div className=" mx-[12%] ">
-                    <div className="mt-10 sm:mt-0">
-                      <h1 className="mb-0 sm:mb-4">
-                        <span
-                          className="block text-1xl md:text-4xl text-white font-light"
-                          style={{
-                            textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
-                          }}
-                        >
-                          {item.title1}
-                        </span>
-                        <span
-                          className="block text-2xl md:text-5xl text-white font-semibold sm:font-bold  mt-2"
-                          style={{
-                            textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
-                          }}
-                        >
-                          {item.title2}
-                        </span>
-                      </h1>
-                      <p
-                        className="text-[14px] md:text-3xl text-white mb-4 sm:mb-8"
-                        style={{ textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)" }}
-                      >
-                        {item.description}
-                      </p>
-                      {index === currentSlide && (
-                        <Link href={item.buttonLink} passHref>
-                          <span className="bg-[#219EBC] text-white font-bold py-1 px-3 sm:py-2 sm:px-6 text-xs rounded-md sm:text-base sm:rounded-lg transition duration-300 cursor-pointer inline-block relative z-10 hover:bg-[#003047]">
-                            {item.buttonText}
-                          </span>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
+        {Slides.map((item, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 flex items-center transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <Image
+              src={item.image}
+              alt={`${item.title1} ${item.title2}`}
+              layout="fill"
+              objectFit="cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-35 flex items-center ">
+              <div className=" mx-[12%] ">
+                <div className="mt-10 sm:mt-0">
+                  <h1 className="mb-0 sm:mb-4">
+                    <span
+                      className="block text-1xl md:text-4xl text-white font-light"
+                      style={{
+                        textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
+                      }}
+                    >
+                      {item.title1}
+                    </span>
+                    <span
+                      className="block text-2xl md:text-5xl text-white font-semibold sm:font-bold  mt-2"
+                      style={{
+                        textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
+                      }}
+                    >
+                      {item.title2}
+                    </span>
+                  </h1>
+                  <p
+                    className="text-[14px] md:text-3xl text-white mb-4 sm:mb-8"
+                    style={{ textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)" }}
+                  >
+                    {item.description}
+                  </p>
+                  {index === currentSlide && (
+                    <Link href={item.buttonLink} passHref>
+                      <span className="bg-[#219EBC] text-white font-bold py-1 px-3 sm:py-2 sm:px-6 text-xs rounded-md sm:text-base sm:rounded-lg transition duration-300 cursor-pointer inline-block relative z-10 hover:bg-[#003047]">
+                        {item.buttonText}
+                      </span>
+                    </Link>
+                  )}
                 </div>
               </div>
-            ))
-          : carouselData.map((item, index) => (
-              <div
-                key={index}
-                className={`absolute inset-0 flex items-center transition-opacity duration-1000 ${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <Image
-                  src={item.image}
-                  alt={`${item.title1} ${item.title2}`}
-                  layout="fill"
-                  objectFit="cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-35 flex items-center ">
-                  <div className=" mx-[12%] ">
-                    <div className="mt-10 sm:mt-0">
-                      <h1 className="mb-0 sm:mb-4">
-                        <span
-                          className="block text-1xl md:text-4xl text-white font-light"
-                          style={{
-                            textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
-                          }}
-                        >
-                          {item.title1}
-                        </span>
-                        <span
-                          className="block text-2xl md:text-5xl text-white font-semibold sm:font-bold  mt-2"
-                          style={{
-                            textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)",
-                          }}
-                        >
-                          {item.title2}
-                        </span>
-                      </h1>
-                      <p
-                        className="text-[14px] md:text-3xl text-white mb-4 sm:mb-8"
-                        style={{ textShadow: "6px 4px 6px rgba(0, 0, 0, 0.5)" }}
-                      >
-                        {item.description}
-                      </p>
-                      {index === currentSlide && (
-                        <Link href={item.buttonLink} passHref>
-                          <span className="bg-[#219EBC] text-white font-bold py-1 px-3 sm:py-2 sm:px-6 text-xs rounded-md sm:text-base sm:rounded-lg transition duration-300 cursor-pointer inline-block relative z-10 hover:bg-[#003047]">
-                            {item.buttonText}
-                          </span>
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            </div>
+          </div>
+        ))}
 
         {/* Next and Previous buttons - hidden on mobile */}
         <div className="hidden sm:block">
@@ -284,14 +229,14 @@ const Carousel: React.FC = () => {
       <div className="absolute -bottom-1 left-0 right-0">
         <div className="flex justify-center">
           <div className="relative w-32 h-4">
-            {carouselData.map((_, index) => (
+            {Slides.map((_, index) => (
               <div
                 key={index}
                 className={`absolute top-0 w-8 h-8 rounded-full transition-all duration-500 ${
                   index === currentSlide ? "opacity-100" : "opacity-0"
                 }`}
                 style={{
-                  left: `${(index / (carouselData.length - 1)) * 100}%`,
+                  left: `${(index / (Slides.length - 1)) * 100}%`,
                   transform: `translateX(-50%)`,
                 }}
               >

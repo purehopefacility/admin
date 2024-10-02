@@ -207,13 +207,8 @@ export default function Dashboard() {
     }
   };
 
-  const Deleter = async (type: string, id: string) => {
+  const Deleter = async (type: string, id: number) => {
     if (type === "svc") {
-      const prevServices = [...services]; // Save the
-      setServices((prevServices) =>
-        prevServices.filter((service) => service.serviceId !== id),
-      );
-
       try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
           method: "DELETE",
@@ -224,7 +219,6 @@ export default function Dashboard() {
         }
       } catch (err) {
         console.error("Error deleting service:", err);
-        setServices(prevServices);
 
         setError("Error deleting service. Please try again.");
         setDialogOpen(true);
@@ -560,6 +554,12 @@ export default function Dashboard() {
                                 className="px-4 py-2 bg-red-500"
                                 onClick={() => {
                                   Deleter("ctg", ctg.categoryId);
+                                  setCategories((prevState) => {
+                                    return prevState.filter(
+                                      (item) =>
+                                        item.categoryId != ctg.categoryId,
+                                    );
+                                  });
                                 }}
                               >
                                 Delete
@@ -739,6 +739,12 @@ export default function Dashboard() {
                                 className="px-4 py-2 bg-red-500"
                                 onClick={() => {
                                   Deleter("svc", service.serviceId);
+                                  setServices((prevState) => {
+                                    return prevState.filter(
+                                      (item) =>
+                                        item.serviceId != service.serviceId,
+                                    );
+                                  });
                                 }}
                               >
                                 Delete
