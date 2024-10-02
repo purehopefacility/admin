@@ -80,8 +80,8 @@ interface servicetype {
 }
 
 export default function Dashboard() {
-  const [services, setServices] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState<servicetype[]>([]);
+  const [categories, setCategories] = useState<categorytype[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -139,8 +139,8 @@ const StateUpdater = async (type: string, id: string, state: string) => {
     const newState = state === "active" ? "suspended" : "active";
     if (type === "svc") {
       // Optimistically update the service state
-      setServices((prevServices) =>
-        prevServices.map((service) =>
+      setServices((prevServices: servicetype[]) =>
+        prevServices.map((service: servicetype) =>
           service.serviceId === id ? { ...service, serviceState: newState } : service
         )
       );
@@ -172,6 +172,10 @@ const StateUpdater = async (type: string, id: string, state: string) => {
 
   const Deleter = async (type: string, id: string) => {
     if (type === "svc") {
+
+      const prevServices = [...services];  // Save the
+      setServices((prevServices) => prevServices.filter((service) => service.serviceId !== id));
+
       try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
           method: "DELETE",
@@ -180,17 +184,37 @@ const StateUpdater = async (type: string, id: string, state: string) => {
         if (!response.ok) {
           throw new Error("Failed to delete service");
         }
-
-        setServices((prevServices) => prevServices.filter((service) => service.serviceId !== id));
       } catch (err) {
         console.error("Error deleting service:", err);
-
+        setServices(prevServices);
 
         setError("Error deleting service. Please try again.");
         setDialogOpen(true);
       }
+    } else if (type === "ctg") {
+      const prevCategories = [...categories];
+      setCategories((prevCategories) => prevCategories.filter((category) => category.categoryId !== id));
+
+      try {
+        const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete category");
+        }
+      } catch (err) {
+        console.error("Error deleting category:", err);
+        setCategories(prevCategories);
+
+        setError("Error deleting category. Please try again.");
+        setDialogOpen(true); 
+      }
     }
   };
+
+
+
 //   const Deleter = async (type: string, id: string) => {
 //     try {
 //       if (type == "svc") {
