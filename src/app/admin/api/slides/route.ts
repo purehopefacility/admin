@@ -32,19 +32,6 @@ export async function GET() {
   }
 }
 
-export async function DELETE() {
-  try {
-    const slides = await getSlides();
-    return NextResponse.json({ slideData: slides }, { status: 200 });
-  } catch (error) {
-    console.error("Error fetching slides:", error);
-    return NextResponse.json(
-      { message: "Error fetching slides" },
-      { status: 500 },
-    );
-  }
-}
-
 export async function POST(request: NextRequest) {
   const SliderData = await request.formData();
 

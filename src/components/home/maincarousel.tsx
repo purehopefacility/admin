@@ -5,6 +5,7 @@ import Link from "next/link";
 import AvatarCircles from "../magicui/avatar-circles";
 
 interface CarouselItem {
+  slideId: number;
   image: string;
   title1: string;
   title2: string;
@@ -21,6 +22,7 @@ const avatarUrls: string[] = [
 
 const carouselData: CarouselItem[] = [
   {
+    slideId: 1,
     image: "/images/home/1.jpg",
     title1: "WELCOME TO",
     title2: "Pure Hope Facility Management",
@@ -30,6 +32,7 @@ const carouselData: CarouselItem[] = [
     buttonLink: "/contactus",
   },
   {
+    slideId: 2,
     image: "/images/home/2.jpg",
     title1: "",
     title2: "Reliable Facility Management",
@@ -39,6 +42,7 @@ const carouselData: CarouselItem[] = [
     buttonLink: "/contactus",
   },
   {
+    slideId: 3,
     image: "/images/home/3.jpg",
     title1: "",
     title2: "Certified and",
@@ -47,6 +51,7 @@ const carouselData: CarouselItem[] = [
     buttonLink: "/ourservices",
   },
   {
+    slideId: 4,
     image: "/images/home/4.jpg",
     title1: "",
     title2: "Transform Your Space With",

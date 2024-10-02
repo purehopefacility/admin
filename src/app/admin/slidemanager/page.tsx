@@ -76,6 +76,7 @@ import {
 import { auth } from "@/auth";
 
 interface SlideItem {
+  slideId: number;
   image: string;
   title1: string;
   title2: string;
@@ -109,6 +110,19 @@ export default function Dashboard() {
     };
     fetchSlides();
   }, []);
+
+  const Deleter = async (id: number) => {
+    try {
+      const response = await fetch(`/admin/api/delete?id=${id}&type=slide`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete slide");
+      }
+    } catch (err) {
+      console.log("Error occured while deleting slide", err);
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -357,7 +371,15 @@ export default function Dashboard() {
                       {Slides.map((slide: SlideItem) => (
                         <TableRow>
                           <TableCell className="font-medium">
-                            {slide.image}
+                            <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                              <Image
+                                src={slide.image} // Preview uploaded service image
+                                alt="Slide Image"
+                                width={100}
+                                height={100}
+                                className="object-cover"
+                              />
+                            </div>
                           </TableCell>
                           <TableCell>{slide.title1}</TableCell>
                           <TableCell className="hidden md:table-cell">
@@ -378,7 +400,12 @@ export default function Dashboard() {
                               <Button
                                 className="px-4 py-2 bg-red-500"
                                 onClick={() => {
-                                  Deleter("ctg", ctg.categoryId);
+                                  Deleter(slide.slideId);
+                                  setSlides((prevState) => {
+                                    return prevState.filter(
+                                      (item) => item.slideId != slide.slideId,
+                                    );
+                                  });
                                 }}
                               >
                                 Delete
@@ -404,170 +431,7 @@ export default function Dashboard() {
                   <CardTitle>Services List</CardTitle>
                   <CardDescription>Manage your services here</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Category
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Order
-                        </TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    {/* <TableBody>
-                      {services.map((service: servicetype) => (
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            {`${service.serviceTitle1} - ${service.serviceTitle2}`}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">
-                              {service.serviceState}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {service.categoryName}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {service.serviceOrder}
-                          </TableCell>
-
-                          <TableCell className="flex gap-2">
-                            <Button
-                              className="px-4 py-2 bg-blue-500"
-                              onClick={() => {
-                                router.push(
-                                  `/admin/updateservice?sid=${service.serviceId}&service=${service.serviceTitle1 + " " + service.serviceTitle2}`,
-                                );
-                              }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              className="px-4 py-2 bg-orange-500"
-                              onClick={() => {
-                                StateUpdater(
-                                  "svc",
-                                  service.serviceId,
-                                  service.serviceState == "active"
-                                    ? "suspended"
-                                    : "active",
-                                );
-                              }}
-                            >
-                              {service.serviceState == "active"
-                                ? "suspend"
-                                : "activate"}
-                            </Button>
-                            <Button
-                              className="px-4 py-2 bg-red-500"
-                              onClick={() => {
-                                Deleter("svc", service.serviceId);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody> */}
-                    <TableBody>
-                      {services
-                        .sort(
-                          (a, b) =>
-                            Number(a.serviceOrder) - Number(b.serviceOrder),
-                        )
-                        .map((service: servicetype) => (
-                          <TableRow key={service.serviceId}>
-                            <TableCell className="font-medium">
-                              {`${service.serviceTitle1} - ${service.serviceTitle2}`}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline">
-                                {service.serviceState}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {service.categoryName}
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              <Input
-                                type="number"
-                                min="1"
-                                value={service.serviceOrder}
-                                onChange={(e) => {
-                                  const newOrder = parseInt(e.target.value);
-                                  if (!isNaN(newOrder) && newOrder > 0) {
-                                    updateServiceOrder(
-                                      service.serviceId,
-                                      newOrder,
-                                    );
-                                  }
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell className="flex gap-2">
-                              <Button
-                                className="px-4 py-2 bg-blue-500"
-                                onClick={() => {
-                                  router.push(
-                                    `/admin/updateservice?sid=${service.serviceId}&service=${service.serviceTitle1} ${service.serviceTitle2}`,
-                                  );
-                                }}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                className="px-4 py-2 bg-orange-500"
-                                onClick={() => {
-                                  StateUpdater(
-                                    "svc",
-                                    service.serviceId,
-                                    service.serviceState === "active"
-                                      ? "suspended"
-                                      : "active",
-                                  );
-                                  setServices((prevState) => {
-                                    return prevState.map((svc) => {
-                                      if (svc.serviceId === service.serviceId) {
-                                        return {
-                                          ...svc,
-                                          serviceState:
-                                            service.serviceState === "active"
-                                              ? "suspended"
-                                              : "active",
-                                        };
-                                      }
-                                      return svc;
-                                    });
-                                  });
-                                }}
-                              >
-                                {service.serviceState === "active"
-                                  ? "Suspend"
-                                  : "Activate"}
-                              </Button>
-                              <Button
-                                className="px-4 py-2 bg-red-500"
-                                onClick={() => {
-                                  Deleter("svc", service.serviceId);
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
+                <CardContent>Secpnf</CardContent>
                 <CardFooter>
                   {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
