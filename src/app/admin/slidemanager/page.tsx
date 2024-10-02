@@ -181,14 +181,14 @@ export default function Dashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/admin/addslide"
+                  href="/admin/slidemanager"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Slider Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Add Slider Images</TooltipContent>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -257,6 +257,13 @@ export default function Dashboard() {
                   <span className="sr-only">Feedbacks</span>
                 </Link>
                 <Link
+                  href="/admin/slidemanager"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slide Manager</span>
+                </Link>
+                <Link
                   href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
@@ -276,7 +283,7 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Slider Manager</Link>
+                  <Link href="#">Slider Manager</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -320,16 +327,19 @@ export default function Dashboard() {
           */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Tabs defaultValue="slides">
-            <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="slides">Services</TabsTrigger>
-                <TabsTrigger value="categories">Service Categories</TabsTrigger>
-              </TabsList>
-              <div className="ml-auto flex items-center gap-2">
+          <Card x-chunk="dashboard-06-chunk-0 ">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Caraousel Slides and Content</CardTitle>
+                  <CardDescription>
+                    Manage your home page slide details here
+                  </CardDescription>
+                </div>
+
                 <Button
                   size="sm"
-                  className="h-8 gap-1"
+                  className="h-8 gap-1 mr-2 "
                   onClick={() => {
                     router.push("/admin/addslide");
                   }}
@@ -340,107 +350,82 @@ export default function Dashboard() {
                   </span>
                 </Button>
               </div>
-            </div>
-            <TabsContent value="slides">
-              <Card x-chunk="dashboard-06-chunk-0">
-                <CardHeader>
-                  <CardTitle>Slides and Content</CardTitle>
-                  <CardDescription>
-                    Manage your home page slide details here
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Slide Image</TableHead>
-                        <TableHead>Title 1</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Title 2
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Description
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          URL in Button
-                        </TableHead>
-                        <TableHead>Button Text</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {Slides.map((slide: SlideItem) => (
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            <div className="flex aspect-square w-full items-center justify-center rounded-md border">
-                              <Image
-                                src={slide.image} // Preview uploaded service image
-                                alt="Slide Image"
-                                width={100}
-                                height={100}
-                                className="object-cover"
-                              />
-                            </div>
-                          </TableCell>
-                          <TableCell>{slide.title1}</TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {slide.title2}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {slide.description}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {slide.buttonLink}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {slide.buttonText}
-                          </TableCell>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Slide Image</TableHead>
+                    <TableHead>Title 1</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Title 2
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Description
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      URL in Button
+                    </TableHead>
+                    <TableHead>Button Text</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Slides.map((slide: SlideItem) => (
+                    <TableRow>
+                      <TableCell className="font-medium">
+                        <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                          <Image
+                            src={slide.image} // Preview uploaded service image
+                            alt="Slide Image"
+                            width={100}
+                            height={100}
+                            className="object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>{slide.title1}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.title2}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.description}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.buttonLink}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.buttonText}
+                      </TableCell>
 
-                          <TableCell>
-                            <TableCell className="flex gap-2">
-                              <Button
-                                className="px-4 py-2 bg-red-500"
-                                onClick={() => {
-                                  Deleter(slide.slideId);
-                                  setSlides((prevState) => {
-                                    return prevState.filter(
-                                      (item) => item.slideId != slide.slideId,
-                                    );
-                                  });
-                                }}
-                              >
-                                Delete
-                              </Button>
-                            </TableCell>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-                <CardFooter>
-                  {/* <div className="text-xs text-muted-foreground">
+                      <TableCell>
+                        <TableCell className="flex gap-2">
+                          <Button
+                            className="px-4 py-2 bg-red-500"
+                            onClick={() => {
+                              Deleter(slide.slideId);
+                              setSlides((prevState) => {
+                                return prevState.filter(
+                                  (item) => item.slideId != slide.slideId,
+                                );
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter>
+              {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
                     products
                   </div> */}
-                </CardFooter>
-              </Card>
-            </TabsContent>
-            <TabsContent value="services">
-              <Card x-chunk="dashboard-06-chunk-0">
-                <CardHeader>
-                  <CardTitle>Services List</CardTitle>
-                  <CardDescription>Manage your services here</CardDescription>
-                </CardHeader>
-                <CardContent>Secpnf</CardContent>
-                <CardFooter>
-                  {/* <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div> */}
-                </CardFooter>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            </CardFooter>
+          </Card>
         </main>
       </div>
     </div>

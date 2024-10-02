@@ -171,14 +171,14 @@ export default function Dashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/admin/addslide"
+                  href="/admin/slidemanager"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Slider Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Add Slider Images</TooltipContent>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -246,11 +246,11 @@ export default function Dashboard() {
                   <span className="sr-only">Feedbacks</span>
                 </Link>
                 <Link
-                  href="/admin/addslide"
+                  href="/admin/slidemanager"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Add Slide Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
                 <Link
                   href="#"
@@ -315,7 +315,7 @@ export default function Dashboard() {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  router.push(`/admin/home`);
+                  router.push(`/admin/slidemanager`);
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />
