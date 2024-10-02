@@ -4,6 +4,7 @@ import { z } from "zod";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import {
   ChevronLeft,
   Home,
@@ -87,6 +88,7 @@ export default function Dashboard() {
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [content, setContent] = useState<string>("");
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
   const handleServiceImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -154,9 +156,11 @@ export default function Dashboard() {
         }, 2000); // Navigate back to the service list
       } else {
         console.error("Failed to create service");
+        setErrorDialogOpen(true);
       }
     } catch (error) {
       console.error("Error creating service:", error);
+      setErrorDialogOpen(true);
     }
   };
   return (
@@ -566,6 +570,21 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+      <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+            <AlertDialogTitle>Failed to Add Service</AlertDialogTitle>
+            <AlertDialogDescription>
+                An error occurred while trying to add the service. Please try again.
+            </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setErrorDialogOpen(false)}>
+                OK
+            </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
     </div>
   );
 }
