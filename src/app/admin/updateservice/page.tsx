@@ -58,10 +58,18 @@ import { signOut } from "next-auth/react";
 
 import dynamic from "next/dynamic";
 
-
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 interface Category {
   categoryId: string;
   categoryTitle: string;
@@ -91,10 +99,11 @@ export default function Dashboard() {
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
 
-  const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
+  const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
-
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -111,9 +120,7 @@ export default function Dashboard() {
     try {
       const response = await fetch(`/api/services/one/${serviceId}`, {
         method: "GET",
-
-      },);
-
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -126,7 +133,6 @@ export default function Dashboard() {
         setOrder(data.serviceOrder);
         setDescription(data.serviceDesc);
         // setCategory(data.serviceCategory);
-
       } else {
         console.error("Failed to fetch service details");
       }
@@ -197,20 +203,21 @@ export default function Dashboard() {
         }, 2000);
       } else {
         const errorResponse = await response.json();
-      const errorMessage = errorResponse.message || "Failed to update service";
-      setError(errorMessage);
-      setShowErrorDialog(true);
+        const errorMessage =
+          errorResponse.message || "Failed to update service";
+        setError(errorMessage);
+        setShowErrorDialog(true);
       }
     } catch (error) {
-        if (error instanceof Error) {
-            console.error("Error updating service:", error.message);
-            setError(error.message || "An unknown error occurred");
-            setShowErrorDialog(true);
-          } else {
-            console.error("Unknown error:", error);
-            setError("An unknown error occurred");
-            setShowErrorDialog(true);
-          }
+      if (error instanceof Error) {
+        console.error("Error updating service:", error.message);
+        setError(error.message || "An unknown error occurred");
+        setShowErrorDialog(true);
+      } else {
+        console.error("Unknown error:", error);
+        setError("An unknown error occurred");
+        setShowErrorDialog(true);
+      }
     }
   };
 
@@ -276,8 +283,11 @@ export default function Dashboard() {
                       />
                     </div>
                     <div className="grid gap-3">
-                        <Label htmlFor="description">Description</Label>
-                        <ReactQuill value={description} onChange={setDescription} />
+                      <Label htmlFor="description">Description</Label>
+                      <ReactQuill
+                        value={description}
+                        onChange={setDescription}
+                      />
                     </div>
                     <div className="grid gap-3 mt-8">
                       <Label htmlFor="description">Service New Order</Label>
@@ -293,22 +303,31 @@ export default function Dashboard() {
                     <div className="grid gap-3">
                       <Label htmlFor="category">Category</Label>
 
-                        <Select value={category} onValueChange={(value) => setCategory(value)}>
-                        <SelectTrigger id="category" aria-label="Select category">
-                            <SelectValue placeholder="Select category">
-                            {categories.find(cat => cat.categoryId === Number(category))?.categoryTitle || "Select category"}
-                            </SelectValue>
+                      <Select
+                        value={category}
+                        onValueChange={(value) => setCategory(value)}
+                      >
+                        <SelectTrigger
+                          id="category"
+                          aria-label="Select category"
+                        >
+                          <SelectValue placeholder="Select category">
+                            {categories.find(
+                              (cat) => cat.categoryId === Number(category),
+                            )?.categoryTitle || "Select category"}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                            {categories.map((cat) => (
-                            <SelectItem key={cat.categoryId} value={String(cat.categoryId)}>
-                                {cat.categoryTitle}
-
+                          {categories.map((cat) => (
+                            <SelectItem
+                              key={cat.categoryId}
+                              value={String(cat.categoryId)}
+                            >
+                              {cat.categoryTitle}
                             </SelectItem>
-                            ))}
+                          ))}
                         </SelectContent>
-                        </Select>
-
+                      </Select>
                     </div>
                   </div>
                 </CardContent>
@@ -343,18 +362,21 @@ export default function Dashboard() {
                                 />
                               </div>
                             )}
-                            <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                              <Upload className="h-4 w-4 text-muted-foreground" />
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleServiceImageUpload}
-                              />
-                              <span className="sr-only">
-                                Upload Service Image
-                              </span>
-                            </label>
+
+                            {!(serviceImage || serviceDetails?.serviceImg) ? (
+                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                <Upload className="h-4 w-4 text-muted-foreground" />
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={handleServiceImageUpload}
+                                />
+                                <span className="sr-only">
+                                  Upload Service Image
+                                </span>
+                              </label>
+                            ) : null}
                           </div>
                         </div>
                         {/* service image new code */}
@@ -407,18 +429,20 @@ export default function Dashboard() {
                                 />
                               </div>
                             )}
-                            <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                              <Upload className="h-4 w-4 text-muted-foreground" />
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handleCoverImageUpload}
-                              />
-                              <span className="sr-only">
-                                Upload Cover Image
-                              </span>
-                            </label>
+                            {!(coverImage || serviceDetails?.coverImg) ? (
+                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                <Upload className="h-4 w-4 text-muted-foreground" />
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={handleCoverImageUpload}
+                                />
+                                <span className="sr-only">
+                                  Upload Cover Image
+                                </span>
+                              </label>
+                            ) : null}
                           </div>
                         </div>
                         {/* coverimage new code  */}
@@ -471,22 +495,24 @@ export default function Dashboard() {
         </div>
       </main>
       {showErrorDialog && (
-      <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Error</AlertDialogTitle>
-            <AlertDialogDescription>
-              {error ? error : "An error occurred while updating the service."}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowErrorDialog(false)}>
-              Close
-            </AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    )}
+        <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Error</AlertDialogTitle>
+              <AlertDialogDescription>
+                {error
+                  ? error
+                  : "An error occurred while updating the service."}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setShowErrorDialog(false)}>
+                Close
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 }

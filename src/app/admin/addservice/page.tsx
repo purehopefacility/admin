@@ -4,7 +4,16 @@ import { z } from "zod";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   ChevronLeft,
   Home,
@@ -502,19 +511,20 @@ export default function Dashboard() {
                                   />
                                 </div>
                               )}
-
-                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={handleServiceImageUpload} // Handle service image upload
-                                />
-                                <span className="sr-only">
-                                  Upload Service Image
-                                </span>
-                              </label>
+                              {!serviceImage ? (
+                                <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                  <Upload className="h-4 w-4 text-muted-foreground" />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleServiceImageUpload} // Handle service image upload
+                                  />
+                                  <span className="sr-only">
+                                    Upload Service Image
+                                  </span>
+                                </label>
+                              ) : null}
                             </div>
                           </div>
                         </CardContent>
@@ -540,18 +550,20 @@ export default function Dashboard() {
                                 </div>
                               )}
 
-                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={handleCoverImageUpload} // Handle cover image upload
-                                />
-                                <span className="sr-only">
-                                  Upload Cover Image
-                                </span>
-                              </label>
+                              {!coverImage ? (
+                                <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                  <Upload className="h-4 w-4 text-muted-foreground" />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleCoverImageUpload} // Handle cover image upload
+                                  />
+                                  <span className="sr-only">
+                                    Upload Cover Image
+                                  </span>
+                                </label>
+                              ) : null}
                             </div>
                           </div>
                         </CardContent>
@@ -572,19 +584,20 @@ export default function Dashboard() {
       </div>
       <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
         <AlertDialogContent>
-            <AlertDialogHeader>
+          <AlertDialogHeader>
             <AlertDialogTitle>Failed to Add Service</AlertDialogTitle>
             <AlertDialogDescription>
-                An error occurred while trying to add the service. Please try again.
+              An error occurred while trying to add the service. Please try
+              again.
             </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
             <AlertDialogAction onClick={() => setErrorDialogOpen(false)}>
-                OK
+              OK
             </AlertDialogAction>
-            </AlertDialogFooter>
+          </AlertDialogFooter>
         </AlertDialogContent>
-    </AlertDialog>
+      </AlertDialog>
     </div>
   );
 }
