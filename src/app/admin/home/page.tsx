@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 import Link from "next/link";
 import {
@@ -82,6 +83,8 @@ export default function Dashboard() {
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -111,49 +114,107 @@ export default function Dashboard() {
 
   //TEST
 
-  const StateUpdater = async (type: string, id: string, state: string) => {
-    try {
-      if (type == "svc") {
-        const svc_response = await fetch(
-          `/admin/api/update/status?id=${id}&type=svc&state=${state}`,
-          {
-            method: "PUT",
-          },
-        );
-        if (!svc_response.ok) {
-          throw new Error("failed to update srvice");
-        }
-      }
+//   const StateUpdater = async (type: string, id: string, state: string) => {
 
-      setLoading(!loading);
-    } catch (err) {
-      setLoading(!loading);
+//     try {
+//       if (type == "svc") {
+//         const svc_response = await fetch(
+//           `/admin/api/update/status?id=${id}&type=svc&state=${state}`,
+//           {
+//             method: "PUT",
+//           },
+//         );
+//         if (!svc_response.ok) {
+//           throw new Error("failed to update srvice");
+//         }
+//       }
+
+//       setLoading(!loading);
+//     } catch (err) {
+//       setLoading(!loading);
+//     }
+//   };
+
+const StateUpdater = async (type: string, id: string, state: string) => {
+    const newState = state === "active" ? "suspended" : "active";
+    if (type === "svc") {
+      // Optimistically update the service state
+      setServices((prevServices) =>
+        prevServices.map((service) =>
+          service.serviceId === id ? { ...service, serviceState: newState } : service
+        )
+      );
+
+      try {
+        const response = await fetch(`/admin/api/update/status?id=${id}&type=svc&state=${newState}`, {
+          method: "PUT",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update service status");
+        }
+      } catch (err) {
+        console.error("Error updating service status:", err);
+
+        // Revert the optimistic update if the request fails
+        setServices((prevServices) =>
+          prevServices.map((service) =>
+            service.serviceId === id ? { ...service, serviceState: state } : service
+          )
+        );
+
+        setError("Error updating service status. Please try again.");
+        setDialogOpen(true);
+      }
     }
   };
+
+
   const Deleter = async (type: string, id: string) => {
-    try {
-      if (type == "svc") {
+    if (type === "svc") {
+      try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
           method: "DELETE",
         });
+
         if (!response.ok) {
           throw new Error("Failed to delete service");
         }
-      } else {
-        const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
-          method: "DELETE",
-        });
-        if (!response.ok) {
-          throw new Error("Failed to delete category");
-        }
-      }
 
-      setLoading(!loading);
-    } catch (err) {
-      setLoading(!loading);
+        setServices((prevServices) => prevServices.filter((service) => service.serviceId !== id));
+      } catch (err) {
+        console.error("Error deleting service:", err);
+
+
+        setError("Error deleting service. Please try again.");
+        setDialogOpen(true);
+      }
     }
   };
-  //TESTEND
+//   const Deleter = async (type: string, id: string) => {
+//     try {
+//       if (type == "svc") {
+//         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
+//           method: "DELETE",
+//         });
+//         if (!response.ok) {
+//           throw new Error("Failed to delete service");
+//         }
+//       } else {
+//         const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
+//           method: "DELETE",
+//         });
+//         if (!response.ok) {
+//           throw new Error("Failed to delete category");
+//         }
+//       }
+
+//       setLoading(!loading);
+//     } catch (err) {
+//       setLoading(!loading);
+//     }
+//   };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -430,10 +491,10 @@ export default function Dashboard() {
                   </Table>
                 </CardContent>
                 <CardFooter>
-                  <div className="text-xs text-muted-foreground">
+                  {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
                     products
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -520,10 +581,10 @@ export default function Dashboard() {
                   </Table>
                 </CardContent>
                 <CardFooter>
-                  <div className="text-xs text-muted-foreground">
+                  {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
                     products
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>
