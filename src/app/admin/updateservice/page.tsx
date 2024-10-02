@@ -15,6 +15,7 @@ import {
   ShoppingCart,
   Upload,
   Users2,
+  Images,
 } from "lucide-react";
 
 import {
@@ -83,7 +84,9 @@ export default function Dashboard() {
   const [category, setCategory] = useState("");
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
+  const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(
+    null,
+  );
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -98,14 +101,14 @@ export default function Dashboard() {
   const fetchServiceDetails = async (serviceId: string | null) => {
     if (!serviceId) return;
     try {
-      const response = await fetch(`/api/services/one/${serviceId}`,{
+      const response = await fetch(`/api/services/one/${serviceId}`, {
         method: "GET",
-      },);
-      
+      });
+
       if (response.ok) {
         const data = await response.json();
         setServiceDetails(data);
-        console.log("oneservice"+JSON.stringify(data));
+        console.log("oneservice" + JSON.stringify(data));
         // Update state variables with fetched data
         setTitle1(data.serviceTitle_1);
         setTitle2(data.serviceTitle_2);
@@ -272,7 +275,10 @@ export default function Dashboard() {
                     </div>
                     <div className="grid gap-3">
                       <Label htmlFor="category">Category</Label>
-                      <Select onValueChange={(value) => setCategory(value)} value={category}>
+                      <Select
+                        onValueChange={(value) => setCategory(value)}
+                        value={category}
+                      >
                         <SelectTrigger
                           id="category"
                           aria-label="Select category"
@@ -280,9 +286,7 @@ export default function Dashboard() {
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ctg">
-                            Select a category
-                          </SelectItem>
+                          <SelectItem value="ctg">Select a category</SelectItem>
                           {categories.map((cat) => (
                             <SelectItem
                               key={cat.categoryId}
@@ -316,7 +320,11 @@ export default function Dashboard() {
                             {(serviceImage || serviceDetails?.serviceImg) && (
                               <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                                 <Image
-                                  src={serviceImage ? URL.createObjectURL(serviceImage) : serviceDetails?.serviceImg || ''}
+                                  src={
+                                    serviceImage
+                                      ? URL.createObjectURL(serviceImage)
+                                      : serviceDetails?.serviceImg || ""
+                                  }
                                   alt="Service Image"
                                   width={100}
                                   height={100}
@@ -352,7 +360,11 @@ export default function Dashboard() {
                             {(coverImage || serviceDetails?.coverImg) && (
                               <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                                 <Image
-                                  src={coverImage ? URL.createObjectURL(coverImage) : serviceDetails?.coverImg || ''}
+                                  src={
+                                    coverImage
+                                      ? URL.createObjectURL(coverImage)
+                                      : serviceDetails?.coverImg || ""
+                                  }
                                   alt="Cover Image"
                                   width={100}
                                   height={100}

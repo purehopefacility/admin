@@ -17,6 +17,7 @@ import {
   ShoppingCart,
   Users2,
   MessageCircle,
+  Images,
 } from "lucide-react";
 
 import {
@@ -176,6 +177,18 @@ export default function InquiriesDashboard() {
               </TooltipTrigger>
               <TooltipContent side="right">Add Feedbacks</TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/addslide"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slider Images</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Slider Images</TooltipContent>
+            </Tooltip>
           </TooltipProvider>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -240,6 +253,13 @@ export default function InquiriesDashboard() {
                 >
                   <PlusCircle className="h-5 w-5" />
                   <span className="sr-only">Feedbacks</span>
+                </Link>
+                <Link
+                  href="/admin/addslide"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Add Slide Images</span>
                 </Link>
                 <Link
                   href="#"
