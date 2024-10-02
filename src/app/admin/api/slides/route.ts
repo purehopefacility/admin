@@ -7,12 +7,13 @@ import { AddImage } from "@/firebase";
 const getSlides = async () => {
   return await db
     .select({
-      imgUrl: HomeSliderImageTable.imgUrl,
+      image: HomeSliderImageTable.imgUrl,
       Order: HomeSliderImageTable.Order,
-      SlideDesc1: HomeSliderImageTable.SlideDesc1,
-      SlideDesc2: HomeSliderImageTable.SlideDesc2,
-      ButtonTxt: HomeSliderImageTable.ButtonTxt,
-      ButtonLink: HomeSliderImageTable.ButtonLink,
+      title1: HomeSliderImageTable.Title1,
+      title2: HomeSliderImageTable.Title2,
+      description: HomeSliderImageTable.SlideDesc,
+      buttonText: HomeSliderImageTable.ButtonTxt,
+      buttonLink: HomeSliderImageTable.ButtonLink,
     })
     .from(HomeSliderImageTable);
 };
@@ -20,7 +21,7 @@ const getSlides = async () => {
 export async function GET() {
   try {
     const slides = await getSlides();
-    return NextResponse.json({ data: slides }, { status: 200 });
+    return NextResponse.json({ slideData: slides }, { status: 200 });
   } catch (error) {
     console.error("Error fetching slides:", error);
     return NextResponse.json(
@@ -34,8 +35,9 @@ export async function POST(request: NextRequest) {
   const SliderData = await request.formData();
 
   const order = parseInt(SliderData.get("order") as string, 10);
-  const desc1 = SliderData.get("desc1") as string;
-  const desc2 = SliderData.get("desc2") as string;
+  const title1 = SliderData.get("title1") as string;
+  const title2 = SliderData.get("title2") as string;
+  const desc = SliderData.get("desc") as string;
   const buttonText = SliderData.get("buttonText") as string;
   const buttonLink = SliderData.get("buttonLink") as string;
   const sliderImg = SliderData.get("image") as File;
@@ -46,8 +48,9 @@ export async function POST(request: NextRequest) {
     await db.insert(HomeSliderImageTable).values({
       imgUrl: sliderURL as string,
       Order: order,
-      SlideDesc1: desc1,
-      SlideDesc2: desc2,
+      Title1: title1,
+      Title2: title2,
+      SlideDesc: desc,
       ButtonTxt: buttonText,
       ButtonLink: buttonLink,
     });

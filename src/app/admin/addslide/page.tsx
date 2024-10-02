@@ -68,8 +68,9 @@ export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [sliderImg, setSliderImg] = useState<File | null>(null);
-  const [desc1, setDesc1] = useState<string>("");
-  const [desc2, setDesc2] = useState<string>("");
+  const [title1, setTitle1] = useState<string>("");
+  const [title2, setTitle2] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
   const [btntxt, setBtnTxt] = useState<string>("");
   const [btnurl, setBtnUrl] = useState<string>("");
   const [order, setOrder] = useState<string>("");
@@ -87,8 +88,9 @@ export default function Dashboard() {
     setLoading(true);
     const formDataToSend = new FormData();
 
-    formDataToSend.append("desc1", desc1);
-    formDataToSend.append("desc2", desc2);
+    formDataToSend.append("title1", title1);
+    formDataToSend.append("title2", title2);
+    formDataToSend.append("desc", desc);
     formDataToSend.append("buttonText", btntxt);
     formDataToSend.append("buttonLink", btnurl);
     formDataToSend.append("image", sliderImg as File);
@@ -355,16 +357,22 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="grid gap-6">
                       <div className="grid gap-3">
-                        <Label htmlFor="name">
-                          {"Primary Text for the Slider"}
+                        <Label htmlFor="name" className="flex flex-col gap-2">
+                          <p> {"Primary Text for the Slider"}</p>
+                          <p>
+                            {" "}
+                            {
+                              "(Note: Keep this empty if you need only 2 lines for Topic and Description)"
+                            }{" "}
+                          </p>
                         </Label>
                         <Input
                           id="t1"
                           type="text"
                           className="w-full"
                           placeholder="primary text"
-                          value={desc1}
-                          onChange={(e) => setDesc1(e.target.value)}
+                          value={title1}
+                          onChange={(e) => setTitle1(e.target.value)}
                         />
                       </div>
                       <div className="grid gap-3">
@@ -376,8 +384,21 @@ export default function Dashboard() {
                           type="text"
                           className="w-full"
                           placeholder="secondary text"
-                          value={desc2}
-                          onChange={(e) => setDesc2(e.target.value)}
+                          value={title2}
+                          onChange={(e) => setTitle2(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">
+                          {"Description for the Slider"}
+                        </Label>
+                        <Input
+                          id="t1"
+                          type="text"
+                          className="w-full"
+                          placeholder="description"
+                          value={desc}
+                          onChange={(e) => setDesc(e.target.value)}
                         />
                       </div>
 
