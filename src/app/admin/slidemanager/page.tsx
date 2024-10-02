@@ -403,6 +403,16 @@ export default function Dashboard() {
                       <TableCell>
                         <TableCell className="flex gap-2">
                           <Button
+                            className="px-4 py-2 bg-blue-500"
+                            onClick={() => {
+                              router.push(
+                                `/admin/updateslide?slid=${slide.slideId}`,
+                              );
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
                             className="px-4 py-2 bg-red-500"
                             onClick={() => {
                               Deleter(slide.slideId);
