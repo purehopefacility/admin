@@ -112,33 +112,42 @@ export default function Dashboard() {
     fetchServices();
   }, [loading]);
 
-  //TEST
+  const updateServiceOrder = async (serviceId: string, newOrder: number) => {
+    const previousServices = [...services];
+    const updatedServices = services.map(service => {
+      if (service.serviceId === serviceId) {
+        return { ...service, serviceOrder: String(newOrder) };
+      }
+      if (Number(service.serviceOrder) >= newOrder && service.serviceId !== serviceId) {
+        return { ...service, serviceOrder: String(Number(service.serviceOrder) + 1) };
+      }
+      return service;
+    });
 
-//   const StateUpdater = async (type: string, id: string, state: string) => {
+    setServices(updatedServices.sort((a, b) => Number(a.serviceOrder) - Number(b.serviceOrder)));
 
-//     try {
-//       if (type == "svc") {
-//         const svc_response = await fetch(
-//           `/admin/api/update/status?id=${id}&type=svc&state=${state}`,
-//           {
-//             method: "PUT",
-//           },
-//         );
-//         if (!svc_response.ok) {
-//           throw new Error("failed to update srvice");
-//         }
-//       }
+    try {
+      const currentService = services.find(svc => svc.serviceId === serviceId);
+      if (!currentService) throw new Error("Service not found");
 
-//       setLoading(!loading);
-//     } catch (err) {
-//       setLoading(!loading);
-//     }
-//   };
+      const response = await fetch(
+        `/api/services/update-order?id=${serviceId}&order=${newOrder}&ctgid=${currentService.categoryName}&type=svc`,
+        { method: "PUT" }
+      );
+
+      if (!response.ok) throw new Error("Failed to update service order");
+    } catch (err) {
+      console.error("Error updating service order:", err);
+      setServices(previousServices);
+      setError("Failed to update service order. Please try again.");
+      setDialogOpen(true);
+    }
+  };
 
 const StateUpdater = async (type: string, id: string, state: string) => {
     const newState = state === "active" ? "suspended" : "active";
     if (type === "svc") {
-      // Optimistically update the service state
+
       setServices((prevServices: servicetype[]) =>
         prevServices.map((service: servicetype) =>
           service.serviceId === id ? { ...service, serviceState: newState } : service
@@ -208,7 +217,7 @@ const StateUpdater = async (type: string, id: string, state: string) => {
         setCategories(prevCategories);
 
         setError("Error deleting category. Please try again.");
-        setDialogOpen(true); 
+        setDialogOpen(true);
       }
     }
   };
@@ -545,7 +554,7 @@ const StateUpdater = async (type: string, id: string, state: string) => {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    {/* <TableBody>
                       {services.map((service: servicetype) => (
                         <TableRow>
                           <TableCell className="font-medium">
@@ -601,7 +610,68 @@ const StateUpdater = async (type: string, id: string, state: string) => {
                           </TableCell>
                         </TableRow>
                       ))}
-                    </TableBody>
+                    </TableBody> */}
+                     <TableBody>
+                        {services
+                            .sort((a, b) => Number(a.serviceOrder) - Number(b.serviceOrder))
+                            .map((service: servicetype) => (
+                            <TableRow key={service.serviceId}>
+                                <TableCell className="font-medium">
+                                {`${service.serviceTitle1} - ${service.serviceTitle2}`}
+                                </TableCell>
+                                <TableCell>
+                                <Badge variant="outline">{service.serviceState}</Badge>
+                                </TableCell>
+                                <TableCell className="hidden md:table-cell">{service.categoryName}</TableCell>
+                                <TableCell className="hidden md:table-cell">
+                                <Input
+                                    type="number"
+                                    min="1"
+                                    value={service.serviceOrder}
+                                    onChange={(e) => {
+                                    const newOrder = parseInt(e.target.value);
+                                    if (!isNaN(newOrder) && newOrder > 0) {
+                                        updateServiceOrder(service.serviceId, newOrder);
+                                    }
+                                    }}
+                                />
+                                </TableCell>
+                                <TableCell className="flex gap-2">
+                                <Button
+                                    className="px-4 py-2 bg-blue-500"
+                                    onClick={() => {
+                                    router.push(
+                                        `/admin/updateservice?sid=${service.serviceId}&service=${service.serviceTitle1} ${service.serviceTitle2}`
+                                    );
+                                    }}
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    className="px-4 py-2 bg-orange-500"
+                                    onClick={() => {
+                                    StateUpdater(
+                                        "svc",
+                                        service.serviceId,
+                                        service.serviceState === "active" ? "suspended" : "active"
+                                    );
+                                    }}
+                                >
+                                    {service.serviceState === "active" ? "Suspend" : "Activate"}
+                                </Button>
+                                <Button
+                                    className="px-4 py-2 bg-red-500"
+                                    onClick={() => {
+                                    Deleter("svc", service.serviceId);
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                                </TableCell>
+                            </TableRow>
+                            ))}
+                        </TableBody>
+
                   </Table>
                 </CardContent>
                 <CardFooter>
