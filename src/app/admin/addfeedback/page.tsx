@@ -71,7 +71,7 @@ export default function Dashboard() {
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
   const [position, setPosition] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
-  const [rating, setRating] = useState<string>(0);
+  const [rating, setRating] = useState<string>("0");
 
   const handleAvatarImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,

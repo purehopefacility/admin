@@ -77,6 +77,7 @@ import { auth } from "@/auth";
 
 interface SlideItem {
   slideId: number;
+  Order: number;
   image: string;
   title1: string;
   title2: string;
@@ -356,6 +357,7 @@ export default function Dashboard() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Slide Image</TableHead>
+                    <TableHead>Slide Order</TableHead>
                     <TableHead>Title 1</TableHead>
                     <TableHead className="hidden md:table-cell">
                       Title 2
@@ -383,6 +385,7 @@ export default function Dashboard() {
                           />
                         </div>
                       </TableCell>
+                      <TableCell>{slide.Order}</TableCell>
                       <TableCell>{slide.title1}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         {slide.title2}
