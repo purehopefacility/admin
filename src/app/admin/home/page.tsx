@@ -169,7 +169,6 @@ export default function Dashboard() {
   };
 
   const StateUpdater = async (type: string, id: string, state: string) => {
-    const newState = state === "active" ? "suspended" : "active";
     if (type === "svc") {
       // setServices((prevServices: servicetype[]) =>
       //   prevServices.map((service: servicetype) =>
@@ -181,7 +180,7 @@ export default function Dashboard() {
 
       try {
         const response = await fetch(
-          `/admin/api/update/status?id=${id}&type=svc&state=${newState}`,
+          `/admin/api/update/status?id=${id}&type=svc&state=${state}`,
           {
             method: "PUT",
           },
