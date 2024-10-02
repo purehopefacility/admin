@@ -25,9 +25,10 @@ export const ServiceCategoryTable = pgTable("services_category", {
 export const HomeSliderImageTable = pgTable("slide_images", {
   SlideId: serial("image_id").primaryKey(),
   imgUrl: varchar("image_url").notNull(),
-  Order: integer("image_order").notNull(),
-  SlideDesc1: varchar("image_desc_1"),
-  SlideDesc2: varchar("image_desc_2"),
+  Order: integer("slide_order").notNull(),
+  Title1: varchar("slide_title_1"),
+  Title2: varchar("slide_title_2"),
+  SlideDesc: varchar("slide_desc"),
   ButtonTxt: varchar("button_txt"),
   ButtonLink: varchar("button_link"),
 });

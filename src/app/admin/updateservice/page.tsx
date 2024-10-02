@@ -15,6 +15,7 @@ import {
   ShoppingCart,
   Upload,
   Users2,
+  Images,
 } from "lucide-react";
 
 import {
@@ -89,9 +90,11 @@ export default function Dashboard() {
   const [category, setCategory] = useState("");
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
+
   const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
+
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -106,14 +109,16 @@ export default function Dashboard() {
   const fetchServiceDetails = async (serviceId: string | null) => {
     if (!serviceId) return;
     try {
-      const response = await fetch(`/api/services/one/${serviceId}`,{
+      const response = await fetch(`/api/services/one/${serviceId}`, {
         method: "GET",
+
       },);
+
 
       if (response.ok) {
         const data = await response.json();
         setServiceDetails(data);
-        console.log("oneservice"+JSON.stringify(data));
+        console.log("oneservice" + JSON.stringify(data));
         // Update state variables with fetched data
         setCategory(String(data.ServiceCategoryId));
         setTitle1(data.serviceTitle_1);
@@ -287,6 +292,7 @@ export default function Dashboard() {
                     </div>
                     <div className="grid gap-3">
                       <Label htmlFor="category">Category</Label>
+
                         <Select value={category} onValueChange={(value) => setCategory(value)}>
                         <SelectTrigger id="category" aria-label="Select category">
                             <SelectValue placeholder="Select category">
@@ -297,6 +303,7 @@ export default function Dashboard() {
                             {categories.map((cat) => (
                             <SelectItem key={cat.categoryId} value={String(cat.categoryId)}>
                                 {cat.categoryTitle}
+
                             </SelectItem>
                             ))}
                         </SelectContent>
@@ -324,7 +331,11 @@ export default function Dashboard() {
                             {(serviceImage || serviceDetails?.serviceImg) && (
                               <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                                 <Image
-                                  src={serviceImage ? URL.createObjectURL(serviceImage) : serviceDetails?.serviceImg || ''}
+                                  src={
+                                    serviceImage
+                                      ? URL.createObjectURL(serviceImage)
+                                      : serviceDetails?.serviceImg || ""
+                                  }
                                   alt="Service Image"
                                   width={100}
                                   height={100}
@@ -384,7 +395,11 @@ export default function Dashboard() {
                             {(coverImage || serviceDetails?.coverImg) && (
                               <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                                 <Image
-                                  src={coverImage ? URL.createObjectURL(coverImage) : serviceDetails?.coverImg || ''}
+                                  src={
+                                    coverImage
+                                      ? URL.createObjectURL(coverImage)
+                                      : serviceDetails?.coverImg || ""
+                                  }
                                   alt="Cover Image"
                                   width={100}
                                   height={100}

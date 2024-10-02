@@ -1,8 +1,6 @@
 {
-
-  "id": "77988361-1309-4061-8638-47f0a7b79726",
-
-  "prevId": "53468dfd-b013-452f-bfee-3fdd97ef0805",
+  "id": "09516d32-d511-42a0-ad12-d5eac07d604e",
+  "prevId": "77988361-1309-4061-8638-47f0a7b79726",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -183,20 +181,26 @@
           "primaryKey": false,
           "notNull": true
         },
-        "image_order": {
-          "name": "image_order",
+        "slide_order": {
+          "name": "slide_order",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "image_desc_1": {
-          "name": "image_desc_1",
+        "slide_title_1": {
+          "name": "slide_title_1",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "image_desc_2": {
-          "name": "image_desc_2",
+        "slide_title_2": {
+          "name": "slide_title_2",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "slide_desc": {
+          "name": "slide_desc",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false

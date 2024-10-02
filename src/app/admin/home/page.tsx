@@ -18,6 +18,7 @@ import {
   ShoppingCart,
   Users2,
   MessageCircle,
+  Images,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -301,6 +302,18 @@ const StateUpdater = async (type: string, id: string, state: string) => {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Add Feedbacks</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/addslide"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slider Images</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Slider Images</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
