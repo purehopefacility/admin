@@ -178,6 +178,29 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <div className="mt-2 ml-8 mb-8">
+        <Breadcrumb className="hidden md:flex">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/admin/home">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/admin/slidemanager">Slider Manager</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="#">Edit Slider</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       {/* ... (rest of the JSX remains the same) ... */}
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
         <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
@@ -194,7 +217,7 @@ export default function Dashboard() {
               <span className="sr-only">Back</span>
             </Button>
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              Add Home Page slider images
+              Edit Slider
             </h1>
 
             <div className="hidden items-center gap-2 md:ml-auto md:flex">
@@ -212,10 +235,10 @@ export default function Dashboard() {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Adding slider....
+                    Updating Slide....
                   </>
                 ) : (
-                  "Add Slide"
+                  "Update Slide"
                 )}
               </Button>
             </div>
@@ -320,7 +343,7 @@ export default function Dashboard() {
               {/* Service Image Uploader */}
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>Slide Image Here</CardTitle>
+                  <CardTitle>new slide Image Here</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-2">
@@ -389,10 +412,10 @@ export default function Dashboard() {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Adding Feedback....
+                  Updating Slide....
                 </>
               ) : (
-                "Add Feedback"
+                "Update Slide"
               )}
             </Button>
           </div>

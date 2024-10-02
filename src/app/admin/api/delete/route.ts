@@ -37,8 +37,13 @@ export async function DELETE(request: NextRequest) {
         .from(ServiceTable)
         .where(eq(ServiceTable.serviceId, parseInt(ID, 10)));
 
-      await DelImage(SvcimgSet[0].images);
-      await DelImage(SvcimgSet[0].cimage);
+      if (SvcimgSet[0].simage) {
+        await DelImage(SvcimgSet[0].simage);
+      }
+      if (SvcimgSet[0].cimage) {
+        await DelImage(SvcimgSet[0].cimage);
+      }
+
       await db
         .delete(ServiceTable)
         .where(eq(ServiceTable.serviceId, parseInt(ID, 10)));
@@ -49,8 +54,9 @@ export async function DELETE(request: NextRequest) {
         })
         .from(ServiceQuoteTable)
         .where(eq(ServiceQuoteTable.quoteId, ID as string));
-
-      await DelImageSet(imgSet[0].images);
+      if (imgSet[0].images.length > 0) {
+        await DelImageSet(imgSet[0].images);
+      }
       await db
         .delete(ServiceQuoteTable)
         .where(eq(ServiceQuoteTable.quoteId, ID as string));
@@ -66,7 +72,9 @@ export async function DELETE(request: NextRequest) {
         .from(HomeSliderImageTable)
         .where(eq(HomeSliderImageTable.SlideId, parseInt(ID, 10)));
 
-      await DelImage(SlideImg[0].slideimage);
+      if (SlideImg[0].slideimage) {
+        await DelImage(SlideImg[0].slideimage);
+      }
       await db
         .delete(HomeSliderImageTable)
         .where(eq(HomeSliderImageTable.SlideId, parseInt(ID, 10)));

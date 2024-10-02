@@ -46,7 +46,9 @@ export async function PUT(request: NextRequest) {
     const slideId = SliderData.get("slideId") as string;
     const prevImg = SliderData.get("prevImg") as string;
     let sliderURL = "";
-    if (sliderImg) {
+    console.log("prevImg", prevImg);
+    console.log("sliderImg", sliderImg.name);
+    if (sliderImg && sliderImg.size > 0) {
       await DelImage(prevImg);
       sliderURL = await AddImage(sliderImg, "slider_images");
     }
@@ -54,7 +56,7 @@ export async function PUT(request: NextRequest) {
     await db
       .update(HomeSliderImageTable)
       .set({
-        imgUrl: sliderURL as string,
+        imgUrl: sliderImg.size > 0 ? (sliderURL as string) : prevImg,
         Order: order,
         Title1: title1,
         Title2: title2,
