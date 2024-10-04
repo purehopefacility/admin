@@ -283,7 +283,7 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Slider Manager</Link>
+                  <Link href="#">Feedback Manager</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>

@@ -9,6 +9,7 @@ import {
   ServiceQuoteTable,
   GeneralInquiryTable,
   HomeSliderImageTable,
+  FeedbackTable,
 } from "@/db/Schema";
 export async function DELETE(request: NextRequest) {
   //Mention the specific type to record
@@ -78,6 +79,20 @@ export async function DELETE(request: NextRequest) {
       await db
         .delete(HomeSliderImageTable)
         .where(eq(HomeSliderImageTable.SlideId, parseInt(ID, 10)));
+    } else if (rectype == "fb") {
+      const AvtImg: any = await db
+        .select({
+          avtimage: FeedbackTable.avatar,
+        })
+        .from(FeedbackTable)
+        .where(eq(FeedbackTable.feedbackId, parseInt(ID, 10)));
+
+      if (AvtImg[0].avtimage) {
+        await DelImage(AvtImg[0].avtimage);
+      }
+      await db
+        .delete(FeedbackTable)
+        .where(eq(FeedbackTable.feedbackId, parseInt(ID, 10)));
     } else {
       console.log("Invalid Record Type");
     }

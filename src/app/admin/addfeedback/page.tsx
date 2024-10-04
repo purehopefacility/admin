@@ -311,7 +311,7 @@ export default function Dashboard() {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  router.push(`/admin/home`);
+                  router.push(`/admin/fbmanager`);
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />

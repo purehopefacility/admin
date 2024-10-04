@@ -302,7 +302,7 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Customer Feedbacks</Link>
+                  <Link href="#">Update Customer Feedbacks</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -345,14 +345,14 @@ export default function Dashboard() {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  router.push(`/admin/home`);
+                  router.push(`/admin/fbmanager`);
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add Customer Feedbacks
+                Update Feedback
               </h1>
 
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
