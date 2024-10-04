@@ -16,7 +16,7 @@ const { auth } = NextAuth(authConfig);
 export default auth(async function middleware(req): Promise<any> {
   // Your custom middleware logic goes here
   const { pathname } = req.nextUrl;
-  const isLoggedIn = true; //!!req.auth
+  const isLoggedIn = !!req.auth;
   console.log("ROUTE: ", req.nextUrl.pathname);
   console.log("Is Logged in: ", isLoggedIn);
 
