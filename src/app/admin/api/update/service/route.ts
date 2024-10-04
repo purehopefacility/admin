@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import { ServiceTable } from "@/db/Schema";
 import IMGservice from "@/lib/imageService";
+import { AddImage, DelImage } from "@/firebase";
 
 export async function POST(request: NextRequest) {
   const sdata = await request.formData();
@@ -82,21 +83,63 @@ export async function POST(request: NextRequest) {
       .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
 
     if (serviceIMG) {
-      const serviceIMGS = await IMGservice.saveImage(
+      //TODO --> here delete tje exisiting image
+      //1) fetche the image url and del first
+
+      try {
+        const s_img_url = await db
+          .select({
+            serviceImg: ServiceTable.serviceImg,
+          })
+          .from(ServiceTable)
+          .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
+
+        //now deleting
+        if (s_img_url[0].serviceImg) {
+          //await IMGservice.deleteImage(s_img_url[0].serviceImg?.toString());
+          await DelImage(s_img_url[0].serviceImg?.toString());
+        }
+      } catch (e) {
+        console.error("error in deleting svc-image" + e);
+      }
+      // const serviceIMGS = await IMGservice.saveImage(
+      //   serviceIMG,
+      //   "Services",
+      //   String(serviceID),
+      // );
+      const ServiceImgFBURL = await AddImage(
         serviceIMG,
-        "Services",
-        String(serviceID),
+        "service_images/services",
       );
-      updateData.serviceImg = serviceIMGS; // Add new image to update data
+      updateData.serviceImg = ServiceImgFBURL; // Add new image to update data
     }
 
     if (coverIMG) {
-      const coverIMGS = await IMGservice.saveImage(
-        coverIMG,
-        "Services",
-        String(serviceID),
-      );
-      updateData.serviceCoverImg = coverIMGS; // Add new cover image to update data
+      //TODO --> here delete tje exisiting image
+      //1) fetche the image url and del first
+      try {
+        const cvr_img_url = await db
+          .select({
+            cvrImg: ServiceTable.serviceCoverImg,
+          })
+          .from(ServiceTable)
+          .where(eq(ServiceTable.serviceId, parseInt(serviceID)));
+
+        //now deleting
+        if (cvr_img_url[0].cvrImg) {
+          //await IMGservice.deleteImage(cvr_img_url[0].cvrImg?.toString());
+          await DelImage(cvr_img_url[0].cvrImg?.toString());
+        }
+      } catch (e) {
+        console.error("error in deleting cvr-image" + e);
+      }
+      // const coverIMGS = await IMGservice.saveImage(
+      //   coverIMG,
+      //   "Services",
+      //   String(serviceID),
+      // );
+      const CoverImgFBURL = await AddImage(coverIMG, "service_images/covers");
+      updateData.serviceCoverImg = CoverImgFBURL; // Add new cover image to update data
     }
 
     // Update images only if they were provided
@@ -111,21 +154,14 @@ export async function POST(request: NextRequest) {
     );
   } catch (e) {
     console.log("Error in updating service: " + e);
-    return NextResponse.json({ message: (e as Error).message || "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { message: (e as Error).message || "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
 
-
-
-
-
 export const dynamic = "force-dynamic";
-
-
-
-
-
-
 
 // import { db } from "@/db/DB";
 // import { NextRequest, NextResponse } from "next/server";

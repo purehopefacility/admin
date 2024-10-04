@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import {
   ChevronLeft,
   Home,
@@ -65,58 +66,54 @@ interface Category {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [ctgtitle, setCtgTitle] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [sliderImg, setSliderImg] = useState<File | null>(null);
+  const [title1, setTitle1] = useState<string>("");
+  const [title2, setTitle2] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [btntxt, setBtnTxt] = useState<string>("");
+  const [btnurl, setBtnUrl] = useState<string>("");
+  const [order, setOrder] = useState<string>("");
 
-  const [order, setOrder] = useState("1");
-  const [description, setDescription] = useState("");
+  const handleSliderImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSliderImg(file); // Set the service image state
+    }
+  };
 
-  const Updater = async () => {
+  const SliderAdder = async () => {
+    setLoading(true);
     const formDataToSend = new FormData();
 
-    formDataToSend.append("ctgTitle", ctgtitle);
-
-    formDataToSend.append("ctgDesc", description);
-    formDataToSend.append("ctgOrder", order);
+    formDataToSend.append("title1", title1);
+    formDataToSend.append("title2", title2);
+    formDataToSend.append("desc", desc);
+    formDataToSend.append("buttonText", btntxt);
+    formDataToSend.append("buttonLink", btnurl);
+    formDataToSend.append("image", sliderImg as File);
+    formDataToSend.append("order", order);
 
     try {
-      const response = await fetch(`/admin/api/addcategory`, {
+      const response = await fetch(`/admin/api/slides`, {
         method: "POST",
         body: formDataToSend,
       });
       if (response.ok) {
-        console.log("Service created successfully");
-
-        setTimeout(() => {
-          router.push("/admin/home");
-        }, 2000); // Navigate back to the service list
+        console.log("Slider added successfully");
       } else {
-        console.error("Failed to create service");
+        console.error("Failed to add Slider");
       }
     } catch (error) {
-      console.error("Error creating service:", error);
+      console.error("Error adding Slide:", error);
+    } finally {
+      setLoading(false);
+      window.location.reload();
     }
   };
-  // const Updater = () => {
-  //   console.log("Title 1:", title1);
-  //   console.log("Title 2:", title2);
-  //   console.log("Order:", order);
-  //   console.log("Description:", description);
-  //   console.log("Category:", category);
 
-  //   // Log the service image (check if an image is uploaded)
-  //   if (serviceImage) {
-  //     console.log("Service Image:", serviceImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Service Image: No image uploaded");
-  //   }
-
-  //   // Log the cover image (check if an image is uploaded)
-  //   if (coverImage) {
-  //     console.log("Cover Image:", coverImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Cover Image: No image uploaded");
-  //   }
-  // };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -178,10 +175,10 @@ export default function Dashboard() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Slider Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Add Slider Images</TooltipContent>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -253,7 +250,7 @@ export default function Dashboard() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Add Slide Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
                 <Link
                   href="#"
@@ -275,19 +272,12 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Service Category</Link>
+                  <Link href="#">Add Slider Images</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
+          {/*
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -315,6 +305,7 @@ export default function Dashboard() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
@@ -324,14 +315,14 @@ export default function Dashboard() {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  router.push(`/admin/home`);
+                  router.push(`/admin/slidemanager`);
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add New Category
+                Add Home Page slider images
               </h1>
 
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
@@ -344,62 +335,174 @@ export default function Dashboard() {
                 >
                   Discard
                 </Button>
-                <Button size="sm" onClick={Updater}>
-                  Add Category
+
+                <Button onClick={SliderAdder} disabled={loading} className="">
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Adding slider....
+                    </>
+                  ) : (
+                    "Add Slide"
+                  )}
                 </Button>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-              <div className="grid auto-rows-max items-start gap-4 col-span-10 lg:gap-8">
-                <Card x-chunk="dashboard-07-chunk-0">
+            <div className="flex gap-4 w-full">
+              <div className="flex w-full">
+                <Card x-chunk="dashboard-07-chunk-0" className="w-full">
                   <CardHeader>
-                    <CardTitle>Add</CardTitle>
+                    <CardTitle></CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6">
                       <div className="grid gap-3">
-                        <Label htmlFor="name">Category Title</Label>
+                        <Label htmlFor="name" className="flex flex-col gap-2">
+                          <p> {"Primary Text for the Slider"}</p>
+                          <p>
+                            {" "}
+                            {
+                              "(Note: Keep this empty if you need only 2 lines for Topic and Description)"
+                            }{" "}
+                          </p>
+                        </Label>
                         <Input
                           id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="title"
-                          value={ctgtitle}
-                          onChange={(e) => setCtgTitle(e.target.value)}
+                          placeholder="primary text"
+                          value={title1}
+                          onChange={(e) => setTitle1(e.target.value)}
                         />
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          value={description}
-                          className="min-h-32"
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                      </div>
-                      {/*
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Category Order</Label>
+                        <Label htmlFor="description">
+                          {"Secondary Text for the Slider"}
+                        </Label>
                         <Input
-                          id="order"
+                          id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="Order Number"
+                          placeholder="secondary text"
+                          value={title2}
+                          onChange={(e) => setTitle2(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">
+                          {"Description for the Slider"}
+                        </Label>
+                        <Input
+                          id="t1"
+                          type="text"
+                          className="w-full"
+                          placeholder="description"
+                          value={desc}
+                          onChange={(e) => setDesc(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">
+                          {"Text to appear on Button"}
+                        </Label>
+                        <Input
+                          id="t1"
+                          type="text"
+                          className="w-full"
+                          placeholder="button text"
+                          value={btntxt}
+                          onChange={(e) => setBtnTxt(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">
+                          {"Url to redirect when button clicked"}
+                        </Label>
+                        <Input
+                          id="t1"
+                          type="text"
+                          className="w-full"
+                          placeholder="url "
+                          value={btnurl}
+                          onChange={(e) => setBtnUrl(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">{"Slide Order"}</Label>
+                        <Input
+                          id="t1"
+                          type="number"
+                          className="w-full"
+                          placeholder="order"
                           value={order}
                           onChange={(e) => setOrder(e.target.value)}
                         />
                       </div>
-                      */}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                {/* Service Image Uploader */}
+                <Card className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle>Slide Image Here</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-2">
+                      <div className="grid grid-cols-3 gap-2">
+                        {sliderImg && (
+                          <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                            <Image
+                              src={URL.createObjectURL(sliderImg)} // Preview uploaded service image
+                              alt="Service Image"
+                              width={100}
+                              height={100}
+                              className="object-cover"
+                            />
+                          </div>
+                        )}
+                        {!sliderImg && (
+                          <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                            <Upload className="h-4 w-4 text-muted-foreground" />
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleSliderImageUpload} // Handle service image upload
+                            />
+                            <span className="sr-only">Upload Slide Image</span>
+                          </label>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  router.push(`/admin/home`);
+                }}
+              >
                 Discard
               </Button>
-              <Button size="sm">Add Category</Button>
+
+              <Button onClick={SliderAdder} disabled={loading} className="">
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Adding Feedback....
+                  </>
+                ) : (
+                  "Add Feedback"
+                )}
+              </Button>
             </div>
           </div>
         </main>

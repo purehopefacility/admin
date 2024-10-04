@@ -3,6 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { ServiceQuoteTable, CustomerTable } from "@/db/Schema";
 import ImageService from "@/lib/imageService";
+import { AddImageSet, DelImageSet } from "@/firebase";
 
 export async function POST(request: NextRequest) {
   const QuoteData = await request.formData();
@@ -80,8 +81,6 @@ export async function POST(request: NextRequest) {
       //either load customerID here
       console.log("CREATED CUSTOMER" + JSON.stringify(customer));
       CustomerID = customer[0].CID;
-
-
     } else {
       //or load CustomerID herr
       console.log("found the customer");
@@ -92,24 +91,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const imageUrls = await ImageService.saveImages(quoteimageFiles, "Quotations", CustomerID!);
+    //const imageUrls = await ImageService.saveImages(quoteimageFiles, "Quotations", CustomerID!);
+    const imageUrls = await AddImageSet(quoteimageFiles, "quotation_images");
+    await db.insert(ServiceQuoteTable).values({
+      ServiceId: serviceId,
+      customerId: CustomerID,
+      recievedAt: receivedAt,
+      status: "pending",
+      note: note,
+      images: JSON.stringify(imageUrls),
+    });
+    //.returning({ QID: ServiceQuoteTable.quoteId });
 
-    const Quote = await db
-      .insert(ServiceQuoteTable)
-      .values({
-        ServiceId: serviceId,
-        customerId: CustomerID,
-        recievedAt: receivedAt,
-        status: "pending",
-        note: note,
-        images: JSON.parse(imageUrls), 
-      })
-      .returning({ QID: ServiceQuoteTable.quoteId });
-
-    return NextResponse.json({ message: "Success" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Success adding quotations" },
+      { status: 200 },
+    );
   } catch (Err) {
     console.error("ERROR: ", Err);
-    return NextResponse.json({ message: "error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "error in adding quotes" },
+      { status: 500 },
+    );
   }
 }
 export const dynamic = "force-dynamic";

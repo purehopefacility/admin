@@ -8,6 +8,7 @@ const getActiveServices = async () => {
     .select({
       serviceId: ServiceTable.serviceId,
       serviceOrder: ServiceTable.serviceOrder,
+      categoryId: ServiceTable.ServiceCategory,
       categoryName: ServiceCategoryTable.categoryTitle,
       serviceTitle1: ServiceTable.serviceTitle_1,
       serviceTitle2: ServiceTable.serviceTitle_2,
@@ -36,4 +37,3 @@ export async function GET() {
   }
 }
 export const dynamic = "force-dynamic";
-

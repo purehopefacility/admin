@@ -31,20 +31,9 @@ export async function GET() {
         eq(ServiceQuoteTable.customerId, CustomerTable.customerId),
       );
 
-    const promises = qdata.map(async (quote) => {
-      const images = await IMGservice.retrieveImages(
-        String(quote.quoteId)
-      );
-      Object.defineProperty(quote, "images", {
-        value: images,
-        enumerable: true, // Make it show up in JSON.stringify()
-        writable: true, // Allow the property value to be changed
-        configurable: true, // Allow the property descriptor to be changed or property to be deleted
-      });
-      return quote;
-    });
-    const quotesWithImages = await Promise.all(promises);
-    return NextResponse.json({ QuoteData: quotesWithImages }, { status: 200 });
+    console.log("Qdata", qdata);
+
+    return NextResponse.json({ QuoteData: qdata }, { status: 200 });
   } catch (e) {
     console.log("error in gettinh quotes" + e);
     return NextResponse.json({ message: e }, { status: 500 });

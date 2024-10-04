@@ -2,7 +2,18 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { signOut } from "next-auth/react"
+import { signOut } from "next-auth/react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import Link from "next/link";
 import {
@@ -16,7 +27,8 @@ import {
   Settings,
   ShoppingCart,
   Users2,
-  MessageCircle
+  MessageCircle,
+  Images,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -60,18 +72,19 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {auth} from "@/auth";
+import { auth } from "@/auth";
 
 interface categorytype {
-  categoryId: string;
+  categoryId: number;
   categoryTitle: string;
   categoryOrder: string;
   categoryDesc: string;
 }
 
 interface servicetype {
-  serviceId: string;
+  serviceId: number;
   serviceTitle1: string;
+  categoryId: string;
   serviceTitle2: string;
   serviceState: string;
   categoryName: string;
@@ -79,9 +92,11 @@ interface servicetype {
 }
 
 export default function Dashboard() {
-  const [services, setServices] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [services, setServices] = useState<servicetype[]>([]);
+  const [categories, setCategories] = useState<categorytype[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -109,51 +124,147 @@ export default function Dashboard() {
     fetchServices();
   }, [loading]);
 
-  //TEST
+  const updateServiceOrder = async (serviceId: number, newOrder: number) => {
+    const previousServices = [...services];
+    const updatedServices = services.map((service) => {
+      if (service.serviceId === serviceId) {
+        return { ...service, serviceOrder: String(newOrder) };
+      }
+      if (
+        Number(service.serviceOrder) >= newOrder &&
+        service.serviceId !== serviceId
+      ) {
+        return {
+          ...service,
+          serviceOrder: String(Number(service.serviceOrder) + 1),
+        };
+      }
+      return service;
+    });
 
-  const StateUpdater = async (type: string, id: string, state: string) => {
+    setServices(
+      updatedServices.sort(
+        (a, b) => Number(a.serviceOrder) - Number(b.serviceOrder),
+      ),
+    );
+
     try {
-      if (type == "svc") {
-        const svc_response = await fetch(
+      const currentService = services.find(
+        (svc) => svc.serviceId === serviceId,
+      );
+      if (!currentService) throw new Error("Service not found");
+
+      const response = await fetch(
+        `/admin/api/update/order?id=${serviceId}&order=${newOrder}&ctgid=${currentService.categoryId}&type=svc`,
+        { method: "PUT" },
+      );
+
+      if (!response.ok) throw new Error("Failed to update service order");
+    } catch (err) {
+      console.error("Error updating service order:", err);
+      setServices(previousServices);
+      setError("Failed to update service order. Please try again.");
+      setDialogOpen(true);
+    }
+  };
+
+  const StateUpdater = async (type: string, id: number, state: string) => {
+    if (type === "svc") {
+      // setServices((prevServices: servicetype[]) =>
+      //   prevServices.map((service: servicetype) =>
+      //     service.serviceId === id
+      //       ? { ...service, serviceState: newState }
+      //       : service,
+      //   ),
+      // );
+
+      try {
+        const response = await fetch(
           `/admin/api/update/status?id=${id}&type=svc&state=${state}`,
           {
             method: "PUT",
           },
         );
-        if (!svc_response.ok) {
-          throw new Error("failed to update srvice");
-        }
-      }
 
-      setLoading(!loading);
-    } catch (err) {
-      setLoading(!loading);
+        if (!response.ok) {
+          throw new Error("Failed to update service status");
+        }
+      } catch (err) {
+        console.error("Error updating service status:", err);
+
+        // Revert the optimistic update if the request fails
+        // setServices((prevServices) =>
+        //   prevServices.map((service) =>
+        //     service.serviceId === id
+        //       ? { ...service, serviceState: state }
+        //       : service,
+        //   ),
+        // );
+
+        setError("Error updating service status. Please try again.");
+        setDialogOpen(true);
+      }
     }
   };
-  const Deleter = async (type: string, id: string) => {
-    try {
-      if (type == "svc") {
+
+  const Deleter = async (type: string, id: number) => {
+    if (type === "svc") {
+      try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
           method: "DELETE",
         });
+
         if (!response.ok) {
           throw new Error("Failed to delete service");
         }
-      } else {
+      } catch (err) {
+        console.error("Error deleting service:", err);
+
+        setError("Error deleting service. Please try again.");
+        setDialogOpen(true);
+      }
+    } else if (type === "ctg") {
+      try {
         const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
           method: "DELETE",
         });
+
         if (!response.ok) {
           throw new Error("Failed to delete category");
         }
-      }
+      } catch (err) {
+        console.error("Error deleting category:", err);
 
-      setLoading(!loading);
-    } catch (err) {
-      setLoading(!loading);
+        setError("Error deleting category. Please try again.");
+        setDialogOpen(true);
+      }
     }
   };
-  //TESTEND
+
+  //   const Deleter = async (type: string, id: string) => {
+  //     try {
+  //       if (type == "svc") {
+  //         const response = await fetch(`/admin/api/delete?id=${id}&type=svc`, {
+  //           method: "DELETE",
+  //         });
+  //         if (!response.ok) {
+  //           throw new Error("Failed to delete service");
+  //         }
+  //       } else {
+  //         const response = await fetch(`/admin/api/delete?id=${id}&type=ctg`, {
+  //           method: "DELETE",
+  //         });
+  //         if (!response.ok) {
+  //           throw new Error("Failed to delete category");
+  //         }
+  //       }
+
+  //       setLoading(!loading);
+  //     } catch (err) {
+  //       setLoading(!loading);
+  //     }
+  //   };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -196,6 +307,30 @@ export default function Dashboard() {
               </TooltipTrigger>
               <TooltipContent side="right">Inquiries</TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Feedbacks</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/slidemanager"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slide Manager</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
+            </Tooltip>
           </TooltipProvider>
         </nav>
         <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -235,32 +370,39 @@ export default function Dashboard() {
                   <span className="sr-only">Acme Inc</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/home"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
-                  Dashboard
+                  <span className="sr-only">Admin Home</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/quotes"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
-                  Customers
+                  <span className="sr-only">Customer Quotations</span>
+                </Link>
+                <Link
+                  href="/admin/inquiries"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">Inquiries</span>
+                </Link>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
+                </Link>
+                <Link
+                  href="/admin/slidemanager"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
                 <Link
                   href="#"
@@ -281,6 +423,7 @@ export default function Dashboard() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          {/*
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -311,12 +454,15 @@ export default function Dashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Tabs defaultValue="all">
+          <Tabs defaultValue="services">
             <div className="flex items-center">
               <TabsList>
                 <TabsTrigger value="services">Services</TabsTrigger>
@@ -402,6 +548,12 @@ export default function Dashboard() {
                                 className="px-4 py-2 bg-red-500"
                                 onClick={() => {
                                   Deleter("ctg", ctg.categoryId);
+                                  setCategories((prevState) => {
+                                    return prevState.filter(
+                                      (item) =>
+                                        item.categoryId != ctg.categoryId,
+                                    );
+                                  });
                                 }}
                               >
                                 Delete
@@ -414,10 +566,10 @@ export default function Dashboard() {
                   </Table>
                 </CardContent>
                 <CardFooter>
-                  <div className="text-xs text-muted-foreground">
+                  {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
                     products
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>
@@ -444,7 +596,7 @@ export default function Dashboard() {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    {/* <TableBody>
                       {services.map((service: servicetype) => (
                         <TableRow>
                           <TableCell className="font-medium">
@@ -500,14 +652,108 @@ export default function Dashboard() {
                           </TableCell>
                         </TableRow>
                       ))}
+                    </TableBody> */}
+                    <TableBody>
+                      {services
+                        .sort(
+                          (a, b) =>
+                            Number(a.serviceOrder) - Number(b.serviceOrder),
+                        )
+                        .map((service: servicetype) => (
+                          <TableRow key={service.serviceId}>
+                            <TableCell className="font-medium">
+                              {`${service.serviceTitle1} - ${service.serviceTitle2}`}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">
+                                {service.serviceState}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {service.categoryName}
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              <Input
+                                type="number"
+                                min="1"
+                                value={service.serviceOrder}
+                                onChange={(e) => {
+                                  const newOrder = parseInt(e.target.value);
+                                  if (!isNaN(newOrder) && newOrder > 0) {
+                                    updateServiceOrder(
+                                      service.serviceId,
+                                      newOrder,
+                                    );
+                                  }
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell className="flex gap-2">
+                              <Button
+                                className="px-4 py-2 bg-blue-500"
+                                onClick={() => {
+                                  router.push(
+                                    `/admin/updateservice?sid=${service.serviceId}&service=${service.serviceTitle1} ${service.serviceTitle2}`,
+                                  );
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                className="px-4 py-2 bg-orange-500"
+                                onClick={() => {
+                                  StateUpdater(
+                                    "svc",
+                                    service.serviceId,
+                                    service.serviceState === "active"
+                                      ? "suspended"
+                                      : "active",
+                                  );
+                                  setServices((prevState) => {
+                                    return prevState.map((svc) => {
+                                      if (svc.serviceId === service.serviceId) {
+                                        return {
+                                          ...svc,
+                                          serviceState:
+                                            service.serviceState === "active"
+                                              ? "suspended"
+                                              : "active",
+                                        };
+                                      }
+                                      return svc;
+                                    });
+                                  });
+                                }}
+                              >
+                                {service.serviceState === "active"
+                                  ? "Suspend"
+                                  : "Activate"}
+                              </Button>
+                              <Button
+                                className="px-4 py-2 bg-red-500"
+                                onClick={() => {
+                                  Deleter("svc", service.serviceId);
+                                  setServices((prevState) => {
+                                    return prevState.filter(
+                                      (item) =>
+                                        item.serviceId != service.serviceId,
+                                    );
+                                  });
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </CardContent>
                 <CardFooter>
-                  <div className="text-xs text-muted-foreground">
+                  {/* <div className="text-xs text-muted-foreground">
                     Showing <strong>1-10</strong> of <strong>32</strong>{" "}
                     products
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </TabsContent>

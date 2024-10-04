@@ -1,9 +1,19 @@
 "use client";
 import Image from "next/image";
-import { z } from 'zod';
+import { z } from "zod";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   ChevronLeft,
   Home,
@@ -11,11 +21,14 @@ import {
   Package,
   Package2,
   PanelLeft,
+  PlusCircle,
+  MessageCircle,
   Search,
   Settings,
   ShoppingCart,
   Upload,
   Users2,
+  Images,
 } from "lucide-react";
 
 import {
@@ -54,7 +67,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {auth} from "@/auth";
+import { auth } from "@/auth";
 import { signOut } from "next-auth/react";
 import JoditEditor from "jodit-react";
 interface Category {
@@ -62,14 +75,14 @@ interface Category {
   categoryTitle: string;
 }
 // import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 
 interface EditorProps {
   initialValue?: string;
 }
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function Dashboard() {
   //const searchParams = useSearchParams();
@@ -84,6 +97,7 @@ export default function Dashboard() {
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [content, setContent] = useState<string>("");
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
   const handleServiceImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -151,9 +165,11 @@ export default function Dashboard() {
         }, 2000); // Navigate back to the service list
       } else {
         console.error("Failed to create service");
+        setErrorDialogOpen(true);
       }
     } catch (error) {
       console.error("Error creating service:", error);
+      setErrorDialogOpen(true);
     }
   };
   return (
@@ -185,6 +201,42 @@ export default function Dashboard() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Customer Quoations</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/inquiries"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">Inquiries</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Inquiries</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Add Feedbacks</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/admin/slidemanager"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slide Manager</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -224,32 +276,39 @@ export default function Dashboard() {
                   <span className="sr-only">Acme Inc</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/home"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
-                  Dashboard
+                  <span className="sr-only">Admin Home</span>
                 </Link>
                 <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  href="/admin/quotes"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
-                  Customers
+                  <span className="sr-only">Customer Quotations</span>
+                </Link>
+                <Link
+                  href="/admin/inquiries"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">Inquiries</span>
+                </Link>
+                <Link
+                  href="/admin/addfeedback"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Feedbacks</span>
+                </Link>
+                <Link
+                  href="/admin/slidemanager"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Images className="h-5 w-5" />
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
                 <Link
                   href="#"
@@ -306,7 +365,9 @@ export default function Dashboard() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
@@ -450,19 +511,20 @@ export default function Dashboard() {
                                   />
                                 </div>
                               )}
-
-                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={handleServiceImageUpload} // Handle service image upload
-                                />
-                                <span className="sr-only">
-                                  Upload Service Image
-                                </span>
-                              </label>
+                              {!serviceImage ? (
+                                <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                  <Upload className="h-4 w-4 text-muted-foreground" />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleServiceImageUpload} // Handle service image upload
+                                  />
+                                  <span className="sr-only">
+                                    Upload Service Image
+                                  </span>
+                                </label>
+                              ) : null}
                             </div>
                           </div>
                         </CardContent>
@@ -488,18 +550,20 @@ export default function Dashboard() {
                                 </div>
                               )}
 
-                              <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
-                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="hidden"
-                                  onChange={handleCoverImageUpload} // Handle cover image upload
-                                />
-                                <span className="sr-only">
-                                  Upload Cover Image
-                                </span>
-                              </label>
+                              {!coverImage ? (
+                                <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                  <Upload className="h-4 w-4 text-muted-foreground" />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleCoverImageUpload} // Handle cover image upload
+                                  />
+                                  <span className="sr-only">
+                                    Upload Cover Image
+                                  </span>
+                                </label>
+                              ) : null}
                             </div>
                           </div>
                         </CardContent>
@@ -518,6 +582,22 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+      <AlertDialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Failed to Add Service</AlertDialogTitle>
+            <AlertDialogDescription>
+              An error occurred while trying to add the service. Please try
+              again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setErrorDialogOpen(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

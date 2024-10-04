@@ -2,7 +2,8 @@ import {
   boolean,
   integer,
   json,
-  pgTable, primaryKey,
+  pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
@@ -21,6 +22,26 @@ export const ServiceCategoryTable = pgTable("services_category", {
   categoryDesc: varchar("category_desc").notNull(),
 });
 
+export const HomeSliderImageTable = pgTable("slide_images", {
+  SlideId: serial("image_id").primaryKey(),
+  imgUrl: varchar("image_url").notNull(),
+  Order: integer("slide_order").notNull(),
+  Title1: varchar("slide_title_1"),
+  Title2: varchar("slide_title_2"),
+  SlideDesc: varchar("slide_desc"),
+  ButtonTxt: varchar("button_txt"),
+  ButtonLink: varchar("button_link"),
+});
+export const FeedbackTable = pgTable("customer_feedbacks", {
+  feedbackId: serial("feedback_id").primaryKey(),
+  avatar: varchar("avatar"),
+  customerName: varchar("customer_name"),
+  registeredAt: timestamp("registered_at").defaultNow(),
+  rating: integer("rating"),
+  feedback: varchar("feedback"),
+  position: varchar("position"),
+});
+
 export const ServiceTable = pgTable("services", {
   serviceId: serial("service_id").primaryKey(),
   serviceOrder: integer("service_order").notNull(),
@@ -36,18 +57,26 @@ export const ServiceTable = pgTable("services", {
 });
 
 export const CustomerTable = pgTable("customers", {
-  customerId: uuid("customer_id").primaryKey().$defaultFn(() => randomUUID()),
+  customerId: uuid("customer_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   customerName: varchar("customer_name").notNull(),
+  //avatar: varchar("avatar"),
   email: varchar("email").unique(),
+
   phoneNumber: varchar("phone_number"),
   registeredAt: timestamp("registered_at"),
+  //rating: integer("rating"),
   address: varchar("address"),
-  feedback: varchar("feedback"),
+  //feedback: varchar("feedback"),
+  //position: varchar("position"),
 });
 
 //Assuming a single quote --> single service
 export const ServiceQuoteTable = pgTable("quotations", {
-  quoteId: uuid("quote_id").primaryKey().$defaultFn(() => randomUUID()),
+  quoteId: uuid("quote_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   ServiceId: integer("service_id").references(() => ServiceTable.serviceId),
   customerId: uuid("customer").references(() => CustomerTable.customerId),
   recievedAt: timestamp("recieved_at"),
@@ -57,7 +86,9 @@ export const ServiceQuoteTable = pgTable("quotations", {
 });
 
 export const GeneralInquiryTable = pgTable("customer_inquiries", {
-  inquiryId: uuid("inquiry_id").primaryKey().$defaultFn(() => randomUUID()),
+  inquiryId: uuid("inquiry_id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   customerId: uuid("customer").references(() => CustomerTable.customerId),
   recievedAt: timestamp("recieved_at"),
   status: varchar("status"),
@@ -70,7 +101,9 @@ export const NewsLetterMailTable = pgTable("news_letter_mails", {
 });
 
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey().$defaultFn(() => randomUUID()),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => randomUUID()),
   roleType: varchar("role_type"),
   name: text("name"),
   password: varchar("password").notNull(),

@@ -1,25 +1,37 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
-  ChevronLeft,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import Link from "next/link";
+import {
   Home,
   LineChart,
   Package,
   Package2,
   PanelLeft,
+  PlusCircle,
   Search,
   Settings,
   ShoppingCart,
-  PlusCircle,
-  MessageCircle,
-  Upload,
   Users2,
+  MessageCircle,
   Images,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -28,7 +40,14 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,18 +57,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-import { Textarea } from "@/components/ui/textarea";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipProvider,
@@ -57,66 +74,57 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
-import { signOut } from "next-auth/react";
-interface Category {
-  categoryId: string;
-  categoryTitle: string;
+
+interface SlideItem {
+  slideId: number;
+  Order: number;
+  image: string;
+  title1: string;
+  title2: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
 }
-
 export default function Dashboard() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const router = useRouter();
-  const [ctgtitle, setCtgTitle] = useState("");
 
-  const [order, setOrder] = useState("1");
-  const [description, setDescription] = useState("");
+  const [Slides, setSlides] = useState<SlideItem[]>([]);
 
-  const Updater = async () => {
-    const formDataToSend = new FormData();
-
-    formDataToSend.append("ctgTitle", ctgtitle);
-
-    formDataToSend.append("ctgDesc", description);
-    formDataToSend.append("ctgOrder", order);
-
-    try {
-      const response = await fetch(`/admin/api/addcategory`, {
-        method: "POST",
-        body: formDataToSend,
-      });
-      if (response.ok) {
-        console.log("Service created successfully");
-
-        setTimeout(() => {
-          router.push("/admin/home");
-        }, 2000); // Navigate back to the service list
-      } else {
-        console.error("Failed to create service");
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const response = await fetch("/admin/api/slides");
+        if (!response.ok) {
+          throw new Error("Failed to fetch slides");
+        }
+        const data = await response.json();
+        setSlides(data.slideData);
+        //setLoading(false);
+      } catch (err) {
+        console.error("Error fetching inquiries:", err);
+        //setLoading(false);
       }
-    } catch (error) {
-      console.error("Error creating service:", error);
+    };
+    fetchSlides();
+  }, []);
+
+  const Deleter = async (id: number) => {
+    try {
+      const response = await fetch(`/admin/api/delete?id=${id}&type=slide`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete slide");
+      }
+    } catch (err) {
+      console.log("Error occured while deleting slide", err);
     }
   };
-  // const Updater = () => {
-  //   console.log("Title 1:", title1);
-  //   console.log("Title 2:", title2);
-  //   console.log("Order:", order);
-  //   console.log("Description:", description);
-  //   console.log("Category:", category);
 
-  //   // Log the service image (check if an image is uploaded)
-  //   if (serviceImage) {
-  //     console.log("Service Image:", serviceImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Service Image: No image uploaded");
-  //   }
-
-  //   // Log the cover image (check if an image is uploaded)
-  //   if (coverImage) {
-  //     console.log("Cover Image:", coverImage.name); // Logs the file name of the image
-  //   } else {
-  //     console.log("Cover Image: No image uploaded");
-  //   }
-  // };
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -178,10 +186,10 @@ export default function Dashboard() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Slider Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Add Slider Images</TooltipContent>
+              <TooltipContent side="right">Slide Manager</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -202,6 +210,7 @@ export default function Dashboard() {
           </TooltipProvider>
         </nav>
       </aside>
+
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
@@ -253,7 +262,7 @@ export default function Dashboard() {
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Images className="h-5 w-5" />
-                  <span className="sr-only">Add Slide Images</span>
+                  <span className="sr-only">Slide Manager</span>
                 </Link>
                 <Link
                   href="#"
@@ -269,17 +278,18 @@ export default function Dashboard() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="/admin/home">Home</Link>
+                  <Link href="#">Home</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Service Category</Link>
+                  <Link href="#">Slider Manager</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          {/*
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -315,93 +325,120 @@ export default function Dashboard() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-7 w-7"
-                onClick={() => {
-                  router.push(`/admin/home`);
-                }}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-              </Button>
-              <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add New Category
-              </h1>
+          <Card x-chunk="dashboard-06-chunk-0 ">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Caraousel Slides and Content</CardTitle>
+                  <CardDescription>
+                    Manage your home page slide details here
+                  </CardDescription>
+                </div>
 
-              <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 <Button
-                  variant="outline"
                   size="sm"
+                  className="h-8 gap-1 mr-2 "
                   onClick={() => {
-                    router.push(`/admin/home`);
+                    router.push("/admin/addslide");
                   }}
                 >
-                  Discard
-                </Button>
-                <Button size="sm" onClick={Updater}>
-                  Add Category
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Add Slide
+                  </span>
                 </Button>
               </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-              <div className="grid auto-rows-max items-start gap-4 col-span-10 lg:gap-8">
-                <Card x-chunk="dashboard-07-chunk-0">
-                  <CardHeader>
-                    <CardTitle>Add</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6">
-                      <div className="grid gap-3">
-                        <Label htmlFor="name">Category Title</Label>
-                        <Input
-                          id="t1"
-                          type="text"
-                          className="w-full"
-                          placeholder="title"
-                          value={ctgtitle}
-                          onChange={(e) => setCtgTitle(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                          id="description"
-                          value={description}
-                          className="min-h-32"
-                          onChange={(e) => setDescription(e.target.value)}
-                        />
-                      </div>
-                      {/*
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Category Order</Label>
-                        <Input
-                          id="order"
-                          type="text"
-                          className="w-full"
-                          placeholder="Order Number"
-                          value={order}
-                          onChange={(e) => setOrder(e.target.value)}
-                        />
-                      </div>
-                      */}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-            <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm">
-                Discard
-              </Button>
-              <Button size="sm">Add Category</Button>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Slide Image</TableHead>
+                    <TableHead>Slide Order</TableHead>
+                    <TableHead>Title 1</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Title 2
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Description
+                    </TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      URL in Button
+                    </TableHead>
+                    <TableHead>Button Text</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Slides.map((slide: SlideItem) => (
+                    <TableRow>
+                      <TableCell className="font-medium">
+                        <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                          <Image
+                            src={slide.image} // Preview uploaded service image
+                            alt="Slide Image"
+                            width={100}
+                            height={100}
+                            className="object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>{slide.Order}</TableCell>
+                      <TableCell>{slide.title1}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.title2}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.description}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.buttonLink}
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {slide.buttonText}
+                      </TableCell>
+
+                      <TableCell>
+                        <TableCell className="flex gap-2">
+                          <Button
+                            className="px-4 py-2 bg-blue-500"
+                            onClick={() => {
+                              router.push(
+                                `/admin/updateslide?slid=${slide.slideId}`,
+                              );
+                            }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            className="px-4 py-2 bg-red-500"
+                            onClick={() => {
+                              Deleter(slide.slideId);
+                              setSlides((prevState) => {
+                                return prevState.filter(
+                                  (item) => item.slideId != slide.slideId,
+                                );
+                              });
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+            <CardFooter>
+              {/* <div className="text-xs text-muted-foreground">
+                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+                    products
+                  </div> */}
+            </CardFooter>
+          </Card>
         </main>
       </div>
     </div>
