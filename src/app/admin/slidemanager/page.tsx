@@ -170,14 +170,14 @@ export default function Dashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/admin/addfeedback"
+                  href="/admin/fbmanager"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <PlusCircle className="h-5 w-5" />
                   <span className="sr-only">Feedbacks</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Add Feedbacks</TooltipContent>
+              <TooltipContent side="right">Feedback Manager</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -251,11 +251,11 @@ export default function Dashboard() {
                   <span className="sr-only">Inquiries</span>
                 </Link>
                 <Link
-                  href="/admin/addfeedback"
+                  href="/admin/fbmanager"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <PlusCircle className="h-5 w-5" />
-                  <span className="sr-only">Feedbacks</span>
+                  <span className="sr-only">Feedback Manager</span>
                 </Link>
                 <Link
                   href="/admin/slidemanager"
