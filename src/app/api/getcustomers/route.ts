@@ -6,6 +6,8 @@ import { CustomerTable } from "@/db/Schema";
 //this is usefull to 2 places
 //1) navbar icon set
 //2) ADMIN --> add feedback
+
+//push comment
 export async function GET() {
   try {
     const cdata = await db
