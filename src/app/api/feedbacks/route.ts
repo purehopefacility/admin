@@ -7,6 +7,7 @@ import { AddImage, DelImage } from "@/firebase";
 const getFeedBacks = async () => {
   return await db
     .select({
+      fid: FeedbackTable.feedbackId,
       avatar: FeedbackTable.avatar,
       name: FeedbackTable.customerName,
       feedback: FeedbackTable.feedback,
@@ -20,7 +21,7 @@ const getFeedBacks = async () => {
 export async function GET() {
   try {
     const feedbacks = await getFeedBacks();
-    return NextResponse.json({ data: feedbacks }, { status: 200 });
+    return NextResponse.json({ FBdata: feedbacks }, { status: 200 });
   } catch (error) {
     console.error("Error fetching feedbacks:", error);
     return NextResponse.json(

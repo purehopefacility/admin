@@ -67,22 +67,53 @@ interface Category {
 export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [sliderImg, setSliderImg] = useState<File | null>(null);
-  const [title1, setTitle1] = useState<string>("");
-  const [title2, setTitle2] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
-  const [btntxt, setBtnTxt] = useState<string>("");
-  const [btnurl, setBtnUrl] = useState<string>("");
-  const [order, setOrder] = useState<string>("");
+  const [customerName, setCustomerName] = useState<string>("");
+  const [avatarImage, setAvatarImage] = useState<File | null>(null);
+  const [position, setPosition] = useState<string>("");
+  const [feedback, setFeedback] = useState<string>("");
+  const [rating, setRating] = useState<string>("0");
+  const [prevAvatar, setPrevAvatar] = useState<string>("");
+  const [fid, setFid] = useState<string>("");
 
-  const handleSliderImageUpload = (
+  const handleAvatarImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSliderImg(file); // Set the service image state
+      setAvatarImage(file); // Set the service image state
     }
   };
+
+  const fetchFBDetails = async (fid: number | null) => {
+    if (!fid) return;
+    try {
+      const response = await fetch(`/api/feedbacks/one/${fid}`, {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        setCustomerName(data.FBData.customerName);
+        setPrevAvatar(data.FBData.avatar);
+        setPosition(data.FBData.position);
+        setRating(data.FBData.rating);
+        setFeedback(data.FBData.feedback);
+      } else {
+        console.error("Failed to fetch feedback details");
+      }
+    } catch (error) {
+      console.error("Error fetching feedback details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    setFid(searchParams.get("fid") as string);
+    if (searchParams.get("fid")) {
+      fetchFBDetails(parseInt(searchParams.get("fid") as string, 10));
+    }
+  }, []);
 
   const FeedBackUpdater = async () => {
     setLoading(true);
@@ -94,6 +125,7 @@ export default function Dashboard() {
     formDataToSend.append("feedback", feedback);
     formDataToSend.append("position", position);
     formDataToSend.append("prevAvatar", prevAvatar);
+    formDataToSend.append("fid", fid);
 
     try {
       const response = await fetch(`/api/feedbacks`, {
@@ -112,7 +144,6 @@ export default function Dashboard() {
       window.location.reload();
     }
   };
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -271,7 +302,7 @@ export default function Dashboard() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Add Slider Images</Link>
+                  <Link href="#">Add Customer Feedbacks</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -314,14 +345,14 @@ export default function Dashboard() {
                 size="icon"
                 className="h-7 w-7"
                 onClick={() => {
-                  router.push(`/admin/slidemanager`);
+                  router.push(`/admin/home`);
                 }}
               >
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add Home Page slider images
+                Add Customer Feedbacks
               </h1>
 
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
@@ -335,14 +366,18 @@ export default function Dashboard() {
                   Discard
                 </Button>
 
-                <Button onClick={SliderAdder} disabled={loading} className="">
+                <Button
+                  onClick={FeedBackUpdater}
+                  disabled={loading}
+                  className=""
+                >
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Adding slider....
+                      Updating Feedback....
                     </>
                   ) : (
-                    "Add Slide"
+                    "Update Feedback"
                   )}
                 </Button>
               </div>
@@ -356,86 +391,50 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="grid gap-6">
                       <div className="grid gap-3">
-                        <Label htmlFor="name" className="flex flex-col gap-2">
-                          <p> {"Primary Text for the Slider"}</p>
-                          <p>
-                            {" "}
-                            {
-                              "(Note: Keep this empty if you need only 2 lines for Topic and Description)"
-                            }{" "}
-                          </p>
-                        </Label>
+                        <Label htmlFor="name">Customer Name</Label>
                         <Input
                           id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="primary text"
-                          value={title1}
-                          onChange={(e) => setTitle1(e.target.value)}
+                          placeholder="Name"
+                          value={customerName}
+                          onChange={(e) => setCustomerName(e.target.value)}
                         />
                       </div>
                       <div className="grid gap-3">
                         <Label htmlFor="description">
-                          {"Secondary Text for the Slider"}
+                          {"Position/Designation"}
                         </Label>
                         <Input
                           id="t1"
                           type="text"
                           className="w-full"
-                          placeholder="secondary text"
-                          value={title2}
-                          onChange={(e) => setTitle2(e.target.value)}
+                          placeholder="position"
+                          value={position}
+                          onChange={(e) => setPosition(e.target.value)}
+                        />
+                      </div>
+                      <div className="grid gap-3">
+                        <Label htmlFor="description">Feedback Message</Label>
+                        <Textarea
+                          id="feedback"
+                          placeholder="Feedback Message"
+                          value={feedback}
+                          className="min-h-32"
+                          onChange={(e) => setFeedback(e.target.value)}
                         />
                       </div>
                       <div className="grid gap-3">
                         <Label htmlFor="description">
-                          {"Description for the Slider"}
+                          {"Rating (out of 5)"}
                         </Label>
-                        <Input
-                          id="t1"
-                          type="text"
-                          className="w-full"
-                          placeholder="description"
-                          value={desc}
-                          onChange={(e) => setDesc(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">
-                          {"Text to appear on Button"}
-                        </Label>
-                        <Input
-                          id="t1"
-                          type="text"
-                          className="w-full"
-                          placeholder="button text"
-                          value={btntxt}
-                          onChange={(e) => setBtnTxt(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">
-                          {"Url to redirect when button clicked"}
-                        </Label>
-                        <Input
-                          id="t1"
-                          type="text"
-                          className="w-full"
-                          placeholder="url "
-                          value={btnurl}
-                          onChange={(e) => setBtnUrl(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">{"Slide Order"}</Label>
                         <Input
                           id="t1"
                           type="number"
                           className="w-full"
-                          placeholder="order"
-                          value={order}
-                          onChange={(e) => setOrder(e.target.value)}
+                          placeholder="title"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
                         />
                       </div>
                     </div>
@@ -447,15 +446,15 @@ export default function Dashboard() {
                 {/* Service Image Uploader */}
                 <Card className="overflow-hidden">
                   <CardHeader>
-                    <CardTitle>Slide Image Here</CardTitle>
+                    <CardTitle>Customer Image</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-2">
                       <div className="grid grid-cols-3 gap-2">
-                        {sliderImg && (
+                        {avatarImage && (
                           <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                             <Image
-                              src={URL.createObjectURL(sliderImg)} // Preview uploaded service image
+                              src={URL.createObjectURL(avatarImage)} // Preview uploaded service image
                               alt="Service Image"
                               width={100}
                               height={100}
@@ -463,18 +462,38 @@ export default function Dashboard() {
                             />
                           </div>
                         )}
-                        {!sliderImg && (
+                        {!avatarImage && (
                           <label className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer">
                             <Upload className="h-4 w-4 text-muted-foreground" />
                             <input
                               type="file"
                               accept="image/*"
                               className="hidden"
-                              onChange={handleSliderImageUpload} // Handle service image upload
+                              onChange={handleAvatarImageUpload} // Handle service image upload
                             />
-                            <span className="sr-only">Upload Slide Image</span>
+                            <span className="sr-only">Upload Avatar Image</span>
                           </label>
                         )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle>Current Image</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-2">
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="flex aspect-square w-full items-center justify-center rounded-md border">
+                          <Image
+                            src={prevAvatar} // Preview uploaded service image
+                            alt="avatar Image"
+                            width={150}
+                            height={150}
+                            className="object-cover"
+                          />
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -492,14 +511,14 @@ export default function Dashboard() {
                 Discard
               </Button>
 
-              <Button onClick={SliderAdder} disabled={loading} className="">
+              <Button onClick={FeedBackUpdater} disabled={loading} className="">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Adding Feedback....
+                    Updating Feedback....
                   </>
                 ) : (
-                  "Add Feedback"
+                  "Update Feedback"
                 )}
               </Button>
             </div>

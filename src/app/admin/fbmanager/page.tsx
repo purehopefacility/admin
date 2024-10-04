@@ -75,15 +75,14 @@ import {
 } from "@/components/ui/tooltip";
 import { auth } from "@/auth";
 
-interface SlideItem {
-  slideId: number;
-  Order: number;
-  image: string;
-  title1: string;
-  title2: string;
-  description: string;
-  buttonText: string;
-  buttonLink: string;
+interface FBItem {
+  fid: number;
+  avatar: string;
+  name: string;
+  feedback: string;
+  regAt: string;
+  rating: number;
+  position: string;
 }
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -92,20 +91,20 @@ export default function Dashboard() {
 
   const router = useRouter();
 
-  const [Slides, setSlides] = useState<SlideItem[]>([]);
+  const [FBs, setFbs] = useState<FBItem[]>([]);
 
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await fetch("/admin/api/slides");
+        const response = await fetch("/api/feedbacks");
         if (!response.ok) {
-          throw new Error("Failed to fetch slides");
+          throw new Error("Failed to fetch feedbacks");
         }
         const data = await response.json();
-        setSlides(data.slideData);
+        setFbs(data.FBdata);
         //setLoading(false);
       } catch (err) {
-        console.error("Error fetching inquiries:", err);
+        console.error("Error fetching feedbacks:", err);
         //setLoading(false);
       }
     };
@@ -114,14 +113,14 @@ export default function Dashboard() {
 
   const Deleter = async (id: number) => {
     try {
-      const response = await fetch(`/admin/api/delete?id=${id}&type=slide`, {
+      const response = await fetch(`/admin/api/delete?id=${id}&type=fb`, {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error("Failed to delete slide");
+        throw new Error("Failed to delete feedback");
       }
     } catch (err) {
-      console.log("Error occured while deleting slide", err);
+      console.log("Error occured while deleting feedback", err);
     }
   };
 
@@ -332,9 +331,9 @@ export default function Dashboard() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Caraousel Slides and Content</CardTitle>
+                  <CardTitle>Customer Feedbacks</CardTitle>
                   <CardDescription>
-                    Manage your home page slide details here
+                    Manage your customer feedbacks and ratings
                   </CardDescription>
                 </div>
 
@@ -342,12 +341,12 @@ export default function Dashboard() {
                   size="sm"
                   className="h-8 gap-1 mr-2 "
                   onClick={() => {
-                    router.push("/admin/addslide");
+                    router.push("/admin/addfeedback");
                   }}
                 >
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Slide
+                    Add Feedback
                   </span>
                 </Button>
               </div>
@@ -356,48 +355,38 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Slide Image</TableHead>
-                    <TableHead>Slide Order</TableHead>
-                    <TableHead>Title 1</TableHead>
+                    <TableHead>Avatar Image</TableHead>
+                    <TableHead>Customer Name</TableHead>
+                    <TableHead>Position</TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Title 2
+                      Feedback
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Description
+                      Rating
                     </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      URL in Button
-                    </TableHead>
-                    <TableHead>Button Text</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Slides.map((slide: SlideItem) => (
+                  {FBs.map((FB: FBItem) => (
                     <TableRow>
                       <TableCell className="font-medium">
                         <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                           <Image
-                            src={slide.image} // Preview uploaded service image
-                            alt="Slide Image"
+                            src={FB.avatar} // Preview uploaded service image
+                            alt="feedback Image"
                             width={100}
                             height={100}
                             className="object-cover"
                           />
                         </div>
                       </TableCell>
-                      <TableCell>{slide.Order}</TableCell>
-                      <TableCell>{slide.title1}</TableCell>
+                      <TableCell>{FB.name}</TableCell>
+                      <TableCell>{FB.position}</TableCell>
                       <TableCell className="hidden md:table-cell">
-                        {slide.title2}
+                        {FB.feedback}
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
-                        {slide.description}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {slide.buttonLink}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {slide.buttonText}
+                        {FB.rating}
                       </TableCell>
 
                       <TableCell>
@@ -406,7 +395,7 @@ export default function Dashboard() {
                             className="px-4 py-2 bg-blue-500"
                             onClick={() => {
                               router.push(
-                                `/admin/updatefeedback?fid=${slide.slideId}`,
+                                `/admin/updatefeedback?fid=${FB.fid}`,
                               );
                             }}
                           >
@@ -415,10 +404,10 @@ export default function Dashboard() {
                           <Button
                             className="px-4 py-2 bg-red-500"
                             onClick={() => {
-                              Deleter(slide.slideId);
-                              setSlides((prevState) => {
+                              Deleter(FB.fid);
+                              setFbs((prevState) => {
                                 return prevState.filter(
-                                  (item) => item.slideId != slide.slideId,
+                                  (item) => item.fid != FB.fid,
                                 );
                               });
                             }}
