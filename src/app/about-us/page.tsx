@@ -5,7 +5,7 @@ import Footer from "@/components/footer";
 
 export default function AboutUs() {
   return (
-    <div>
+    <>
       <NavBar />
       <div className="flex flex-col content-end">
         <div
@@ -215,6 +215,6 @@ export default function AboutUs() {
       <div className="flex items-center justify-center">
         <Footer />
       </div>
-    </div>
+    </>
   );
 }
