@@ -6,7 +6,6 @@ import Footer from "@/components/footer";
 export default function AboutUs() {
   return (
     <>
-      <NavBar />
       <div className="flex flex-col content-end">
         <div
           className="flex w-full items-end justify-center h-64 mb-10 relative bg-cover bg-center bg-blue-700 border-2"
@@ -211,9 +210,6 @@ export default function AboutUs() {
       </div>
       <div>
         <Brands2 />
-      </div>
-      <div className="flex items-center justify-center">
-        <Footer />
       </div>
     </>
   );

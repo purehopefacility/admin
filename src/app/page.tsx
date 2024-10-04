@@ -18,7 +18,6 @@ import Footer from "@/components/footer";
 export default function Home() {
   return (
     <div>
-      <NavBar />
       <main className="flex flex-col  items-center">
         <section id="mainCarousel" className="flex w-full">
           <MainCarousel />
@@ -60,9 +59,6 @@ export default function Home() {
           <OurLocation />
         </section>
       </main>
-      <div className="flex items-center justify-center">
-        <Footer />
-      </div>
     </div>
   );
 }

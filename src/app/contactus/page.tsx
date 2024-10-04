@@ -16,7 +16,6 @@ import Footer from "@/components/footer";
 export default function ContactUs() {
   return (
     <>
-      <NavBar />
       <div className="flex flex-col">
         {/* Header Section */}
         <div
@@ -119,9 +118,6 @@ export default function ContactUs() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-center">
-        <Footer />
       </div>
     </>
   );

@@ -67,58 +67,52 @@ export default function OurService() {
       : services.filter((service) => service.categoryName === selectedCategory);
 
   return (
-    <div>
-      <NavBar />
-      <div className="flex flex-col content-end">
-        <div
-          className="flex w-full items-end justify-center h-64 relative bg-cover bg-center bg-blue-700"
-          style={{
-            backgroundImage: "url('/images/ourservices/Our Services-01.jpg')",
-          }}
-        >
-          <div className="absolute md:w-3/4 w-[84%] h-1/2 bottom-[-20%] p-2 rounded-t-lg bg-white flex justify-center items-center">
-            <h1 className="text-[#219EBC] text-2xl">
-              <span className="font-bold text-[#003047]">Our</span> Services
-            </h1>
-          </div>
-        </div>
-        <div className="flex flex-col justify-center p-10 ">
-          <div className="flex flex-row gap-2 flex-wrap justify-center pt-20 pb-10">
-            {categories.map((category) => (
-              <button
-                key={category}
-                className={`py-3 px-4 rounded-lg text-white transition-colors ${
-                  selectedCategory === category
-                    ? "bg-[#219EBC]"
-                    : "bg-[#003047] hover:bg-[#219EBC]"
-                }`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-          <div className="grid sm:grid-cols-1  gap-y-10 gap-x-4 md:grid-cols-2 lg:grid-cols-4 py-10 mx-[12%] ">
-            {isLoading ? (
-              <p className="text-[#003047]">Loading services...</p>
-            ) : filteredServices.length > 0 ? (
-              filteredServices.map((service) => (
-                <ServiceCard
-                  key={service.serviceId}
-                  title={`${service.serviceTitle1} ${service.serviceTitle2}`}
-                  alt={`${service.serviceTitle1} ${service.serviceTitle2}`}
-                  imgPath={service.serviceImg || ""}
-                  href={service.serviceId}
-                />
-              ))
-            ) : (
-              <p className="text-[#003047]">No services found.</p>
-            )}
-          </div>
+    <div className="flex flex-col content-end">
+      <div
+        className="flex w-full items-end justify-center h-64 relative bg-cover bg-center bg-blue-700"
+        style={{
+          backgroundImage: "url('/images/ourservices/Our Services-01.jpg')",
+        }}
+      >
+        <div className="absolute md:w-3/4 w-[84%] h-1/2 bottom-[-20%] p-2 rounded-t-lg bg-white flex justify-center items-center">
+          <h1 className="text-[#219EBC] text-2xl">
+            <span className="font-bold text-[#003047]">Our</span> Services
+          </h1>
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        <Footer />
+      <div className="flex flex-col justify-center p-10 ">
+        <div className="flex flex-row gap-2 flex-wrap justify-center pt-20 pb-10">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`py-3 px-4 rounded-lg text-white transition-colors ${
+                selectedCategory === category
+                  ? "bg-[#219EBC]"
+                  : "bg-[#003047] hover:bg-[#219EBC]"
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+        <div className="grid sm:grid-cols-1  gap-y-10 gap-x-4 md:grid-cols-2 lg:grid-cols-4 py-10 mx-[12%] ">
+          {isLoading ? (
+            <p className="text-[#003047]">Loading services...</p>
+          ) : filteredServices.length > 0 ? (
+            filteredServices.map((service) => (
+              <ServiceCard
+                key={service.serviceId}
+                title={`${service.serviceTitle1} ${service.serviceTitle2}`}
+                alt={`${service.serviceTitle1} ${service.serviceTitle2}`}
+                imgPath={service.serviceImg || ""}
+                href={service.serviceId}
+              />
+            ))
+          ) : (
+            <p className="text-[#003047]">No services found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

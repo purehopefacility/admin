@@ -59,7 +59,6 @@ export default function RequestQuote() {
 
   const formContent = (
     <>
-      <NavBar />
       <div className="mb-4">
         <label className="block text-sm text-white mb-1" htmlFor="name">
           Your Name
@@ -125,9 +124,6 @@ export default function RequestQuote() {
       >
         Submit
       </button>
-      <div className="flex items-center justify-center">
-        <Footer />
-      </div>
     </>
   );
 
