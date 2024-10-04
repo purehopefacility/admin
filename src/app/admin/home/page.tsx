@@ -155,7 +155,7 @@ export default function Dashboard() {
       if (!currentService) throw new Error("Service not found");
 
       const response = await fetch(
-        `/api/services/update/order?id=${serviceId}&order=${newOrder}&ctgid=${currentService.categoryId}&type=svc`,
+        `/admin/api/update/order?id=${serviceId}&order=${newOrder}&ctgid=${currentService.categoryId}&type=svc`,
         { method: "PUT" },
       );
 
