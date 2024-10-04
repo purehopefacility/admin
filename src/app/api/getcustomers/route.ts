@@ -10,7 +10,6 @@ export async function GET() {
   try {
     const cdata = await db
       .select({
-        avatar: CustomerTable.avatar,
         name: CustomerTable.customerName,
         customerID: CustomerTable.customerId,
         phoneNo: CustomerTable.phoneNumber,

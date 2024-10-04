@@ -124,7 +124,7 @@ export default function Dashboard() {
     fetchServices();
   }, [loading]);
 
-  const updateServiceOrder = async (serviceId: string, newOrder: number) => {
+  const updateServiceOrder = async (serviceId: number, newOrder: number) => {
     const previousServices = [...services];
     const updatedServices = services.map((service) => {
       if (service.serviceId === serviceId) {

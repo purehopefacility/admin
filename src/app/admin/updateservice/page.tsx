@@ -71,7 +71,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 interface Category {
-  categoryId: string;
+  categoryId: number;
   categoryTitle: string;
 }
 
