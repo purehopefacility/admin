@@ -15,7 +15,7 @@ import Footer from "@/components/footer";
 
 export default function ContactUs() {
   return (
-    <div>
+    <>
       <NavBar />
       <div className="flex flex-col">
         {/* Header Section */}
@@ -117,12 +117,12 @@ export default function ContactUs() {
               <div className="mb-5 text-lg sm:text-lg ">Contact Form</div>
               <ContactForm />
             </div>
-            <div className="flex items-center justify-center">
-              <Footer />
-            </div>
           </div>
         </div>
       </div>
-    </div>
+      <div className="flex items-center justify-center">
+        <Footer />
+      </div>
+    </>
   );
 }
