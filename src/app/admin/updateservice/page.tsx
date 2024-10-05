@@ -289,7 +289,7 @@ export default function Dashboard() {
                         onChange={setDescription}
                       />
                     </div>
-                    <div className="grid gap-3 mt-8">
+                    {/* <div className="grid gap-3 mt-8">
                       <Label htmlFor="description">Service New Order</Label>
                       <Input
                         id="order"
@@ -299,8 +299,8 @@ export default function Dashboard() {
                         value={order}
                         onChange={(e) => setOrder(e.target.value)}
                       />
-                    </div>
-                    <div className="grid gap-3">
+                    </div> */}
+                    <div className="grid gap-3 mt-8">
                       <Label htmlFor="category">Category</Label>
 
                       <Select
