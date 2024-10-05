@@ -97,6 +97,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [updatedServiceId, setUpdatedServiceId] = useState<number | null>(null);
+  const [updatedOrder, setUpdatedOrder] = useState<number | null>(null);
+  const [inputValues, setInputValues] = useState<{[key: number]: string}>({});
 
   const router = useRouter();
   useEffect(() => {
@@ -123,49 +126,85 @@ export default function Dashboard() {
     };
     fetchServices();
   }, [loading]);
+// const updateServiceOrder = async () => {
+//     if (updatedServiceId === null || updatedOrder === null) return;
 
-  const updateServiceOrder = async (serviceId: number, newOrder: number) => {
-    const previousServices = [...services];
-    const updatedServices = services.map((service) => {
-      if (service.serviceId === serviceId) {
-        return { ...service, serviceOrder: String(newOrder) };
-      }
-      if (
-        Number(service.serviceOrder) >= newOrder &&
-        service.serviceId !== serviceId
-      ) {
-        return {
-          ...service,
-          serviceOrder: String(Number(service.serviceOrder) + 1),
-        };
-      }
-      return service;
-    });
+//     try {
+//       // Find the current service in the services array
+//       const currentService = services.find(service => service.serviceId === updatedServiceId);
+//       if (!currentService) {
+//         throw new Error("Service not found");
+//       }
 
-    setServices(
-      updatedServices.sort(
-        (a, b) => Number(a.serviceOrder) - Number(b.serviceOrder),
-      ),
-    );
+//       const response = await fetch(
+//         `/admin/api/update/order?id=${updatedServiceId}&order=${updatedOrder}&ctgid=${currentService.categoryId}&type=svc`,
+//         { method: "PUT" }
+//       );
+
+//       if (!response.ok) throw new Error("Failed to update service order");
+
+//       // If the update was successful, fetch the updated services
+//       const updatedServicesResponse = await fetch("/api/services/all");
+//       if (!updatedServicesResponse.ok) throw new Error("Failed to fetch updated services");
+
+//       const updatedServices = await updatedServicesResponse.json();
+//       setServices(updatedServices.data);
+//     } catch (err) {
+//       console.error("Error updating service order:", err);
+//       setError("Failed to update service order. Please try again.");
+//       setDialogOpen(true);
+//     }
+//   };
+
+const updateServiceOrder = async () => {
+    if (updatedServiceId === null || updatedOrder === null) return;
 
     try {
-      const currentService = services.find(
-        (svc) => svc.serviceId === serviceId,
-      );
-      if (!currentService) throw new Error("Service not found");
+      const currentService = services.find(service => service.serviceId === updatedServiceId);
+      if (!currentService) {
+        throw new Error("Service not found");
+      }
 
       const response = await fetch(
-        `/admin/api/update/order?id=${serviceId}&order=${newOrder}&ctgid=${currentService.categoryId}&type=svc`,
-        { method: "PUT" },
+        `/admin/api/update/order?id=${updatedServiceId}&order=${updatedOrder}&ctgid=${currentService.categoryId}&type=svc`,
+        { method: "PUT" }
       );
 
       if (!response.ok) throw new Error("Failed to update service order");
+
+
+      const updatedServicesResponse = await fetch("/api/services/all");
+      if (!updatedServicesResponse.ok) throw new Error("Failed to fetch updated services");
+
+      const updatedServices = await updatedServicesResponse.json();
+      setServices(updatedServices.data);
+
+      setInputValues(prev => {
+        const newValues = {...prev};
+        delete newValues[updatedServiceId];
+        return newValues;
+      });
+
+      setUpdatedServiceId(null);
+      setUpdatedOrder(null);
     } catch (err) {
       console.error("Error updating service order:", err);
-      setServices(previousServices);
       setError("Failed to update service order. Please try again.");
       setDialogOpen(true);
     }
+  };
+
+
+//   const handleOrderChange = (serviceId: number, newOrder: string) => {
+//     setUpdatedServiceId(serviceId);
+//     setUpdatedOrder(newOrder === "" ? null : Number(newOrder));
+//   };
+const handleOrderChange = (serviceId: number, newValue: string) => {
+    setInputValues(prev => ({...prev, [serviceId]: newValue}));
+
+    const newOrder = newValue === "" ? null : Number(newValue);
+    setUpdatedServiceId(serviceId);
+    setUpdatedOrder(newOrder);
   };
 
   const StateUpdater = async (type: string, id: number, state: string) => {
@@ -423,43 +462,6 @@ export default function Dashboard() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          {/*
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full"
-              >
-                <Image
-                  src="/placeholder-user.jpg"
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  className="overflow-hidden rounded-full"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          */}
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Tabs defaultValue="services">
@@ -596,63 +598,6 @@ export default function Dashboard() {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    {/* <TableBody>
-                      {services.map((service: servicetype) => (
-                        <TableRow>
-                          <TableCell className="font-medium">
-                            {`${service.serviceTitle1} - ${service.serviceTitle2}`}
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">
-                              {service.serviceState}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {service.categoryName}
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            {service.serviceOrder}
-                          </TableCell>
-
-                          <TableCell className="flex gap-2">
-                            <Button
-                              className="px-4 py-2 bg-blue-500"
-                              onClick={() => {
-                                router.push(
-                                  `/admin/updateservice?sid=${service.serviceId}&service=${service.serviceTitle1 + " " + service.serviceTitle2}`,
-                                );
-                              }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              className="px-4 py-2 bg-orange-500"
-                              onClick={() => {
-                                StateUpdater(
-                                  "svc",
-                                  service.serviceId,
-                                  service.serviceState == "active"
-                                    ? "suspended"
-                                    : "active",
-                                );
-                              }}
-                            >
-                              {service.serviceState == "active"
-                                ? "suspend"
-                                : "activate"}
-                            </Button>
-                            <Button
-                              className="px-4 py-2 bg-red-500"
-                              onClick={() => {
-                                Deleter("svc", service.serviceId);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody> */}
                     <TableBody>
                       {services
                         .sort(
@@ -673,22 +618,39 @@ export default function Dashboard() {
                               {service.categoryName}
                             </TableCell>
                             <TableCell className="hidden md:table-cell">
-                              <Input
-                                type="number"
-                                min="1"
-                                value={service.serviceOrder}
-                                onChange={(e) => {
-                                  const newOrder = parseInt(e.target.value);
-                                  if (!isNaN(newOrder) && newOrder > 0) {
-                                    updateServiceOrder(
-                                      service.serviceId,
-                                      newOrder,
-                                    );
-                                  }
+                            {/* <Input
+                                type="text"
+                                value={
+                                updatedServiceId === service.serviceId && updatedOrder !== null
+                                    ? updatedOrder.toString()
+                                    : service.serviceOrder
+                                }
+                                onChange={(e) => handleOrderChange(service.serviceId, e.target.value)}
+                            /> */}
+                            <Input
+                                type="text"
+                                value={inputValues[service.serviceId] ?? service.serviceOrder}
+                                onChange={(e) => handleOrderChange(service.serviceId, e.target.value)}
+                                onBlur={() => {
+                                if (inputValues[service.serviceId] === "") {
+                                    setInputValues(prev => {
+                                    const newValues = {...prev};
+                                    delete newValues[service.serviceId];
+                                    return newValues;
+                                    });
+                                    setUpdatedOrder(null);
+                                }
                                 }}
-                              />
+                            />
                             </TableCell>
                             <TableCell className="flex gap-2">
+                            <Button
+                          className="px-4 py-2 bg-green-500"
+                          onClick={updateServiceOrder}
+                          disabled={updatedServiceId !== service.serviceId || updatedOrder === null}
+                        >
+                          Update Order
+                        </Button>
                               <Button
                                 className="px-4 py-2 bg-blue-500"
                                 onClick={() => {
