@@ -5,6 +5,7 @@ import { div } from "framer-motion/client";
 import { useState, useEffect } from "react";
 
 interface RW {
+  fid: number;
   avatar: string;
   feedback: string;
   name: string;
@@ -13,25 +14,15 @@ interface RW {
 }
 
 export default function OurCustomers() {
-  const [Reviewdata, setReviewData] = useState<RW[]>([
-    {
-      avatar:
-        "https://www.google.com/imgres?q=avatar%20image&imgurl=https%3A%2F%2Fimg.freepik.com%2Ffree-psd%2F3d-illustration-person-with-sunglasses_23-2149436188.jpg%3Fsize%3D338%26ext%3Djpg%26ga%3DGA1.1.1819120589.1727654400%26semt%3Dais_hybrid&imgrefurl=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Favatar&docid=DjJcL6-DnnZi6M&tbnid=Pns35Dm3xVP0eM&vet=12ahUKEwj65cSTvuyIAxXv1jgGHfAdFQAQM3oECBcQAA..i&w=338&h=338&hcb=2&ved=2ahUKEwj65cSTvuyIAxXv1jgGHfAdFQAQM3oECBcQAA",
-      feedback:
-        "The quality of cleaning is excellent. They are dependable. A morning appointment is very important to me and they always keep that time frame.",
-      name: "Jude Roshen",
-      position: "CEO - Five Squared",
-      rating: 5,
-    },
-  ]);
+  const [Reviewdata, setReviewData] = useState<RW[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch("/api/feedbacks");
         const feedbacks = await response.json();
-        console.log("FEDBACKS  : ", feedbacks.data);
-        setReviewData(feedbacks.data);
+        console.log("FEDBACKS  : ", feedbacks.FBdata);
+        setReviewData(feedbacks.FBdata);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
