@@ -12,10 +12,18 @@ type Service = {
     serviceId: number;
     serviceOrder: number;
     categoryId: number;
+    categoryOrder: number;
     categoryName: string;
     serviceTitle1: string;
     serviceTitle2: string;
     serviceState: string;
+  };
+
+  type GroupedServices = {
+    [key: string]: {
+      order: number;
+      services: Service[];
+    };
   };
 
 const Accordion = ({ title, children }: AccordionProps) => {
@@ -53,11 +61,42 @@ const Accordion = ({ title, children }: AccordionProps) => {
 export default function WhyChoose() {
 
   const [services, setServices] = useState<Service[]>([]);
-  const [groupedServices, setGroupedServices] = useState<
-    { [key: string]: Service[] }
-  >({});
+//   const [groupedServices, setGroupedServices] = useState<
+//     { [key: string]: Service[] }
+//   >({});
+  const [groupedServices, setGroupedServices] = useState<GroupedServices>({});
 
-  useEffect(() => {
+//   useEffect(() => {
+//     const fetchServices = async () => {
+//       try {
+//         const response = await fetch("/api/services/all");
+//         const { data } = await response.json();
+
+//         const activeServices = data.filter(
+//           (service: Service) => service.serviceState === "active"
+//         );
+
+//         const grouped = activeServices.reduce(
+//           (acc: { [key: string]: Service[] }, service: Service) => {
+//             if (!acc[service.categoryName]) {
+//               acc[service.categoryName] = [];
+//             }
+//             acc[service.categoryName].push(service);
+//             return acc;
+//           },
+//           {}
+//         );
+
+//         setGroupedServices(grouped);
+//       } catch (error) {
+//         console.error("Error fetching services:", error);
+//       }
+//     };
+
+//     fetchServices();
+//   }, []);
+
+useEffect(() => {
     const fetchServices = async () => {
       try {
         const response = await fetch("/api/services/all");
@@ -68,11 +107,14 @@ export default function WhyChoose() {
         );
 
         const grouped = activeServices.reduce(
-          (acc: { [key: string]: Service[] }, service: Service) => {
+          (acc: GroupedServices, service: Service) => {
             if (!acc[service.categoryName]) {
-              acc[service.categoryName] = [];
+              acc[service.categoryName] = {
+                order: service.categoryOrder,
+                services: [],
+              };
             }
-            acc[service.categoryName].push(service);
+            acc[service.categoryName].services.push(service);
             return acc;
           },
           {}
@@ -86,6 +128,10 @@ export default function WhyChoose() {
 
     fetchServices();
   }, []);
+
+  const sortedCategories = Object.entries(groupedServices).sort(
+    ([, a], [, b]) => a.order - b.order
+  );
 
 
   return (
@@ -109,10 +155,21 @@ export default function WhyChoose() {
           </div>
           <div className="my-10">
             <div className="max-w-2xl sm:ml-8 bg-white rounded-lg">
-            {Object.keys(groupedServices).map((categoryName) => (
+            {/* {Object.keys(groupedServices).map((categoryName) => (
                 <Accordion title={categoryName} key={categoryName}>
                   <ul className="list-[circle] xl:ml-5">
                     {groupedServices[categoryName].map((service) => (
+                      <li key={service.serviceId}>
+                        {service.serviceTitle1} {service.serviceTitle2}
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion>
+              ))} */}
+              {sortedCategories.map(([categoryName, { services }]) => (
+                <Accordion title={categoryName} key={categoryName}>
+                  <ul className="list-[circle] xl:ml-5">
+                    {services.map((service) => (
                       <li key={service.serviceId}>
                         {service.serviceTitle1} {service.serviceTitle2}
                       </li>

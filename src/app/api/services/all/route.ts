@@ -9,6 +9,7 @@ const getActiveServices = async () => {
       serviceId: ServiceTable.serviceId,
       serviceOrder: ServiceTable.serviceOrder,
       categoryId: ServiceTable.ServiceCategory,
+      categoryOrder: ServiceCategoryTable.categoryOrder,
       categoryName: ServiceCategoryTable.categoryTitle,
       serviceTitle1: ServiceTable.serviceTitle_1,
       serviceTitle2: ServiceTable.serviceTitle_2,
