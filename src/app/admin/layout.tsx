@@ -3,6 +3,8 @@ import "../globals.css";
 import dotenv from "dotenv";
 dotenv.config();
 import { Poppins } from "next/font/google";
+import NavBar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -38,13 +40,14 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} font-sans  items-center justify-center`}
       >
-        {/*   <NavBar />*/}
-        {children}
-        {/*
-        <div className="flex items-center justify-center">
-            <Footer/>
+        <div className="hidden">
+          <NavBar />
         </div>
-        */}
+        {children}
+
+        <div className="flex items-center justify-center hidden">
+          <Footer />
+        </div>
       </body>
       <GoogleAnalytics gaId="G-XVQLXY2R9K" />
     </html>
