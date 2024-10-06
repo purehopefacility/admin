@@ -1,14 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import RequestForm from "./requestform/page";// Import the RequestForm component
+import RequestForm from "./requestform";
 
-// Define the type for the service category
 interface ServiceCategory {
   categoryId: number;
   categoryTitle: string;
 }
 
-// Define the type for the service
 interface Service {
   serviceId: number;
   serviceTitle1: string;
@@ -17,52 +15,50 @@ interface Service {
 }
 
 export default function RequestQuote() {
-  // State for storing service categories
   const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [services, setServices] = useState<Service[]>([]);
-  const [selectedService, setSelectedService] = useState<Service | null>(null); // Hold selected service
+  const [services, setServices] = useState<Service[] | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Function to fetch service categories
   const fetchCategories = async () => {
     try {
       const response = await fetch("/api/requestquote/selectcategory");
       const data = await response.json();
-      setCategories(data.data); // Assuming the response format has `data`
+      setCategories(data.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
   };
 
-  // Function to fetch services based on selected category
   const fetchServices = async (categoryId: number) => {
+    setIsLoading(true);
+    setServices(null); // Reset services before fetching new ones
     try {
       const response = await fetch(`/api/requestquote/selectservices?categoryId=${categoryId}`);
       const data = await response.json();
-      console.log(data);
-      setServices(data.data); // Assuming the response format has `data`
+      setServices(data.data);
     } catch (error) {
       console.error("Error fetching services:", error);
+      setServices([]); // Set to empty array in case of error
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle category button click
   const handleCategoryClick = (categoryId: number) => {
     setSelectedCategory(categoryId);
-    fetchServices(categoryId); // Fetch services for the selected category
+    fetchServices(categoryId);
   };
 
-  // Handle service button click
   const handleServiceClick = (service: Service) => {
-    setSelectedService(service); // Set the selected service
+    setSelectedService(service);
   };
 
-  // Handle back button click in RequestForm
   const handleBackClick = () => {
-    setSelectedService(null); // Reset the selected service to go back to services list
+    setSelectedService(null);
   };
 
-  // Fetch categories when the component mounts
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -71,7 +67,6 @@ export default function RequestQuote() {
     <div className="flex justify-center items-center">
       <div className="flex w-3/4 justify-center items-center my-20">
         <div className="flex flex-col md:flex-row bg-[#003047] text-white rounded-3xl overflow-hidden">
-          {/* Image and text section */}
           <div className="md:w-3/4 relative">
             <img
               src="images/home/services.png"
@@ -89,9 +84,7 @@ export default function RequestQuote() {
             </div>
           </div>
 
-          {/* Form section */}
           <div className="w-full p-10 bg-[#003047]">
-            {/* Conditionally render category selection, services, or the request form */}
             {selectedService === null ? (
               selectedCategory === null ? (
                 <>
@@ -99,7 +92,6 @@ export default function RequestQuote() {
                     Select Our Valuable Category
                   </h3>
                   <div className="space-y-3">
-                    {/* Map over categories fetched from API */}
                     {categories.length > 0 ? (
                       categories.map((category) => (
                         <button
@@ -122,12 +114,15 @@ export default function RequestQuote() {
                     Services in Selected Category
                   </h3>
                   <div className="space-y-3">
-                    {/* Map over services fetched from API */}
-                    {services.length > 0 ? (
+                    {isLoading ? (
+                      <p>Loading services...</p>
+                    ) : services === null ? (
+                      <p>Error loading services. Please try again.</p>
+                    ) : services.length > 0 ? (
                       services.map((service) => (
                         <button
                           key={service.serviceId}
-                          onClick={() => handleServiceClick(service)} // Handle service click
+                          onClick={() => handleServiceClick(service)}
                           className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
                         >
                           <h4>{service.serviceTitle1}</h4>
@@ -135,11 +130,11 @@ export default function RequestQuote() {
                         </button>
                       ))
                     ) : (
-                      <p>No services found for this category.</p>
+                      <p>No services available for this category.</p>
                     )}
                     <button
                       onClick={() => setSelectedCategory(null)}
-                    className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-4 rounded transition duration-300 w-full"
+                      className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-4 rounded transition duration-300 w-full"
                     >
                       Back
                     </button>
