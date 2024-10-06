@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, ChangeEvent } from "react";
 
 interface FormData {
   name: string;
@@ -17,6 +17,23 @@ interface RequestFormProps {
   handleBackClick: () => void;
 }
 
+interface InputFieldProps {
+  label: string;
+  name: string;
+  type?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  required?: boolean;
+}
+
+interface TextAreaFieldProps {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  required?: boolean;
+}
+
 export default function RequestForm({ selectedService, handleBackClick }: RequestFormProps) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -29,7 +46,7 @@ export default function RequestForm({ selectedService, handleBackClick }: Reques
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -71,7 +88,7 @@ export default function RequestForm({ selectedService, handleBackClick }: Reques
 
   return (
     <div className="flex justify-center items-center">
-      <div className="flex justify-center items-center my-20">
+      <div className="flex justify-center w-full items-center my-20">
         <div className="flex flex-col bg-[#003047] text-white rounded-3xl w-full">
           {isSubmitted ? (
             <div className="text-center">
@@ -104,17 +121,17 @@ export default function RequestForm({ selectedService, handleBackClick }: Reques
                 <InputField label="Address" name="address" value={formData.address} onChange={handleChange} required />
                 <TextAreaField label="Message" name="message" value={formData.message} onChange={handleChange} required />
 
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col w-full justify-between items-center">
                   <button
                     type="submit"
-                    className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-6 rounded transition duration-300"
+                    className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-6 rounded transition duration-300 w-full mb-6"
                   >
                     Submit
                   </button>
                   <button
                     type="button"
                     onClick={handleBackClick}
-                    className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded transition duration-300"
+                    className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded transition duration-300 w-full"
                   >
                     Back
                   </button>
@@ -128,7 +145,7 @@ export default function RequestForm({ selectedService, handleBackClick }: Reques
   );
 }
 
-const InputField = ({ label, name, type = "text", value, onChange, required }) => (
+const InputField: React.FC<InputFieldProps> = ({ label, name, type = "text", value, onChange, required }) => (
   <div className="flex flex-col">
     <label htmlFor={name} className="text-sm text-gray-400 mb-1">{label}</label>
     <input
@@ -144,7 +161,7 @@ const InputField = ({ label, name, type = "text", value, onChange, required }) =
   </div>
 );
 
-const TextAreaField = ({ label, name, value, onChange, required }) => (
+const TextAreaField: React.FC<TextAreaFieldProps> = ({ label, name, value, onChange, required }) => (
   <div className="flex flex-col">
     <label htmlFor={name} className="text-sm text-gray-400 mb-1">{label}</label>
     <textarea

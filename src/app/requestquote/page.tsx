@@ -137,6 +137,12 @@ export default function RequestQuote() {
                     ) : (
                       <p>No services found for this category.</p>
                     )}
+                    <button
+                      onClick={() => setSelectedCategory(null)}
+                    className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-4 rounded transition duration-300 w-full"
+                    >
+                      Back
+                    </button>
                   </div>
                 </>
               )
