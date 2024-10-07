@@ -67,7 +67,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [ctgtitle, setCtgTitle] = useState("");
 
-  const [order, setOrder] = useState("1");
+  const [order, setOrder] = useState("");
   const [description, setDescription] = useState("");
 
   const Updater = async () => {
@@ -90,10 +90,10 @@ export default function Dashboard() {
           router.push("/admin/home");
         }, 2000); // Navigate back to the service list
       } else {
-        console.error("Failed to create service");
+        console.error("Failed to create service category");
       }
     } catch (error) {
-      console.error("Error creating service:", error);
+      console.error("Error creating service category:", error);
     }
   };
   // const Updater = () => {
@@ -377,19 +377,17 @@ export default function Dashboard() {
                           onChange={(e) => setDescription(e.target.value)}
                         />
                       </div>
-                      {/*
-                      <div className="grid gap-3">
-                        <Label htmlFor="description">Category Order</Label>
+                        <div className="grid gap-3">
+                        <Label htmlFor="order">Category Order</Label>
                         <Input
-                          id="order"
-                          type="text"
-                          className="w-full"
-                          placeholder="Order Number"
-                          value={order}
-                          onChange={(e) => setOrder(e.target.value)}
+                            id="order"
+                            type="number"
+                            className="w-full"
+                            placeholder="Order Number"
+                            value={order}
+                            onChange={(e) => setOrder(e.target.value)}
                         />
-                      </div>
-                      */}
+                        </div>
                     </div>
                   </CardContent>
                 </Card>
