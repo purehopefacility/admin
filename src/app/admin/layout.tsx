@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   description: "Pure Hope Facility Management",
 };
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -45,11 +45,15 @@ export default function RootLayout({
         </div>
         {children}
 
-        <div className="flex items-center justify-center hidden">
-          <Footer />
+        <div className="hidden">
+          <div className="flex items-center justify-center">
+            <Footer />
+          </div>
         </div>
       </body>
-      <GoogleAnalytics gaId="G-XVQLXY2R9K" />
+      <div className="hidden">
+        <GoogleAnalytics gaId="G-XVQLXY2R9K" />
+      </div>
     </html>
   );
 }

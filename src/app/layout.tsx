@@ -6,7 +6,7 @@ import { Poppins } from "next/font/google";
 import NavBar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
-
+import { usePathname } from "next/navigation";
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
 //   variable: "--font-geist-sans",

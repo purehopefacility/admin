@@ -168,6 +168,7 @@ const Carousel: React.FC = () => {
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
           >
+            {/*
             <Image
               src={item.image}
               alt={`${item.title1} ${item.title2}`}
@@ -175,6 +176,15 @@ const Carousel: React.FC = () => {
               objectFit="cover"
               priority
             />
+            */}
+
+            <img
+              src={item.image}
+              alt={`${item.title1} ${item.title2}`}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+
             <div className="absolute inset-0 bg-black bg-opacity-35 flex items-center ">
               <div className=" mx-[12%] ">
                 <div className="mt-10 sm:mt-0">
