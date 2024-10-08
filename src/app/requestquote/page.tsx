@@ -5,6 +5,8 @@ import RequestForm from "./requestform";
 interface ServiceCategory {
   categoryId: number;
   categoryTitle: string;
+  categoryOrder: number;
+  categoryDesc: string;
 }
 
 interface Service {
@@ -25,6 +27,7 @@ export default function RequestQuote() {
     try {
       const response = await fetch("/api/requestquote/selectcategory");
       const data = await response.json();
+      const sortedCategories = data.data.sort((a: ServiceCategory, b: ServiceCategory) => a.categoryOrder - b.categoryOrder);
       setCategories(data.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
