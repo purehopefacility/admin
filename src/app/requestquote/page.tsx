@@ -1,213 +1,72 @@
 "use client";
-import NavBar from "@/components/navbar";
-import Footer from "@/components/footer";
+import { useState, useEffect } from "react";
+import RequestForm from "./requestform";
 
-import { useState, FormEvent } from "react";
+interface ServiceCategory {
+  categoryId: number;
+  categoryTitle: string;
+}
 
-// Define the type for the form data
-interface FormData {
-  name: string;
-  mobile: string;
-  email: string;
-  address: string;
-  message: string;
+interface Service {
+  serviceId: number;
+  serviceTitle1: string;
+  serviceTitle2: string;
+  serviceOrder: number;
 }
 
 export default function RequestQuote() {
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    mobile: "",
-    email: "",
-    address: "",
-    message: "",
-  });
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [services, setServices] = useState<Service[] | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Form submit function
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setFormData({
-      name: (e.currentTarget.elements.namedItem("name") as HTMLInputElement)
-        .value,
-      mobile: (e.currentTarget.elements.namedItem("mobile") as HTMLInputElement)
-        .value,
-      email: (e.currentTarget.elements.namedItem("email") as HTMLInputElement)
-        .value,
-      address: (
-        e.currentTarget.elements.namedItem("address") as HTMLInputElement
-      ).value,
-      message: (
-        e.currentTarget.elements.namedItem("message") as HTMLTextAreaElement
-      ).value,
-    });
-
-    console.log("Form Data on Submit:", formData);
-
-    setSelectedService(null);
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch("/api/requestquote/selectcategory");
+      const data = await response.json();
+      setCategories(data.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
-  // Service selection function
-  const handleButtonClick = (service: string) => {
+  const fetchServices = async (categoryId: number) => {
+    setIsLoading(true);
+    setServices(null); // Reset services before fetching new ones
+    try {
+      const response = await fetch(`/api/requestquote/selectservices?categoryId=${categoryId}`);
+      const data = await response.json();
+      setServices(data.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setServices([]); // Set to empty array in case of error
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCategoryClick = (categoryId: number) => {
+    setSelectedCategory(categoryId);
+    fetchServices(categoryId);
+  };
+
+  const handleServiceClick = (service: Service) => {
     setSelectedService(service);
   };
 
-  // Back button function
   const handleBackClick = () => {
-    setSelectedService(null); // Reset the selected service to go back
+    setSelectedService(null);
   };
 
-  const formContent = (
-    <>
-      <div className="mb-4">
-        <label className="block text-sm text-white mb-1" htmlFor="name">
-          Your Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name" // Add the name attribute for reference in handleSubmit
-          className="w-full py-2 px-3 bg-[#219ebc4d] placeholder:text-white rounded text-white sm:text-base text-sm focus:outline-none"
-          placeholder="Enter your name"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm text-white mb-1" htmlFor="mobile">
-          Mobile Number
-        </label>
-        <input
-          type="text"
-          id="mobile"
-          name="mobile"
-          className="w-full py-2 px-3 bg-[#219ebc4d] placeholder:text-white rounded text-white sm:text-base text-sm focus:outline-none"
-          placeholder="Enter your mobile number"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm text-white mb-1" htmlFor="email">
-          Your Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="w-full py-2 px-3 bg-[#219ebc4d] placeholder:text-white rounded text-white sm:text-base text-sm focus:outline-none"
-          placeholder="Enter your email"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm text-white mb-1" htmlFor="address">
-          Address
-        </label>
-        <input
-          type="text"
-          id="address"
-          name="address"
-          className="w-full py-2 px-3 bg-[#219ebc4d] placeholder:text-white rounded text-white sm:text-base text-sm focus:outline-none"
-          placeholder="Enter your address"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-sm text-white mb-1" htmlFor="message">
-          Message
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          className="w-full py-2 px-3 bg-[#219ebc4d] placeholder:text-white rounded text-white sm:text-base text-sm focus:outlwhite"
-          placeholder="Enter your message"
-        />
-      </div>
-      <button
-        type="submit"
-        className="w-full py-2 px-4 bg-[#219EBC] hover:bg-opacity-80 rounded font-semibold mb-4"
-      >
-        Submit
-      </button>
-    </>
-  );
-
-  if (selectedService === "Other Service") {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="flex w-3/4 justify-center items-center  my-20">
-          <div className="flex flex-col bg-[#003047] text-white rounded-3xl p-10 w-full">
-            <h2 className="text-2xl text-[#219EBC] font-bold mb-4">
-              Request a Quote
-            </h2>
-            <p className="text-sm mb-8">
-              You've selected{" "}
-              <span className="font-semibold">{selectedService}</span>. Please
-              fill in the form below.
-            </p>
-            <form onSubmit={handleSubmit}>{formContent}</form>
-            <button
-              onClick={handleBackClick}
-              className="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 rounded font-semibold"
-            >
-              Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (selectedService === "Pure Hope Cleaning Services") {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="flex w-3/4 justify-center items-center  my-20">
-          <div className="flex flex-col bg-[#003047] text-white rounded-3xl p-10 w-full">
-            <h2 className="text-2xl text-[#219EBC] font-bold mb-4">
-              Request a Quote
-            </h2>
-            <p className="text-sm mb-8">
-              You've selected{" "}
-              <span className="font-semibold">{selectedService}</span>. Please
-              fill in the form below.
-            </p>
-            <form onSubmit={handleSubmit}>{formContent}</form>
-            <button
-              onClick={handleBackClick}
-              className="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 rounded font-semibold"
-            >
-              Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  if (selectedService === "Pure Hope Floor Care Services") {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="flex w-3/4 justify-center items-center  my-20">
-          <div className="flex flex-col bg-[#003047] text-white rounded-3xl p-10 w-full">
-            <h2 className="text-2xl text-[#219EBC] font-bold mb-4">
-              Request a Quote
-            </h2>
-            <p className="text-sm mb-8">
-              You've selected{" "}
-              <span className="font-semibold">{selectedService}</span>. Please
-              fill in the form below.
-            </p>
-            <form onSubmit={handleSubmit}>{formContent}</form>
-            <button
-              onClick={handleBackClick}
-              className="w-full py-2 px-4 bg-gray-600 hover:bg-gray-500 rounded font-semibold"
-            >
-              Back
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <div className="flex justify-center items-center">
-      <div className="flex w-3/4 justify-center items-center  my-20">
+      <div className="flex w-3/4 justify-center items-center my-20">
         <div className="flex flex-col md:flex-row bg-[#003047] text-white rounded-3xl overflow-hidden">
-          {/* Image and text section */}
           <div className="md:w-3/4 relative">
             <img
               src="images/home/services.png"
@@ -225,34 +84,66 @@ export default function RequestQuote() {
             </div>
           </div>
 
-          {/* Form section */}
           <div className="w-full p-10 bg-[#003047]">
-            <h3 className="text-sm mb-4 text-gray-400">
-              Select Our Valuable Category
-            </h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => handleButtonClick("Pure Hope Cleaning Services")}
-                className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
-              >
-                Pure Hope Cleaning Services
-              </button>
-              <button
-                onClick={() =>
-                  handleButtonClick("Pure Hope Floor Care Services")
-                }
-                className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-center text-sm rounded sm:text-left border border-[#219EBC]"
-              >
-                Pure Hope Floor Care Services
-              </button>
-              <button
-                onClick={() => handleButtonClick("Other Service")}
-                className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
-              >
-                Other Service
-              </button>
-            </div>
-            <p className="text-sm mt-4 text-gray-400">Choose one option</p>
+            {selectedService === null ? (
+              selectedCategory === null ? (
+                <>
+                  <h3 className="text-sm mb-4 text-gray-400">
+                    Select Our Valuable Category
+                  </h3>
+                  <div className="space-y-3">
+                    {categories.length > 0 ? (
+                      categories.map((category) => (
+                        <button
+                          key={category.categoryId}
+                          onClick={() => handleCategoryClick(category.categoryId)}
+                          className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
+                        >
+                          {category.categoryTitle}
+                        </button>
+                      ))
+                    ) : (
+                      <p>Loading categories...</p>
+                    )}
+                  </div>
+                  <p className="text-sm mt-4 text-gray-400">Choose one option</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-sm mb-4 text-gray-400">
+                    Services in Selected Category
+                  </h3>
+                  <div className="space-y-3">
+                    {isLoading ? (
+                      <p>Loading services...</p>
+                    ) : services === null ? (
+                      <p>Error loading services. Please try again.</p>
+                    ) : services.length > 0 ? (
+                      services.map((service) => (
+                        <button
+                          key={service.serviceId}
+                          onClick={() => handleServiceClick(service)}
+                          className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
+                        >
+                          <h4>{service.serviceTitle1}</h4>
+                          <p>{service.serviceTitle2}</p>
+                        </button>
+                      ))
+                    ) : (
+                      <p>No services available for this category.</p>
+                    )}
+                    <button
+                      onClick={() => setSelectedCategory(null)}
+                      className="bg-[#219EBC] hover:bg-[#0077B6] text-white py-2 px-4 rounded transition duration-300 w-full"
+                    >
+                      Back
+                    </button>
+                  </div>
+                </>
+              )
+            ) : (
+              <RequestForm selectedService={selectedService} handleBackClick={handleBackClick} />
+            )}
           </div>
         </div>
       </div>
