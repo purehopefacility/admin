@@ -356,6 +356,7 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                  <TableHead>#</TableHead>
                     <TableHead>Slide Image</TableHead>
                     <TableHead>Slide Order</TableHead>
                     <TableHead>Title 1</TableHead>
@@ -372,8 +373,9 @@ export default function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Slides.map((slide: SlideItem) => (
+                  {Slides.map((slide: SlideItem, index: number) => (
                     <TableRow>
+                        <TableCell>{index + 1}</TableCell>
                       <TableCell className="font-medium">
                         <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                           <Image

@@ -355,6 +355,7 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>#</TableHead>
                     <TableHead>Avatar Image</TableHead>
                     <TableHead>Customer Name</TableHead>
                     <TableHead>Position</TableHead>
@@ -367,8 +368,9 @@ export default function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {FBs.map((FB: FBItem) => (
+                  {FBs.map((FB: FBItem, index: number) => (
                     <TableRow>
+                      <TableCell>{index + 1}</TableCell>
                       <TableCell className="font-medium">
                         <div className="flex aspect-square w-full items-center justify-center rounded-md border">
                           <Image

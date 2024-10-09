@@ -328,6 +328,7 @@ export default function InquiriesDashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                      <TableHead>#</TableHead>
                         <TableHead>Customer Name</TableHead>
 
                         <TableHead className="hidden md:table-cell">
@@ -345,8 +346,9 @@ export default function InquiriesDashboard() {
                     <TableBody>
                       {inquiries
                         .filter((inq) => inq.status == "pending")
-                        .map((inquiry) => (
+                        .map((inquiry, index: number) => (
                           <TableRow key={inquiry.inquireId}>
+                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {inquiry.customerName}
                             </TableCell>
@@ -428,6 +430,7 @@ export default function InquiriesDashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                      <TableHead>#</TableHead>
                         <TableHead>Customer Name</TableHead>
 
                         <TableHead className="hidden md:table-cell">
@@ -445,8 +448,9 @@ export default function InquiriesDashboard() {
                     <TableBody>
                       {inquiries
                         .filter((inq) => inq.status == "read")
-                        .map((inquiry) => (
+                        .map((inquiry, index: number) => (
                           <TableRow key={inquiry.inquireId}>
+                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {inquiry.customerName}
                             </TableCell>

@@ -509,6 +509,7 @@ const handleOrderChange = (serviceId: number, newValue: string) => {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead>#</TableHead>
                         <TableHead>ID</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -526,8 +527,9 @@ const handleOrderChange = (serviceId: number, newValue: string) => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {categories.map((ctg: categorytype) => (
-                        <TableRow>
+                      {categories.map((ctg: categorytype, index: number) => (
+                        <TableRow key={ctg.categoryId}>
+                            <TableCell>{index + 1}</TableCell>
                           <TableCell className="font-medium">
                             {ctg.categoryId}
                           </TableCell>
@@ -585,6 +587,7 @@ const handleOrderChange = (serviceId: number, newValue: string) => {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                      <TableHead>#</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -604,8 +607,9 @@ const handleOrderChange = (serviceId: number, newValue: string) => {
                           (a, b) =>
                             Number(a.serviceOrder) - Number(b.serviceOrder),
                         )
-                        .map((service: servicetype) => (
+                        .map((service: servicetype, index: number) => (
                           <TableRow key={service.serviceId}>
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {`${service.serviceTitle1} - ${service.serviceTitle2}`}
                             </TableCell>

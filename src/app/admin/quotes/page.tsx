@@ -354,6 +354,7 @@ export default function Dashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead>#</TableHead>
                         <TableHead>Quotation ID</TableHead>
                         <TableHead>customer</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -379,8 +380,9 @@ export default function Dashboard() {
                     <TableBody>
                       {quotations
                         .filter((quote) => quote.status == "pending")
-                        .map((quote) => (
-                          <TableRow>
+                        .map((quote, index:number) => (
+                          <TableRow >
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {quote.quoteId}
                             </TableCell>
@@ -530,6 +532,7 @@ export default function Dashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                      <TableHead>#</TableHead>
                         <TableHead>Quotation ID</TableHead>
                         <TableHead>customer</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -555,8 +558,9 @@ export default function Dashboard() {
                     <TableBody>
                       {quotations
                         .filter((quote) => quote.status == "approved")
-                        .map((quote) => (
+                        .map((quote, index: number) => (
                           <TableRow>
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {quote.quoteId}
                             </TableCell>
@@ -706,6 +710,7 @@ export default function Dashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                         <TableHead>#</TableHead>
                         <TableHead>Quotation ID</TableHead>
                         <TableHead>customer</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -731,8 +736,9 @@ export default function Dashboard() {
                     <TableBody>
                       {quotations
                         .filter((quote) => quote.status == "completed")
-                        .map((quote) => (
+                        .map((quote, index: number) => (
                           <TableRow>
+                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {quote.quoteId}
                             </TableCell>
@@ -862,6 +868,7 @@ export default function Dashboard() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                      <TableHead>#</TableHead>
                         <TableHead>Quotation ID</TableHead>
                         <TableHead>customer</TableHead>
                         <TableHead className="hidden md:table-cell">
@@ -887,8 +894,9 @@ export default function Dashboard() {
                     <TableBody>
                       {quotations
                         .filter((quote) => quote.status == "rejected")
-                        .map((quote) => (
+                        .map((quote, index: number) => (
                           <TableRow>
+                            <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {quote.quoteId}
                             </TableCell>
