@@ -128,8 +128,7 @@ export default function RequestQuote() {
                           onClick={() => handleServiceClick(service)}
                           className="w-full py-2 px-4 bg-[#219EBC] bg-opacity-30 hover:bg-[#219EBC] sm:text-base text-sm rounded sm:text-left text-center border border-[#219EBC]"
                         >
-                          <h4>{service.serviceTitle1}</h4>
-                          <p>{service.serviceTitle2}</p>
+                          <h4>{service.serviceTitle1} {service.serviceTitle2}</h4>
                         </button>
                       ))
                     ) : (
