@@ -49,15 +49,16 @@ export async function DELETE(request: NextRequest) {
         .delete(ServiceTable)
         .where(eq(ServiceTable.serviceId, parseInt(ID, 10)));
     } else if (rectype == "quote") {
-      const imgSet: any = await db
-        .select({
-          images: ServiceQuoteTable.images,
-        })
-        .from(ServiceQuoteTable)
-        .where(eq(ServiceQuoteTable.quoteId, ID as string));
-      if (imgSet[0].images.length > 0) {
-        await DelImageSet(imgSet[0].images);
-      }
+      //COMMENTED --> coz imgs will get delted either when rej or completerd
+      // const imgSet: any = await db
+      //   .select({
+      //     images: ServiceQuoteTable.images,
+      //   })
+      //   .from(ServiceQuoteTable)
+      //   .where(eq(ServiceQuoteTable.quoteId, ID as string));
+      // if (imgSet[0].images.length > 0) {
+      //   await DelImageSet(imgSet[0].images);
+      // }
       await db
         .delete(ServiceQuoteTable)
         .where(eq(ServiceQuoteTable.quoteId, ID as string));
