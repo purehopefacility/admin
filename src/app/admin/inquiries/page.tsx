@@ -80,7 +80,12 @@ export default function InquiriesDashboard() {
           throw new Error("Failed to fetch inquiries");
         }
         const data = await response.json();
-        setInquiries(data.InquireData);
+        const sortedInquiries = data.InquireData.sort((a: InquiryType, b: InquiryType) => {
+            return new Date(b.recievedAt).getTime() - new Date(a.recievedAt).getTime();
+          });
+
+        // setInquiries(data.InquireData);
+        setInquiries(sortedInquiries);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching inquiries:", err);

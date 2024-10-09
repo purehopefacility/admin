@@ -88,8 +88,11 @@ export default function Dashboard() {
         }
 
         const quotes = await quotes_response.json();
-
-        setQuotations(quotes.QuoteData);
+        const sortedQuotations = quotes.QuoteData.sort((a: any, b: any) => {
+            return new Date(b.recievedAt).getTime() - new Date(a.recievedAt).getTime();
+          });
+        // setQuotations(quotes.QuoteData);
+        setQuotations(sortedQuotations);
 
         console.log("Quotes:" + JSON.stringify(quotes.QuoteData));
 
@@ -101,6 +104,7 @@ export default function Dashboard() {
     };
     fetchServices();
   }, []);
+  
   const StateUpdater = async (type: string, id: string, state: string) => {
     try {
       if (type == "quote") {
