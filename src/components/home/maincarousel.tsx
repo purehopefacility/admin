@@ -86,12 +86,12 @@ const Carousel: React.FC = () => {
         const sortedSlides = data.slideData.sort(
           (a: CarouselItem, b: CarouselItem) => a.Order - b.Order,
         );
-
+        console.log("SLIDES", sortedSlides);
         setSlides(sortedSlides);
 
         //setLoading(false);
       } catch (err) {
-        console.error("Error fetching inquiries:", err);
+        console.error("Error fetching Slides:", err);
         //setLoading(false);
       }
     };
@@ -181,7 +181,6 @@ const Carousel: React.FC = () => {
             <img
               src={item.image}
               alt={`${item.title1} ${item.title2}`}
-              loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
             />
 
