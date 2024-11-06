@@ -23,7 +23,7 @@ export default auth(async function middleware(req): Promise<any> {
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isSliderFecther = pathname.endsWith("/slides");
-  isSliderFecther ? console.log("has slides") : console.log("no slides");
+  //isSliderFecther ? console.log("has slides") : console.log("no slides");
 
   if (isAdminRoute && !isSliderFecther) {
     if (!isLoggedIn) {
