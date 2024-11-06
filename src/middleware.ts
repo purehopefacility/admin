@@ -22,8 +22,10 @@ export default auth(async function middleware(req): Promise<any> {
   console.log("Is Logged in: ", isLoggedIn);
 
   const isAdminRoute = pathname.startsWith("/admin");
+  const isSliderFecther = pathname.endsWith("/slides");
+  isSliderFecther ? console.log("has slides") : console.log("no slides");
 
-  if (isAdminRoute) {
+  if (isAdminRoute && !isSliderFecther) {
     if (!isLoggedIn) {
       return Response.redirect(new URL("/auth/login", req.url));
     }
